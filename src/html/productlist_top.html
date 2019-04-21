@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+
+    <link rel="stylesheet" href="./common/css/iconfont.css">
+    <style>
+      	html,body{-webkit-touch-callout:none;	-webkit-text-size-adjust:none;	-webkit-tap-highlight-color:rgba(0, 0, 0, 0);	-webkit-user-select:none;}
+        *{margin: 0;padding: 0;}
+        ul li{list-style:none;}
+        header{position: relative;}
+        /*搜索区域   start*/
+        .goods_search {width: 280px;padding: 10px 0; flex-grow: 4;display: -webkit-box;display: -webkit-flex;display: flex;  box-sizing: border-box; }
+        .goods_search form {  width: 100%;height: 28px;background: #E6E6E6;border-radius: 28px;display: flex;justify-content: space-between;align-items: center;}
+        .goods_search form>span {width: 20px;  height: 20px;display: block;background-size: cover;margin-right: 10px;}
+        .goods_search form>input { width: 100%;height: 30px;border-radius: 5px;padding-left: 15px;background: transparent;font-size: 12px;border: none;outline-style: none;  }
+        /*搜索区域   end*/
+        .showResult{width:100%;position:fixed;top:0;background: #508372;}
+        .showResult-nav{height:40px;box-sizing:border-box;border-bottom:1px solid rgb(200,200,200);}
+        .showResult-nav-ul{width:100%; margin-top:50px;}
+        .showResult-nav-li{float:left;width:25%;box-sizing:border-box;height:40px;line-height: 40px;text-align:center;}
+        .showResult-nav-price-arrow{width:10px;height:10px;background-color:#f8f8f8;margin:0 0 0 5px;}
+        .showResult-nav-price-arrow img{width: 10px;height: 12px; position: absolute; bottom: 13px;}
+        .search-top{
+          display:flex;
+          justify-content: space-around;
+          background-color: #508372;
+        }
+        .left-icon{
+          flex-grow: 1;
+          padding:2px 10px 2px 5px;
+          padding-top:12px;
+          height:50px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .left-icon img {
+          width: 25px;
+          height: 25px;
+        }
+        
+        .change img{display: none;}
+        .change img.showImg{display: inline-block;}
+        input[type="search"]::-webkit-search-cancel-button{
+          display: none;
+      }
+      .statop{width: 100%;position: fixed;top: 0;z-index: 99999;}
+      .statopshow{background-color: #508372}
+      .icon_searchs{background: url(./image/secard.png) no-repeat 0 0;}
+    </style>
+</head>
+<body>
+  <header>
+        <div class="statop statopshow"></div>
+      <div class="showResult" id="showResult">
+        <div class="search-top" id="searchTop">
+          <!-- <div class="left-icon" > -->
+          <span style="font-size: 18px;color: #fff;padding: 15px 0 15px 15px;" onclick="backUrl()" class="iconfont icon-fanhui"></span>
+          <!-- </div> -->
+          <div class="goods_search"  data-title="输入关键词" >
+              <form action="#" id="form" name="form" onsubmit = "return false">
+                  <input type="search" class="search"  placeholder="搜索您想要的商品" id="keyword"  name="sKey" onkeyup="SearchProduct(event)">
+                  <input type="hidden" name="act" value="search">
+                  <span class="icon_searchs" id="btnSearch" onclick="SearchProduct()"></span>
+              </form>
+          </div>
+          <div class="left-icon change" onclick="changeList(this)"  id="change_icon">
+            <img src="./image/icon-heng.png" alt="" class="showImg">
+          </div>
+        </div>
+     </div>
+  </header>
+</body>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/common.js"></script>
+<script>
+
+    var sort="";
+    var clickCount = 1;
+    var isClicked = false;
+    if (openapp) {
+      window.apiready = function () {
+        onready()
+      }
+    } else {
+      window.onload = function () {
+        onready()
+      }
+    }
+    var onready = function () {
+      if(pageParam('iscompany')) {
+        $api.html($api.byId("change_icon"), '');
+      }
+      var statustop=$api.getStorage('statustop');
+      $api.dom('#searchTop').style.paddingTop=statustop+'px';
+      var hea=$api.dom('.statop')
+      hea.style.height=statustop+'px'
+      var bgImg = 'widget://image/border_defalut.png';
+      var itemsArry = [{
+          title: '综合',
+          size: 16,
+          sizeSelected: 16,
+          bg: '#f8f8f8',
+          color: '#FFFFFF',
+          colorSelected: '#ff0000',
+          bgSelected: '#f8f8f8'
+      }, {
+          title: '销量',
+          size: 16,
+          sizeSelected: 16,
+          bg: '#f8f8f8',
+          color: '#FFFFFF',
+          colorSelected: '#ff0000',
+          bgSelected: '#f8f8f8'
+      }, {
+          title: '价格',
+          size: 16,
+          sizeSelected: 16,
+          bg: bgImg,
+          color: '#FFFFFF',
+          colorSelected: '#ff0000',
+          bgSelected: '#f8f8f8'
+      }, {
+          title: '人气',
+          size: 16,
+          sizeSelected: 16 ,
+          bg: '#f8f8f8',
+          bgSelected: '#f8f8f8',
+          color: '#FFFFFF',
+          colorSelected: '#ff0000'
+      }];
+      var idx = 0;
+      api.setWinAttr({
+           bounces: false
+       });
+      $api.fixStatusBar($api.dom('header') );
+      if(pageParam('iscompany')) {
+        var Y = $api.dom('#showResult').offsetHeight+Number(statustop)
+      }else {
+        var Y = $api.dom('#showResult').offsetHeight+40+Number(statustop)
+      }
+      console.log('打开了frame')
+      api.openFrame({
+          name: 'productlistframe',
+          rect: {
+              x: 0,
+              y: Y,
+              w: 'auto',
+              h: 'auto'
+          },
+          url: './productlist.html',
+          bgColor: '#fff',
+          pageParam:{
+            act : pageParam('act'),
+            skey : pageParam('skey'),
+            clsid : pageParam('clsid'),
+            sale :  pageParam('sale'),
+            pack :  pageParam('pack'),
+            companyid : pageParam('companyid'),
+            iscompany: pageParam('iscompany'),
+            bid:pageParam('bid')
+          }
+      }, function(ret, err) {
+      });
+      var navigationBar = api.require('navigationBar');
+      openNavigation();
+      function openNavigation() {
+        if(!pageParam('iscompany')) {
+          navigationBar.open({
+              y:50+Number(statustop),
+              w: api.frameWidth,
+              h: 42,
+              itemSize: {
+                  w: api.frameWidth/4
+              },
+              selectedLine : {
+                  color : '#F00', // 字符串；下划线的颜色
+                  width :2, // 数字；下划线的宽
+                  marginLR :20,
+                },
+              selectedIndex:idx,
+              items: itemsArry,
+              font: {
+                size:14,
+                sizeSelected:14,
+                  color: '#333',
+                  colorSelected: '#ff0000'
+              },
+              fixedOn: api.frameName,
+              showScrollIndicator:false
+          },
+          function(ret, err) {
+              if (ret) {
+                if(ret.eventType=='click'){
+                  var index = ret.index;
+                  switch (index) {
+                    case 0:
+                      clickCount = 1;
+                      initImg(ret.index);
+                      isClicked = false;
+                      sort="";
+                      break;
+                    case 1:
+                      clickCount = 1;
+                      initImg(ret.index);
+                      isClicked = false;
+                      sort="sale_desc";
+                      break;
+                    case 2:
+                      idx = ret.index;
+                      if(isClicked){
+                        clickCount++;//1升序,0降序
+                        if(clickCount%2 == 0){
+                          itemsArry[ret.index].bg = 'widget://image/border_bottom.png';
+                          sort="price_desc";
+                        }else {
+                          itemsArry[ret.index].bg = 'widget://image/border_top.png';
+                          sort="price_asc";
+                        }
+                      }else{
+                        itemsArry[ret.index].bg = 'widget://image/border_top.png';
+                        isClicked = true;
+                        sort="price_asc";
+                      }
+                      navigationBar.close();
+                      openNavigation();
+                      break;
+                    case 3:
+                      clickCount = 1;
+                      initImg(ret.index);
+                      isClicked = false;
+                      sort="";
+                      break;
+                    default:
+                  }
+                  var keyword = $api.val($api.byId('keyword'));
+                  setTimeout(function () {
+                    if(pageParam('iscompany')) {
+                      api.execScript({
+                          name: 'productlist',
+                          frameName: 'productlistframe',
+                          script: 'ChangeCompany(\''+keyword+'\');'
+                      });
+                    }else {
+                      api.execScript({
+                          name: 'productlist',
+                          frameName: 'productlistframe',
+                          script: 'ChangeOrder(\''+sort+'\',\'search\',\''+keyword+'\');'
+                      });
+                    }
+                  }, 500)
+
+                }
+              } else {
+                  // promptMsg(JSON.stringify(err));
+              }
+          });
+        }
+  }
+
+      if(pageParam('skey')!=null){
+          $api.val($api.byId('keyword'),pageParam('skey'));
+      }
+      function initImg(index) {
+        if(idx == 2){
+          itemsArry[idx].bg = 'widget://image/border_defalut.png';
+          idx = index;
+          navigationBar.close();
+          openNavigation();
+        }
+      };
+      setTimeout(function () {
+        SearchProduct()
+      }, 500);
+   };
+  function changeList(obj){
+    if(pageParam('iscompany')) {
+      return;
+    }
+    var msg = $api.attr($api.dom('.change>img'),'src');
+    var str = msg.slice(msg.lastIndexOf('/')+1,-4);
+    if(str =='icon-heng'){
+      var n = './image/icon-fang.png';
+    }
+    else{
+      var n = './image/icon-heng.png';
+    }
+      $api.attr($api.dom('.change>img'),'src',n)
+      var can = false;
+         api.execScript({
+             name: 'productlist',
+             frameName:'productlistframe',
+             script: 'changeList('+can+');'
+         });}
+         function SearchProduct(e){
+           var keyword = $api.val($api.byId('keyword'));
+           if(e) {
+             var keyCode = window.event ? e.keyCode : e.which;
+             if(keyCode != "13") {
+               return;
+             }
+           }
+           $api.byId('keyword').blur()
+           setTimeout(function () {
+             if(pageParam('iscompany')) {
+               api.execScript({
+                   name: 'productlist',
+                   frameName: 'productlistframe',
+                   script: 'ChangeCompany(\''+keyword+'\');'
+               });
+             }else {
+               api.execScript({
+                   name: 'productlist',
+                   frameName: 'productlistframe',
+                   script: 'ChangeOrder(\''+sort+'\',\'search\',\''+keyword+'\');'
+               });
+             }
+           }, 100)
+
+         }
+
+</script>
+</html>

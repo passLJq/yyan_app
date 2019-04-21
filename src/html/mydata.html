@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./common/css/orderList.css"/>
+    <link rel="stylesheet" type="text/css" href="./common/css/icon-weigoyi.css"/>
+    <link rel="stylesheet" href="./common/css/pageSass/mydata.css">
+
+  </head>
+      <body>
+        <div id="head"></div>
+        <!-- 头部 -->
+        <section onclick="openuserdata()" style="margin-top: 15px;">
+          <div><p class="size_title">个人资料<p></div>
+          <span class="set_page_message_ft"></span>
+        </section>
+        <section onclick="openappban()">
+          <div><p class="size_title">版本信息<p></div>
+          <span class="set_page_message_ft"></span>
+        </section>
+        <section onclick="clearc()" style="border: 0;">
+          <div><p class="size_title">清除缓存<p><span id="cache"></span></div>
+          <span class="set_page_message_ft"></span>
+        </section>
+        <section onclick="LoginOut()" style="border: 0;">
+          <div><p class="size_title">退出账号<p></div>
+          <span class="set_page_message_ft"></span>
+        </section>
+        <script type="text/javascript" src="./common/js/api.js"></script>
+        <script type="text/javascript" src="./common/js/config.js"></script>
+        <script type="text/javascript" src="./common/js/common.js"></script>
+        <script>
+         if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+            if (window.api) {
+              api.getCacheSize(function(ret) {
+                var size = ret.size;
+                size=(Number(size)/1024/1024).toFixed(2)
+                if(size==0){
+                    $api.html($api.byId('cache'), "");
+                }else{
+                  $api.html($api.byId('cache'), size+"M");
+                }
+              });
+            }
+            headTitle(document.getElementById('head'),'账号设置')
+          }
+          function openyijian(){
+            openWin({
+                name: 'feedback',
+                url: './feedback.html'
+            })
+          }
+          function openwe(){
+            openWin({
+                name: 'aboutour',
+                url: './aboutour.html'
+            })
+          }
+          function openuserdata(){
+            openWin({
+                name: 'userdata',
+                url: './userdata.html',
+                bounces: false,
+                bgColor: '#fff'
+            })
+          }
+          function clearc(){
+            if (window.api) {
+              api.clearCache(0,function() {
+                api.toast({
+                    msg: '清除完成'
+                });
+                $api.html($api.byId('cache'), "");
+              });
+            }
+          }
+          function LoginOut() {
+              comfirmDialogBox("您确定要退出账号吗?", LoginOutCallBack)
+          }
+          function LoginOutCallBack(){
+            // $api.rmStorage('SessionUserID');
+            // $api.rmStorage('SessionName');
+            //退出更换别名,去除通知
+            var ajpush = api.require('ajpush');
+              var param = {alias:'guoqi',tags:['tag1','tag2']};
+              ajpush.bindAliasAndTags(param,function(ret) {
+                      var statusCode = ret.statusCode;
+              });
+            api.removePrefs({ key:'SessionUserID'});
+            api.removePrefs({ key:'SessionName'});
+            api.removePrefs({ key:'SessionKey'});
+            api.removePrefs({ key:'SessionShopID'});
+            api.setPrefs({ key:'loginStatus',value:'loginFail'});
+            api.alert({msg:"成功退出登录"},function(){
+              api.closeWin({
+                  name: 'mydata'
+              });
+
+              api.sendEvent({
+                    name : 'loginout'
+              });
+            });
+          }
+
+          function openappban(){
+            openWin({
+                name: 'version',
+                url: './version.html'
+            })
+
+          }
+        </script>
+      </body>
+</html>

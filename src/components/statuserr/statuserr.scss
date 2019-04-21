@@ -1,0 +1,42 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.err {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 99999999999999999999999;
+}
+
+.img {
+  width: rems(600);
+  height: rems(600);
+  display:block;
+  margin: 25% auto 0;
+}
+p {
+  text-align: center;
+  font-size: rems(28);
+  font-weight: 500;
+  color: #2C5B33;
+  // margin-top: ;
+}
+.chongshi{
+  text-align: center;
+  font-size: rems(28);
+  font-weight: 500;
+  color: #2C5B33;
+  display: block;
+  margin: 0 auto;
+  padding: rems(10) rems(10);
+  border: 1px solid #2C5B33;
+  width: 20%;
+  margin-top: rems(20)
+}

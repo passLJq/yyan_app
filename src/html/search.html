@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <title>APP</title>
+    <link rel="stylesheet" type="text/css" href="./common/css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./common/css/iconfont.css" />
+    <style>
+body{
+  color: #508372;
+}
+.display-box{display:-webkit-box;display:-webkit-flex;display:flex}
+.box-orient-h{-webkit-box-orient:horizontal;-webkit-flex-flow:row;flex-flow:row}
+.box-orient-v{-webkit-box-orient:vertical;-webkit-flex-flow:column;flex-flow:column}
+.box-flex-1{-webkit-box-flex:1;-webkit-flex:1;flex:1}
+.header{height:45px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-flow:row;flex-flow:row;border-bottom:1px solid #BCB3AF;background-color:#fff}
+#main{background-color:#EEE}
+.search-box{-webkit-box-flex:1;display:-webkit-flex;display:flex;display:-webkit-box;-webkit-flex:1;flex:1;padding:7px 8px}
+.search-inner{width:100%;display:block;height:28px;line-height: 28px;background-color:#e8e8e8;border-radius:28px}
+.search-box input{color:#000;font-size:12px;padding-left: 15px;text-indent:4px;height:21px;line-height: 21px;margin-top: 5px;float:left;overflow:hidden;outline-style:none}
+.search-icon{width:29px;height:29px;background:url(./image/secard.png) 4px center no-repeat;background-size:15px 15px;float:right;margin-right:5px}
+.header-right{width:48px}
+.header-right span{height:45px;line-height:45px;color:#66524A}
+.tabBar-box{padding:20px 10px;background-color:#FFF; border-bottom: 1px solid #ccc; min-height: 150px;}
+.tabBar-inner, .tabBar-now{width:100%;margin-right:-10px;}
+.tabBar-inner .item, .tabBar-now .item{background-color:#EEE;color:#333;height:35px;line-height:35px;font-size:14px;padding:0 14px;margin-right:10px;margin-bottom:10px;float:left}
+.tabBar-inner .item.tap-active,.tabBar-inner .item:active,.tabBar-now .item.tap-active,.tabBar-now .item:active{background-color:#B8B8B8}
+.tabBar-btn{color:#2E6CED;text-align:center;}
+.left-icon { padding: 5px 0px 0px 10px; height: 45px; line-height: 45px; box-sizing: border-box; text-align: center; }
+.left-icon>img{ width:20px; height:20px; }
+.hide{display: none;}
+/*热搜列表*/
+.list_container > ul > li{border-bottom: 1px solid #ccc; padding: 10px; width: 100%; color: #666; box-sizing: border-box; overflow: hidden; white-space: nowrap; text-overflow:ellipsis; background-color: #fff;}
+.list_container > ul > li img{width: 18px; height: 18px; vertical-align: middle; padding-right: 5px; position: relative; top: -2px;}
+.fl{float: left;}
+.fr{float: right;}
+.clear:after{content: ""; display: block; clear: both;}
+.padding10{padding:10px;}
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div class="header" id="header" style="padding-top: 24px;background-color: #508372;display: flex;align-items: center;">
+          <!-- <div class="left-icon" onclick="backUrl()"> -->
+            <!-- <img src="./image/icon-back.png" alt=""> -->
+            <span onclick="javascript:api.closeWin();" class="iconfont icon-fanhui" style="font-size: 18px; color: #fff;padding: 15px 0 15px 10px"></span>
+          <!-- </div> -->
+            <div class="search-box">
+                <form action="#" id="form" name="form" onsubmit="SearchPro()" style="width:100%">
+                <div class="search-inner">
+                    <i class="search-icon">
+                    </i>
+                    <input type="search" placeholder="搜商品" id="searchkey"   oninput="hotSearch(this.value)" onporpertychange="hotSearch(this.value)" value="" autofocus="autofocus">
+                </div>
+                <form>
+            </div>
+            <div class="header-right" onclick="SearchPro()">
+                <span style="color: #fff;">搜索</span>
+            </div>
+        </div>
+        <div class="list_container hide" id="list_container">
+          <ul id="searchList">
+
+          </ul>
+        </div>
+        <div id="nowSearch">
+            <div class="tabBar-box display-box box-orient-v">
+              <div class="clear padding10"><span class="fl">最近搜索</span><span class="tabBar-btn fr" tapmode="tap-active" id="clear_cache" onclick="clearCache();">清除记录</span></div>
+              <div class="tabBar-now">
+
+              </div>
+            </div>
+        </div>
+        <div id="main">
+            <div class="tabBar-box display-box box-orient-v">
+                <div class="clear padding10"><span class="fl">热门搜索</span><span class="tabBar-btn fr hide" tapmode="tap-active" id="btn_change" onclick="changeMsg();">换一批</span></div>
+                <div class="tabBar-inner">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./common/js/api.js"></script>
+<script type="text/javascript" src="./common/js/config.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="./common/js/zepto.js"></script>
+<script src="./common/js/common.js"></script>
+<script type="text/javascript">
+    var page = 1;
+    var pageSize =10;
+    var maxCounts;
+    var storage = []
+    var changeSearch = function(arrList){
+        var arr = [];
+        var len = arrList.length >= 9? 9: arrList.length;
+        var str = '';
+        for (var i = 0; i < len; i++) {
+            arr.push(arrList.splice(Math.random()*arrList.length, 1));
+        }
+        for (var j = 0; j < len; j++) {
+            str += '<span class="item" tapmode="tap-active">'+ arr[j][0] +'</span>';
+        }
+        $api.html($api.dom('.tabBar-inner'),str);
+        $api.removeCls($api.byId("btn_change"), 'hide');
+        
+        if (window.api) {
+          api.parseTapmode()
+        }
+        BindKeywordEvent();
+    };
+    if (openapp) {
+      window.apiready = function () {
+        // $api.css($api.dom('.header'), 'padding-top: '+(+getname('safeAreaBottom')/2) + 'px')
+        $api.byId('header').style.paddintTop = getname('statustop') + 'px'
+        BindKeywordEvent();
+        getMsg(page)
+        nowSearchMsg(getStorage())
+      }
+    } else {
+      window.onload = function () {
+        // $api.css($api.dom('.header'), 'padding-top: '+(+getname('safeAreaBottom')/2) + 'px')
+        $api.byId('header').style.paddintTop = getname('statustop') + 'px'
+        BindKeywordEvent();
+        getMsg(page)
+        nowSearchMsg(getStorage())
+      }
+    }
+    function clearCache() {
+        $api.setStorage('inputHisroty', "");
+        $api.addCls($api.byId("nowSearch"), 'hide');
+    }
+    function nowSearchMsg(list) {
+      if(list.length > 0) {
+        $api.removeCls($api.byId("nowSearch"), 'hide');
+        list.reverse(compare('time'))
+        list = refull(list)
+        $api.setStorage('inputHisroty', list);
+        var html = ""
+        var len = list.length >= 10? 10: list.length
+        for(var i = 0; i < len; i++) {
+           html += '<span class="item" tapmode="tap-active">'+ list[i].msg +'</span>';
+        }
+        $api.html($api.dom(".tabBar-now"), html)
+      }else {
+        $api.addCls($api.byId("nowSearch"), 'hide');
+
+      }
+    }
+    function compare(property){
+      return function(a,b){
+          var value1 = a[property];
+          var value2 = b[property];
+          return value1 - value2;
+      }
+  }
+  function refull(arr){
+      var n = [];
+      var v = []
+      var new_list = []
+      for(var m = 0; m < arr.length; m++) {
+        v.push(arr[m].msg)
+      }
+      for(var i=0;i<v.length;i++){
+          if(n.indexOf(v[i]) == -1 ){
+              n.push(v[i]);
+              new_list.push(arr[i])
+          }
+      }
+      return new_list;
+  }
+  function isNull( str ){
+    if ( str == "" ) return true;
+    var regu = "^[ ]+$";
+    var re = new RegExp(regu);
+    return re.test(str);
+  }
+  function SearchPro(God){
+    var searchkey = $api.val($api.byId('searchkey'));
+    if(!isNull(searchkey)) {
+      setStorage(searchkey)
+    }
+    openWin({
+        name: 'productlist',
+        url: './productlist_top.html',
+        pageParam: {
+            act: 'search',
+            skey: searchkey,
+            companyid : pageParam('companyid'),
+            iscompany: God
+        }
+    });
+  }
+    function BindKeywordEvent(){
+      var keyworddoms = $api.domAll('.item');
+      for(var i =0; i<keyworddoms.length;i++){
+        $api.addEvt(keyworddoms[i],'click',function(){
+          var keyword =$api.html(this);
+          $api.val($api.byId('searchkey'),keyword);
+          SearchPro();
+        })
+      }
+    }
+
+    function getMsg(page_item, content) {
+      if(content) {
+        var values ={
+          currentPage: page_item,
+          pageSize: pageSize,
+          content: content
+        }
+      }else {
+        var values ={
+          currentPage: page_item,
+          pageSize: pageSize
+        }
+      }
+      console.log(values)
+      https({
+        url: siteUrl +'Main/Main/GetHotSearch',
+        // method: 'get',
+        data:values,
+        headers:1,
+        successBack: function(ret, err) {
+        if(ret) {
+          if(ret.success && ret.status == 1) {
+            var html = ""
+            if(ret.Data) {
+              if(content) {
+                $api.removeCls($api.byId("list_container"), "hide")
+                $api.addCls($api.byId("main"), "hide")
+                var cname = ret.Data.shopcontent
+                if(cname) {
+                  html += '<li id="company" data-name = "'+cname+'"><img src="./image/footer3.png" alt="">搜索"'+cname+'"店铺</li>'
+                }
+                for(var i = 0; i < ret.Data.prolist.length; i++) {
+                    html += '<li>'+ret.Data.prolist[i]+'</li>'
+                }
+                $api.html($api.byId("searchList"), html)
+              }else {
+                maxCounts = ret.current + 1
+                changeSearch(ret.Data.prolist)
+              }
+
+            }
+          }
+        }else {
+          promptMsg(err.msg)
+        }
+        }
+      })
+    }
+    function changeMsg() {
+      if(maxCounts > (pageSize * page)) {
+        page += 1
+      }else {
+        page = 1
+      }
+      getMsg(page)
+    }
+    function hotSearch(msg) {
+      if($api.trim(msg)) {
+        page = 1
+        getMsg(page, $api.trim(msg))
+      }
+      if(msg.length <= 0) {
+        $api.removeCls($api.byId("main"), "hide")
+        $api.addCls($api.byId("list_container"), "hide")
+      }
+    }
+    document.getElementById("searchList").addEventListener("click", function (e) {
+      if(e.target.nodeName == "LI" && e.target.id == "company") {
+        var txt = e.target.getAttribute("data-name")
+        $api.val($api.byId('searchkey'), $api.trim(txt));
+        SearchPro(1)
+      }else {
+        $api.val($api.byId('searchkey'), $api.trim(e.target.innerHTML));
+        SearchPro()
+      }
+
+    })
+</script>
+</html>

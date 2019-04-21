@@ -1,0 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: #f5f5f5;
+}
+.line {
+  width: 92%;
+  height: rems(2);
+  background-color: #f6f6fa;
+  margin: 0 auto;
+}
+/* 有消息时的小点 */
+.hasMess::after {
+  content: '';
+  width: rem(6);
+  height: rem(6);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 50%;
+  border:1px solid #2C5B33;
+}
+
+.headtap {
+  width: 100%;
+  opacity: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+}
+
+// 头部
+.header {
+  width: 100%;
+  height: rems(400);
+  // background-color: #427161;
+  background: url('../../img/memberBack.jpg') no-repeat;
+  background-size: cover;
+  box-sizing: content-box;
+  .icon {
+    width: 100%;
+    height: rem(46);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    a {
+      width: rem(24);
+      height: rem(24);
+      &:nth-child(1) {
+        background: url('../../img/setup.png') no-repeat;
+        background-position: center;
+        background-size: contain;
+        margin-left: rem(20);
+      }
+      &:nth-child(2) {
+        background: url('../../img/message_icon.png') no-repeat;
+        background-position: center;
+        background-size: contain;
+        margin-right: rem(20);
+        position: relative;
+        i {
+          width: rem(6);
+          height: rem(6);
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+  .msg {
+    width: 100%;
+    height: rem(64);
+    padding-left: rem(26);
+    display: flex;
+    margin-top: rem(5);
+    .imgbox {
+      width: rem(64);
+      height: rem(64);
+      display: flex;
+      border-radius: 50%;
+      justify-content: center;
+      align-items: center;
+      // border: 2px solid #F0B8A2;
+      img {
+        width: rem(64);
+        height: rem(64);
+        display: block;
+        border-radius: 50%;
+        border: rem(2) solid #fb9e85;
+      }
+    }
+    
+    .user {
+      height: 100%;
+      margin-left: rem(20);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      p {
+        color: #2c5b33;
+        font-size: rem(17);
+        &:nth-child(1) {
+          font-size: rem(17);
+          font-weight: 600;
+        }
+        &:nth-child(2) {
+          max-width: rem(100);
+          font-size: rem(10);
+          padding: rem(1) rem(9);
+          background-color: #fff;
+          // border: 1px solid #ffafa5;
+          border-radius: rem(10);
+          margin-bottom: rem(4);
+          text-align: center;
+          color: #215645;
+        }
+      }
+    }
+  }
+  .jif {
+    width: 100%;
+    height: rem(70);
+    margin-top: rem(10);
+    display: flex;
+    div {
+      width: 33.3333%;
+      height: 100%;
+      display: flex;
+      box-sizing: border-box;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: rem(9) 0 rem(10) 0;
+      p {
+        color: #502113;
+        &:nth-child(1){
+          font-size: rem(20);
+          font-weight: bold;
+        }
+        &:nth-child(2){
+          font-size: rem(12);
+        }
+      }
+    }
+  }
+
+  .item {
+    width: 100%;
+    padding: 0 rems(30);
+    margin-top: rems(10);
+    background-color: #fff;
+    .title {
+      width: 100%;
+      height: rems(96);
+      // background-color: #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        &:nth-child(1) {
+          font-size: rems(34);
+          color: #333;
+        }
+        &:nth-child(2) {
+          font-size: rems(24);
+          color: #676767;
+        }
+      }
+    }
+    .content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      .blo {
+        width: rems(138);
+        height: rems(160);
+        position: relative;
+        // background-color: #ccc;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: rems(72);
+          height: rems(72);
+        }
+        p {
+          font-size: rems(24);
+          color: #333;
+        }
+      }
+    }
+  }
+  .item + .item {
+    margin-top: rems(20);
+  }
+
+  .num {
+    font-size: rem(11);
+    padding: rem(6.5) rem(3.5);
+    line-height: 0;
+    color: #215645;
+    position: absolute;
+    top: 16%;
+    right: 20%;
+    border-radius: rems(14);
+    border: rem(1) solid #215645;
+    background-color: #fff;
+  }
+  

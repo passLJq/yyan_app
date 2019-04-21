@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" href="./common/css/api.css">
+      <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+      <style>
+      *{padding: 0;margin: 0}
+      body{
+      background-color: #fff
+      }
+      .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    background-color: rgb(216,216,216);
+    color: #fff;
+    width: 80%;
+    outline:none;
+}
+.bthbox{text-align: center;}
+section{width: 90%;margin: 0 auto;text-align: center;}
+section input{border-bottom: 1px solid RGBA(246, 246, 250, 1);width: 100%;margin: 30px 0;font-size: 14px;line-height: 30px;outline:none;}
+.hide{display: none;}
+.red{background-color: #F5AC9E;}
+      </style>
+  </head>
+  <body>
+    <!-- <div id="head"></div> -->
+<section>
+  <input type="text" name="" value="" placeholder="请填写你的攸店名称" id='shopname' class="hide" oninput="cheack()">
+</section>
+<section>
+  <input type="text" name="" value="" placeholder="请填写你的个性签名" id='notice' class="hide" oninput="cheack()" maxlength="13">
+</section>
+<section>
+  <input type="text" name="" value="" placeholder="请填写你的店铺分享语" id='sharelanguage' class="hide" oninput="cheack()">
+</section>
+<section>
+  <input type="text" name="" value="" placeholder="请填写你的商品分享语" id='prosharelanguage' class="hide" oninput="cheack()">
+</section>
+<section class="bthbox">
+  <button type="button" name="button" class="btn">保存</button>
+</section>
+  </body>
+  <script src="./common/js/api.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script src="./common/js/config.js"></script>
+  <script type="text/javascript">
+  var shopname =$api.byId('shopname')
+  var notice=$api.byId('notice')
+  var sharelanguage =$api.byId('sharelanguage')
+  var prosharelanguage=$api.byId('prosharelanguage')
+  if(openapp){
+    window.apiready=function(){
+      data()
+    }
+  }else{
+    window.onload=function(){
+      data()
+    }
+  }
+  function data(){
+    shopzl()
+        if(pageParam('index')==1){
+          $api.removeCls(shopname, 'hide');
+        }else if(pageParam('index')==2){
+          $api.removeCls(notice, 'hide');
+        }else if(pageParam('index')==3){
+          $api.removeCls(sharelanguage, 'hide');
+        }else if(pageParam('index')==4){
+          $api.removeCls(prosharelanguage, 'hide');
+        }  
+  }
+
+      //读取资料
+      function shopzl(){
+        https({
+            url: siteUrl +'Main/Member/GetUserShopJson',
+            method: 'get',
+            data:{
+                uid:getname()
+            },
+            headers:1,
+            successBack:function(ret){
+                if(ret.success){
+                  var data=ret.Data;
+                  $api.val(shopname , data.shopname);
+                  $api.val(notice, data.notice);
+                  $api.val(sharelanguage, data.sharelanguage);
+                  $api.val(prosharelanguage, data.prosharelanguage);
+                  yishopid=data.yshopid
+                  //进来判断按钮的状态
+                  cheack()
+                }else{
+                    promptMsg(ret.err);
+                }
+              }
+        });
+      }
+      //更新数据
+      function sub(){
+          https({
+              url: siteUrl +'Main/Member/ShopEdit?uid='+getname(),
+              method: 'post',
+              data: {
+                    uid:getname(),
+                    yshopid:yishopid,
+                    sharelanguage:$api.val(sharelanguage),
+                    prosharelanguage:$api.val(prosharelanguage),
+                    shopname:	$api.val(shopname),
+                    notice:$api.val(notice)
+              },
+              headers:1,
+              successBack:function(ret){
+                if(ret.status==1){
+                  promptMsg("保存成功")
+                  setTimeout(function () {
+                    api.closeWin()
+                  }, 1200)
+                }
+                else {
+                     promptMsg(ret.err);
+                }
+              }
+          });
+      }
+      //按钮检查
+      function cheack(){
+        var nowed
+        if(pageParam('index')==1){
+          nowed=shopname
+        }else if(pageParam('index')==2){
+            nowed=notice
+        }else if(pageParam('index')==3){
+            nowed=sharelanguage
+        }else if(pageParam('index')==4){
+            nowed=prosharelanguage
+        }
+        if($api.val(nowed).length>0){
+           $api.addCls($api.dom('.btn'),'red')
+          $api.dom('.btn').addEventListener('click', sub, false);
+        }else{
+          $api.removeCls($api.dom('.btn'),'red')
+          $api.dom('.btn').removeEventListener('click', sub, false);
+        }
+      }
+  </script>
+  </html>

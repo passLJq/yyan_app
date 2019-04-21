@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no" />
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <style>
+      body{
+        background-color:#f5f5f5;
+      }
+      .user_data{ 
+        border-bottom: 1px solid #ddd;
+        line-height: 50px;
+      }
+      label{    
+        position: absolute;
+        line-height: 57px;
+        left:10px;
+        font-size: 16px;
+        margin-left: 10px
+      }
+      em{
+        margin-right: 3px
+      }
+      input{  
+        border: 0;
+        padding-left: 110px;
+        width: 100%;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        height: 54px;
+        font-family: "微软雅黑";
+        outline: none;
+      }
+        .u_foot{
+          text-align: center;
+          margin-top: 60px
+        }
+
+        .btnn{
+          display: inline-block;
+          padding: 10px 12px;
+          margin-bottom: 0;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 1.42857143;
+          text-align: center;
+          white-space: nowrap;
+          vertical-align: middle;
+          -ms-touch-action: manipulation;
+          touch-action: manipulation;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          background-image: none;
+          border: 1px solid transparent;
+          border-radius: 32px;
+          color: #fff;
+          background-color: #F5AC9E;
+          border-color: #fff;
+          width: 225px;
+        }
+        .hide{display: none}
+        #noRec{width:100%}
+        /* #noRec{padding:80px 0} */
+        #noRec .square{width:180px;height:130px;margin:0 auto}
+        #noRec .ic_text{height:24px;line-height:38px;text-align:center;color:#999;font-size:15px}
+        .yaoq {
+          width: 100%;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 135px;
+        }
+        .numbox {
+          width: 16.666%;height: 100%;
+          box-sizing: border-box;
+          text-align: center;
+          line-height: 35px;
+          color: #9b9b9b;
+        }
+        .numbox + .numbox {
+          border-left: 1px solid #F29B76;
+        }
+      </style>
+  </head>
+  <body>
+    <div id="head"></div>
+    <!-- <div class="user_info">
+      <ul id='user_ul'>
+        <li class="user_data" id='inv_code'>
+          <label for=""><em style="color: red;">&nbsp</em>邀请码</label>
+          <input type="tel" placeholder="" id="yaoqingma" value="" maxlength="6">
+        </li>
+        <li class="user_data hide" id='inv_ren'>
+          <label for=""><em style="color: red;">&nbsp</em>邀请人</label>
+          <input type="text" placeholder="" id="yaoqingren" value="" disabled="disabled">
+        </li>
+      </ul>
+    </div> -->
+    <div class="hide" id="inv_ren" style="width: 100%;padding:12px 20px 12px;border-bottom: 1px solid #d8d8d8;box-sizing:border-box;">
+      <p style="color:#666464;font-size:14px;">邀请人<span id="yaoqingren" style="margin-left: 20px;color:#666464;font-size:14px;"></span></p>
+    </div>
+    <div class="hide" id="inv_time" style="width: 100%;padding:12px 20px 12px;border-bottom: 1px solid #d8d8d8;box-sizing:border-box;">
+      <p style="color:#666464;font-size:14px;">时间　<span id="yaoqingshijian" style="margin-left: 20px;color:#666464;font-size:14px;">2018.0.0</span></p>
+    </div>
+    <div class="yaoq">
+      <div class="hide" id="inv_code">
+        <p style="color: #2C5B33;font-size: 17px;margin-bottom: 33px;text-align: center;">邀请码</p>
+        <label for="input" style="left:0;margin-left:0;width: 300px;height:45px;padding: 4px 0;box-sizing: border-box;border-radius: 4px;border:1px solid rgba(230, 152, 136, 1);background-color: #fff;display: flex;position: relative;">
+          <input id="input" oninput="inputnum()" style="padding: 0;color:transparent;position: absolute;left: -9999px;" maxlength="6" class="numbox" type="tel" value="">
+          <div style="border: none;" class="numbox"></div>
+          <div class="numbox"></div>
+          <div class="numbox"></div>
+          <div class="numbox"></div>
+          <div class="numbox"></div>
+          <div class="numbox"></div>
+        </label>
+      </div>
+      <!-- <div class="hide" id="inv_ren">
+          <p style="color: #2C5B33;font-size: 17px;text-align: center;margin-bottom: 33px;">邀请人</p>
+          <p style="color: #2C5B33;font-size: 17px;text-align: center;" id="yaoqingren"></p>
+        </div> -->
+    </div>
+    <div class="u_foot hide" id="full">
+      <a class="btnn" onclick="a()">确定</a>
+    </div>
+
+    <div class="noRec hide" id="noRec">
+    <div class="square">
+      <img src="./image/nodata.png" alt="" width="100%">
+    </div>
+    <div class="ic_text">您已经是店主了~</div>
+
+    </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script type="text/javascript">
+      if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+        headTitle($api.byId('head'),'填写邀请码')
+        databind()
+      }
+
+      function databind(){
+        var fxshopid = getname('SessionShopID')
+        https({
+            url: siteUrl +'Main/Member/GetInvitationCode',
+            method: 'get',
+            data:{
+              uid: getname()
+            },
+          headers:1,
+          successBack: function(ret, err){
+            console.log(JSON.stringify(ret))
+            if (ret) {
+              if(ret.success){
+                if(ret.status==1&&ret.reobj!=null){
+                  console.log(1)
+                  var data=ret.reobj;
+                  $api.addCls($api.byId('full'), 'hide');
+                  $api.addCls($api.byId('inv_code'), 'hide');
+                  $api.removeCls($api.byId('inv_ren'), 'hide');
+                  $api.html($api.byId('yaoqingren'),data.referee+'（'+data.code+'）')
+                  if (data.time && data.time != null) {
+                    $api.removeCls($api.byId('inv_time'), 'hide');
+                    $api.html($api.byId('yaoqingshijian'),data.time)
+                  }
+                }else{
+                    $api.addCls($api.byId('inv_ren'), 'hide');
+                    $api.addCls($api.byId('inv_time'), 'hide');
+                    $api.removeCls($api.byId('inv_code'), 'hide');
+                    $api.removeCls($api.byId('full'), 'hide');
+                    if(fxshopid!=""){
+                      $api.addCls($api.byId('inv_code'), 'hide');
+                      $api.addCls($api.byId('full'), 'hide');
+                      $api.removeCls($api.byId('noRec'), 'hide');
+                    }
+                }
+              }else{
+                promptMsg(ret.err)
+              }
+            } else {
+              promptMsg(err.msg);
+            }
+          }
+        });
+      }
+
+function a(){
+  var yaoqingma=$api.val($api.byId('input')).substring(0, 6)
+  if(yaoqingma==''){
+    promptMsg('邀请码不能为空')
+    return
+  }
+  https({
+      url: siteUrl +'Main/Member/GetCodeUser?uid='+ getname(),
+      method: 'get',
+      data: {
+        code: yaoqingma
+      },
+      headers:1,
+      successBack: function(ret, err){
+      if (ret) {
+        if(ret.status==1){
+          check(ret.reobj.referee,yaoqingma)
+        }else{
+          promptMsg(ret.err)
+        }
+      } else {
+          alert( JSON.stringify( err.msg ) );
+      }
+  }
+  });
+}
+
+function inputnum() {
+  var number = $api.val($api.byId('input')).substring(0, 6)
+  var boxArr = document.querySelectorAll('.numbox')
+  for(var i=1; i < boxArr.length;i++) {
+    var num = number.split('')
+    var n = num[i - 1] ? num[i - 1] : ''
+    boxArr[i].innerHTML = n
+  }
+}
+function check(name,code){
+  var dialogBox = api.require('dialogBox');
+    dialogBox.alert({
+        texts: {
+            title: '确认',
+            content: '邀请人:'+name+'',
+            leftBtnTitle: '取消',
+            rightBtnTitle: '确认'
+        },
+        styles: {
+            bg: '#fff',
+            w: 255,
+            corner: 4,
+            title: {
+                marginT: 20,
+                titleSize: 17,
+                titleColor: '#666464'
+            },
+            content: {
+                color: '#666464',
+                size: 15,
+                titleColor: '#666464',
+                marginB: 30
+            },
+            left: {
+                marginB: 15,
+                marginL: 12,
+                w: 113,
+                h: 38,
+                corner: 2,
+                color: '#666464',
+                bg: '#F2F2F2',
+                size: 12
+            },
+            right: {
+                marginB: 15,
+                marginL: 5,
+                w: 113,
+                h: 38,
+                corner: 2,
+                color: '#fff',
+                bg: '#F5AC9E',
+                size: 12
+            }
+        }
+    }, function(ret) {
+        if (ret.eventType == 'left') {
+            var dialogBox = api.require('dialogBox')
+            dialogBox.close({
+                dialogName: 'alert'
+            });
+        }
+        if (ret.eventType == 'right') {
+            var dialogBox = api.require('dialogBox')
+            dialogBox.close({
+                dialogName: 'alert'
+            });
+            save(code)
+        }
+    });
+}
+
+function save(code){
+      https({
+          url: siteUrl +'Main/Member/SaveInvitationCode?uid='+ getname(),
+          method: 'post',
+          data: {
+            code: code,
+            uid:getname()
+          },
+          headers:1,
+          successBack: function(ret, err){
+            console.log(JSON.stringify(ret))
+          if (ret) {
+            if(ret.success){
+              if(ret.status==1){
+                databind()
+              }else {
+                alert(ret.err)
+              }
+            }else{
+              alert(ret.err)
+            }
+          } else {
+              alert($api.strToJson(err.msg).Message)
+          }
+      }
+      });
+
+}
+  </script>
+  </html>

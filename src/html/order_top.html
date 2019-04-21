@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="./common/css/api.css">
+    <style>
+        body {
+            background: #FFFFFF;
+            font-size: 13px;
+        }
+        header{
+          width:30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="head">
+    </div>
+</body>
+  <script src="./common/js/api.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script>
+        var statustop=$api.getStorage('statustop');
+  apiready = function(){
+    InitTop();
+    InitGroup();
+    if(api.pageParam.isgroupby==true){
+        headTitle($api.byId('head'),'我的拼单')
+    }else{
+    headTitle($api.byId('head'),'我的订单')
+  }
+  }
+
+
+  function InitTop(){
+    var NVNavigationBar = api.require('NVNavigationBar');
+    var width = api.frameWidth/5;
+    // NVNavigationBar.open({
+    //   rect: {
+    //          x: 0,
+    //          y: 50,
+    //          w: api.frameWidth,
+    //          h: 35
+    //     },
+    //     styles: {
+    //            orientation: 'horizontal',
+    //            font: {
+    //              size: 14,
+    //              sizeSelected: 14,
+    //              color: '#333',
+    //              colorSelected: '#f00',
+    //              alpha : 1
+    //            },
+    //            itemSize: {
+    //                w: width,
+    //                h: 50
+    //            }
+    //      },
+    //     items: [
+    //       {
+    //         title:'全部',
+    //      bgSelected :  'widget://image/under_line.png'
+    //       },
+    //       {
+    //         title:'待付款',
+    //         bg:'#fff',
+    //      bgSelected :  'widget://image/under_line.png'
+    //       },
+    //       {
+    //         title:'待发货',
+    //         bg:'#fff',
+    //      bgSelected :  'widget://image/under_line.png'
+    //       },
+    //       {
+    //         title:'待收货',
+    //         bg:'#fff',
+    //      bgSelected :  'widget://image/under_line.png'
+    //       },
+    //       {
+    //         title:'已完成',
+    //         bg:'#fff',
+    //      bgSelected :  'widget://image/under_line.png'
+    //       }
+    //     ],
+    //     selectedIndex: api.pageParam.selectindex,
+    //     id: 'ordertop'
+    //   }, function(ret, err) {
+    //      if(ret.eventType == 'click'){
+    //        api.setFrameGroupIndex({
+    //           name: 'ordergroup',
+    //           index: ret.index
+    //         });
+    //      }
+    //   });
+
+      var navigationBar = api.require('navigationBar');
+      navigationBar.open({
+          y: 46+Number(statustop),
+          w: api.frameWidth,
+          h: 48,
+          itemSize: {
+              w: api.frameWidth/5
+          },
+          selectedLine : {
+          		color : '#F00', // 字符串；下划线的颜色
+          		width :2, // 数字；下划线的宽
+              marginLR :13,
+          	},
+          selectedIndex: api.pageParam.selectindex,
+          items: [{
+              title: '全部',
+              bg: '#f8f8f8',
+              color: '#FFFFFF',
+              colorSelected: '#ff0000',
+              bgSelected: '#f8f8f8',
+              bgSelected :  'widget://image/under_line.png'
+          }, {
+              title: '待付款',
+              bg: '#f8f8f8',
+              color: '#FFFFFF',
+              colorSelected: '#ff0000',
+              bgSelected: '#f8f8f8',
+                bgSelected :  'widget://image/under_line.png'
+          }, {
+              title: '待发货',
+              bg: '#f8f8f8',
+              color: '#FFFFFF',
+              colorSelected: '#ff0000',
+              bgSelected: '#f8f8f8'
+          }, {
+              title: '待收货',
+              bg: '#f8f8f8',
+              bgSelected: '#f8f8f8',
+              color: '#FFFFFF',
+              colorSelected: '#ff0000'
+          }, {
+              title: '已完成',
+              bg: '#f8f8f8',
+              bgSelected: '#f8f8f8',
+              color: '#FFFFFF',
+              colorSelected: '#ff0000'
+          }],
+          font: {
+               size:14,
+               sizeSelected:14,
+              color: '#333',
+               colorSelected: '#ff0000'
+          },
+          fixedOn: api.frameName,
+          showScrollIndicator:false,
+          id: 'ordertop'
+      }, function(ret, err) {
+
+        if(ret.eventType == 'click'){
+          api.setFrameGroupIndex({
+             name: 'ordergroup',
+             index: ret.index
+           });
+        }
+
+      });
+   };
+
+
+
+
+
+
+  function InitGroup(){
+    api.openFrameGroup({
+      name: 'ordergroup',
+      rect: {
+        marginLeft:0,    //相对父window左外边距的距离
+        marginTop:94+Number(statustop),    //相对父window上外边距的距离
+        marginBottom:0,    //相对父window下外边距的距离
+        marginRight:0    //相对父window右外边距的距离
+      },
+      preload:0,
+      index : api.pageParam.selectindex,
+      frames: [{
+          name: 'allorder',
+          url: 'order.html',
+          bgColor: '#fff',
+          pageParam :{orderstatus:'all',isgroupby:api.pageParam.isgroupby}
+      }, {
+          name: 'paymentorder',
+          url: 'order.html',
+          bgColor: '#fff',
+          pageParam :{orderstatus:'payment',isgroupby:api.pageParam.isgroupby}
+      }, {
+          name: 'pendingorder',
+          url: 'order.html',
+          bgColor: '#fff',
+          pageParam :{orderstatus:'pending',isgroupby:api.pageParam.isgroupby}
+      }, {
+          name: 'receiptorder',
+          url: 'order.html',
+          bgColor: '#fff',
+          pageParam :{orderstatus:'receipt',isgroupby:api.pageParam.isgroupby}
+      }, {
+          name: 'completionorder',
+          url: 'order.html',
+          bgColor: '#fff',
+          pageParam :{orderstatus:'completion',isgroupby:api.pageParam.isgroupby}
+      }]
+    }, function(ret, err) {
+        var index = ret.index;
+        var navigationBar = api.require('navigationBar');
+        // navigationBar.setSelected({
+        //     id: 'ordertop',
+        //     index: index,
+        //     selected: true
+        // });
+        navigationBar.config({
+          key: 'selectedIndex',
+          value:index
+        }, function(ret, err) {
+          if (ret) {
+
+          } else {
+              alert(JSON.stringify(err));
+          }
+      });
+    });
+  }
+
+function headTitle(el,title, isShare, shareCallBack){
+  var statustop=$api.getStorage('statustop');
+var hee=45+Number(statustop)+'px'
+  var shtml=''
+  var newWidth = window.innerWidth - 140
+  if(isShare) {
+    if(shareCallBack) {
+      shtml += '<div class="ym_head" style="padding-top:'+statustop+'px'+';height:'+hee+'px'+';-moz-box-shadow:0px 0px 14px #f5f4f4; -webkit-box-shadow:0px 0px 14px #f5f4f4; box-shadow:0px 0px 14px #f5f4f4; border: 0;"><div class="ym_head_back" onclick="backUrl()"><img src="'+api.wgtRootDir+'/img/icon-back.png" style="vertical-align: top;"></div><div class="ym_head_title"><p style="width:'+newWidth+'px;margin: 0 auto;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">'+title+'</p></div><div class="yu_head_share" onclick="'+shareCallBack+'()"><img src="'+api.wgtRootDir+'/image/share_black.png" style="vertical-align: top;"></div></div>';
+    }else {
+      shtml += '<div class="ym_head" style="padding-top:'+statustop+'px'+';height:'+hee+'px'+';-moz-box-shadow:0px 0px 14px #f5f4f4; -webkit-box-shadow:0px 0px 14px #f5f4f4; box-shadow:0px 0px 14px #f5f4f4; border: 0;"><div class="ym_head_back" onclick="backUrl()"><img src="'+api.wgtRootDir+'/img/icon-back.png" style="vertical-align: top;"></div><div class="ym_head_title"><p style="width:'+newWidth+'px;margin: 0 auto;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">'+title+'</p></div><div class="yu_head_share"><img src="'+api.wgtRootDir+'/image/share_black.png" style="vertical-align: top;"></div></div>';
+    }
+  }else {
+    shtml += '<div class="ym_head" style="padding-top:'+statustop+'px'+';height:'+hee+'px'+';-moz-box-shadow:0px 0px 14px #f5f4f4; -webkit-box-shadow:0px 0px 14px #f5f4f4; box-shadow:0px 0px 14px #f5f4f4; border: 0;"><div class="ym_head_back" onclick="backUrl()"><img src="'+api.wgtRootDir+'/img/icon-back.png" style="vertical-align: top;"></div><div class="ym_head_title"><p style="width:'+newWidth+'px;margin: 0 auto;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">'+title+'</p></div></div>';
+  }
+  $api.html(el,shtml);
+}
+  </script>
+
+
+
+</html>

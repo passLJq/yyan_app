@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no" />
+      <title>title</title>
+      <link rel="stylesheet" href="./common/css/api.css">
+      <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+      <style>
+       body{background:#f5f5f5}
+      .salerContainer{position:relative;display:block;width:100%}
+      .salerContainer .logoBox{position:relative;width:100%;max-height:360px;overflow:hidden}
+      .salerContainer .logoBox #fxshop_banner{display:block;width:100%}
+      .shopLogoContainer{position:absolute;left:10px;bottom:18px;z-index:10;width:50px;height:50px;border-radius: 5px}
+      .shopLogoContainer img{width:50px;height:50px;border-radius: 5px}
+      .logoBox .infoBox{position:absolute;bottom:21px;left:72px;z-index:2;color:#fff}
+      .logoBox .infoBox h3{font-size:16px}
+      .salerInfoContainer{position:relative;display:block;width:100%;height:56px;border-bottom:1px solid #ddd;background-color:#fff}
+      .salerInfoContainer .operationBox{width:100%}
+      .salerInfoContainer .operationBox ul{display:block;width:100%;overflow:hidden}
+      .salerInfoContainer .operationBox li{display:block;float:left;width:25%;box-sizing:border-box;border-right:1px solid #ddd;margin-top:5px;color:#505050}
+      .salerInfoContainer .operationBox li a{display:block;color:#505050}
+      .salerInfoContainer .operationBox li span.icon{font-size:18px;height:24px;line-height:24px;padding-top:2px}
+      .salerInfoContainer .operationBox li span{display:block;width:100%;text-align:center;font-size:13px;color: #333;}
+
+      .contenter{width:100%}
+      .section_title{width:100%;line-height:0}
+      .section_title img{width:100%}
+      .mall-item:nth-child(odd){padding:0px 2px 10px 0}
+      .mall-item:nth-child(2n){padding:0px 0 10px 2px}
+      .mall-item{position:relative;padding:0 3px 3px 8px;box-sizing:border-box;width:50%;list-style-type:none;text-align:left;float:left;line-height:0;}
+      .mall-item a{width:100%;}
+      .mall-item_content{background-color:#fff;position:relative}
+      .mall-item .cover{position:relative}
+      .mall-item .cover img{position:absolute;top:0;bottom:0;left:0;right:0;max-width:100%;max-height:100%;width:100%;height:100%;margin:auto;-webkit-animation:fadeIn .4s ease-in-out;animation:fadeIn .4s ease-in-out}
+      .mall-item .cover:after{content:" ";display:block;padding-top:100%}
+      .mall-item .title{height:41px;padding:5px 10px 0;line-height:1.3;color:#666464;font-weight: 500;font-size:14px;position:absolute;box-sizing:border-box;display:-webkit-box;overflow:hidden;text-overflow:ellipsis;white-space:normal;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
+      .mall-item .info{position:relative;bottom:-30px;margin:41px 10px 0;height:29px;line-height:29px;font-size:12px;padding-top:5px;}
+      .mall-item .info .price{font-size:15px;line-height:1;color:#E69888;display:inline-block;vertical-align:bottom;margin:0 0 -2px;width: 100%;}
+      .mall-item .info .already-num{font-size:12px;color:#999;vertical-align:bottom;position:absolute;bottom:20px;right:0;line-height:1}
+      .mall-item_style{margin-bottom:0}
+      .s_yen{font-size:15px;padding-right:2px}
+      #adimg{width:100%;display: block}
+      /*底部样式  start*/
+      .wgy-tabbar.wy-foot-menu { position: fixed;}
+      .wgy-tabbar {display: -webkit-box;display: -webkit-flex;display: flex;position: absolute;z-index: 500;bottom: 0;width: 100%; background-color: #f7f7fa;}
+      .wgy-tabbar:before {content: " ";position: absolute;left: 0;top: 0;right: 0;height: 1px;border-top: 1px solid #c0bfc4;color: #c0bfc4;-webkit-transform-origin: 0 0;transform-origin: 0 0;-webkit-transform: scaleY(.5);transform: scaleY(.5);}
+      .promotion-foot-menu-items {display: block;-webkit-box-flex: 1;-webkit-flex: 1;flex: 1;padding: 5px 0 0;  font-size: 0;color: #666;  text-align: center;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+      a {text-decoration: none;-webkit-tap-highlight-color: rgba(0,0,0,0);}
+      .promotion-foot-menu-dianzan {background: url(../image/yidian-2.png) no-repeat;background-size: 20px;}
+      .promotion-foot-menu-collection {background: url(../image/yidiancenter-1.png) no-repeat; background-size: 20px;}
+      .promotion-foot-menu-shops {background: url(../image/tuiguang-1.png) no-repeat;background-size: 20px;}
+      .promotion-foot-menu-cart {background: url(../image/bottombtn0401.png) no-repeat;background-size: 20px;}
+      .wgy-tabbar__icon {width: 20px;height: 20px;display: inline-block;}
+      .wgy-tabbar__label {color: #ff5543;}
+      .wgy-tabbar__label {text-align: center;font-size: 10px;line-height: 1.8;    font-size: 13px !important;}
+      .yellow-color { background-color: #ffb03f;}
+      .red-color {background-color: #e21323;}
+      .wgy-tabbar__item {position: relative;}
+      .wgy-tabbar__item {display: block;-webkit-box-flex:1;-webkit-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;padding: 5px 0 0;font-size: 0;color: #999;text-align: center;-webkit-tap-highlight-color: rgba(0,0,0,0);}
+      .promotion-foot-menu-label {line-height: 40px;font-size: 15px;color: #fff;}
+      .wgy-badge {display: inline-block;padding: .1em .3em;min-width: 8px;border-radius: 18px;background-color: #f43530;color: #fff; line-height: 1;text-align: center;font-size: 12px;vertical-align: middle;}
+
+      .hide{display: none;}
+      .text-container{
+        position:relative;
+        top:-40px;
+      }
+      .title_bkg {
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+      font-size: 14px;
+      position: absolute;
+      box-sizing: border-box;
+      display: -webkit-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
+      bottom: 0;
+      background: rgba(168,168,168,.8);
+      width: 100%;
+      display: none;
+  }
+    .title_bkg_fl {
+      position: absolute;
+      left: 10px;
+  }
+  .title_bkg_fr {
+      position: absolute;
+      right: 10px;
+  }
+  .ltri {
+    position:absolute;
+    right:20px;
+    bottom:10px;
+    padding-top: 8px;
+    padding-left:5px;
+  }
+  .price_fr_img {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+  }
+      #noRec{width:100%;padding:80px 0;background: #f5f5f5;}
+      #noRec .square{width:180px;height:130px;margin:0 auto}
+      #noRec .ic_text{height:24px;line-height:38px;text-align:center;color:#999;font-size:15px}
+      /*切换图片样式*/
+      .img-container{
+        text-align: center;
+      }
+      .img-container img{
+        width:20px;
+        height:20px;
+        margin-bottom:-5px;
+      }
+      .heng li.mall-item{
+        width: 100%;
+        vertical-align: middle;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        margin-top:10px;
+        overflow: hidden;
+      }
+      .heng li.mall-item .img-url{
+        text-align: center;
+        float: left;
+        width: 115px;
+        height: 115px;
+      }
+      .heng li.mall-item .img-url img{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 115px;
+        width: 115px;
+        margin: auto;
+        -webkit-animation: fadeIn .4s ease-in-out;
+        animation: fadeIn .4s ease-in-out;
+      }
+      .heng li.mall-item .text-container{
+        width:100%;
+        position:relative;
+      }
+      .heng li.mall-item .text-container .title{
+        position:absolute;
+        left:130px;
+        color: #666464;
+        top:50px;
+        font-weight: 500;
+        font-size: 15px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+      .heng li.mall-item .text-container .info{
+        position:relative;
+        bottom:-54px;
+        font-size: 17px;
+        line-height: 1;
+        padding-top:10px;
+        display: inline-block;
+        vertical-align: bottom;
+        padding-left: 10px;
+        color: #f44;
+        width: 57%;
+      }
+    .heng li.mall-item .earn_hd {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding: 7px;
+        border-top: 1px solid #EFEFEF;
+        font-size: 14px
+    }
+    .heng li.mall-item .earn_hd span {
+        color: #989898;
+        line-height: 30px;
+    }
+    .heng li.mall-item .price_fr_img {
+        width: 23px;
+        height: 23px;
+        margin-top:-4px;
+    }
+
+
+    .canshow{
+      display: none!important;
+    }
+    .show-item{
+      display: block!important;
+    }
+    /*头部搜索框样式*/
+    .wgy_search{position: fixed;width: 100%; height: 45px;top: 0;z-index: 1000;min-width: 300px; max-width: 640px;  margin: 0 auto;opacity:.7;display: flex;align-items: center;}
+    .wgy_message_span{display:block;font-size: 13px;line-height: 1.2;  color:#fff;}
+    .wgy_message{ position: absolute;right: 0;top: 5px;width: 60px;text-align: center;font-size: 15px; color: #fff;}
+    .wgy_goods_search {padding: 7px 60px;display: -webkit-box; display: -webkit-flex;display: flex; box-sizing: border-box;width: 100% }
+    .wgy_goods_search form {width: 100%;height: 30px;position: relative;}
+    .wgy_goods_search .wgy_icon_search {width: 20px;height: 20px;display: block;position: absolute;top: 5px;left: 10px;background: url(./image/search.png) no-repeat 0 0; background-size: cover;}
+    .wgy_goods_search .wgy_input_search {width: 100%; height: 30px;border-radius: 15px;padding-left: 40px;background: #fff;font-size: 13px;}
+    .wgy_input_search:focus {outline:none}
+    .left-icon{
+      position:absolute;
+      height:45px;
+      width:45px;
+      box-sizing: border-box;
+      text-align: center;
+      border-radius:50%;
+    }
+    .left-icon>img{
+      width:20px;
+      height:20px;
+      position:absolute;
+      top:50%;
+      left:50%;
+      background-color: rgba(0,0,0,0.5);
+      padding: 5px 5px;
+      border-radius: 50%;
+      -webkit-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+    }
+    .left-icon>i{
+      width:20px;
+      height:20px;
+      position:absolute;
+      top:50%;
+      left:50%;
+      background-color: rgba(0,0,0,0.5);
+      padding: 5px 5px;
+      /* padding-top: 6px; */
+      border-radius: 50%;
+      -webkit-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+      
+    }
+    .pull-left{
+      left:10px;
+    }
+    .pull-right{
+      right:10px;
+    }
+    .goods_search {
+    padding: 6px 5px 6px 5px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    box-sizing: border-box;
+    color: #000;
+    font-size: 16px;
+    background-color: #fff;
+}
+#msg_container{width:70%;overflow:hidden;white-space:nowrap;margin-right:10px;}
+@media screen and (max-width: 355px) {
+  .new_p{font-size: 11px}
+}
+.newheng{width:100%;height:30px;display:flex;align-items:center;font-size:13px;border-top: 1px solid #f2f2f2;color: #656768;justify-content:space-between;padding: 5px 0}
+/*列表样式*/
+.xian_item{display: flex;align-items: center;justify-content: center;}
+.hrs{border:1px solid #dcdcdc; width: 5%}
+.baobox{width: 160px;font-size: 15px;}
+.baobox_img{width: 160px;height: 160px;border-radius: 5px 5px 0 0}
+.baobox_item{display: flex;align-items: center;justify-content: space-between;font-size: 13px;height: 30px}
+.bao_pic_title{overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;font-size: 14px;height: 46px;}
+.b_pic{color: #f72133;}
+.b_jifen{color: #999999;}
+.b_zuan{color: #999999;border-top: 1px solid #f7f8fc;font-size: 14px;}
+.ime_box{padding: 0 5px}
+.bao_swiper-container{width:100%;max-width:640px;overflow:hidden;margin:0 auto;background: #fff;border-top:1px solid #f7f8fc; padding: 10px 0; }
+.lou_swiper-containers{width:100%;max-width:640px;overflow:hidden;margin:5px auto;background: #fff;}
+.img_dapais{width:100%;max-width:640px;overflow:hidden;margin:0 auto;background: #fff;}
+.two_img_dapais{width:100%;max-width:640px;overflow:hidden;margin:0 auto;}
+.bord{border: 1px solid #f7f8fc;border-radius: 5px;overflow: hidden;}
+.zuan_b{overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;}
+.img_dapai{display: flex;align-items: center;flex-wrap: wrap;background-color: #fff}
+.img_dapai img{width: 25%;display: block;padding: 5px 5px;box-sizing: border-box;}
+.guangkao{width: 92%;margin: 0 auto;text-align: center;}
+.quan_img{background-color: #fff}
+.guess_list{display: flex;align-items: center;flex-wrap: wrap;padding-top: 10px}
+.guess_pic{width: 50%;box-sizing: border-box;padding: 0 10px;margin-bottom: 10px}
+.guess_pic_box{border:1px solid #f7f8fc;border-radius:5px;overflow: hidden;background-color: #fff}
+.gues_baobox_img{height:160px;max-width: 100%;}
+.guess_pic:nth-child(odd){padding: 0 5px 0 10px;}
+.guess_pic:nth-child(even){padding: 0 10px 0 5px;}
+.orldes{display: flex;align-items: center;justify-content: center;border: 0px;height: 200px}
+.backg{background-color: rgba(0,0,0,0.5);padding: 5px 5px;border-radius: 50%;}
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1528945846527'); /* IE9*/
+  src: url('iconfont.eot?t=1528945846527#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAWIAAsAAAAAB+wAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFZW7kftY21hcAAAAYAAAABcAAABhplEBr5nbHlmAAAB3AAAAboAAAHU3gqoOmhlYWQAAAOYAAAALwAAADYRrz9paGhlYQAAA8gAAAAcAAAAJAfeA4RobXR4AAAD5AAAAAwAAAAMC+kAAGxvY2EAAAPwAAAACAAAAAgAdgDqbWF4cAAAA/gAAAAfAAAAIAETAF1uYW1lAAAEGAAAAUUAAAJtPlT+fXBvc3QAAAVgAAAAJQAAADbQ2lbteJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2Bk/sE4gYGVgYOpk+kMAwNDP4RmfM1gxMjBwMDEwMrMgBUEpLmmMDgwVDxjZm7438AQw9zA0AAUZgTJAQAjlQxveJzFkMENgDAMAy9N6QMxCA8G4sUcnbhrFBPKgwlqybHiWEoUYAFcPMQMdmE8OOVa+M4afo5MkRqJ2rx39Z8qolkJTSqFabB5q//You6j01eogzqx+UvSDVSHC5t4nBXPv2vUYBwG8O/3zeVNcs2vN7+T6/1I0surXD00zSWl4l0rKlYcCgdtHbsKFZw6KFiHEwcHJ0dBEfwD3Er/AHFWJxfRwdlVLhofHni2Bz4gAvz9LpwLAdhwAa7ADdgDQDrCRCddjHkxJiN0Y9H1HV3gKY+lNBkL19BPqOPlZZH5VKIG6tjDjTgv+ZhwnBRTchVzr4sYdqK5NVy1hJfYDnhvUd8hb9Htp6vG9FK9uz5z8oEtn6iWFVrWC5mKokxIy9Dx2PcUUWnT+p1oRO55/yLpoxry6O49bdCxjp4XD7pDX0E8PUW7M9Dfz1jEmj6OPNsKJVOTg0hL1xw8+bkS2Go3+wFNaGN92gLhCQwghptwC27DLkB1WXJ7mJcztNY2pP+sGZaTgg8zHb0+tog/LLKESsyhaZxkE1aUja6hjxq2xHrox1OsGLqT30hMzyTkCJ8t3igsUL7KWv1nxdNp+0N9vxYFzQxNrPiy5FXFz1TG1LOdfcT9HfKp2eXhQ4Gquq5qOP/2SvEt+aOiGu3XVHQ96fh6vT7/rJmmVn/JNjcz8ohXrHk72F4utg+wWRzhr60tgH87zFCRAAB4nGNgZGBgAOLP+bN/xfPbfGXgZmEAgevuf7ch6P+NLAzM9UAuBwMTSBQAbpEMWgB4nGNgZGBgbvjfwBDDwgACQJKRARUwAwBHCQJsBAAAAAPpAAAEAAAAAAAAAAB2AOp4nGNgZGBgYGYIZGBjAAEmIOYCQgaG/2A+AwARDgFxAHicZY9NTsMwEIVf+gekEqqoYIfkBWIBKP0Rq25YVGr3XXTfpk6bKokjx63UA3AejsAJOALcgDvwSCebNpbH37x5Y08A3OAHHo7fLfeRPVwyO3INF7gXrlN/EG6QX4SbaONVuEX9TdjHM6bCbXRheYPXuGL2hHdhDx18CNdwjU/hOvUv4Qb5W7iJO/wKt9Dx6sI+5l5XuI1HL/bHVi+cXqnlQcWhySKTOb+CmV7vkoWt0uqca1vEJlODoF9JU51pW91T7NdD5yIVWZOqCas6SYzKrdnq0AUb5/JRrxeJHoQm5Vhj/rbGAo5xBYUlDowxQhhkiMro6DtVZvSvsUPCXntWPc3ndFsU1P9zhQEC9M9cU7qy0nk6T4E9XxtSdXQrbsuelDSRXs1JErJCXta2VELqATZlV44RelzRiT8oZ0j/AAlabsgAAAB4nGNgYoAALgbsgJmRiZGZkYWBsYIjLTWvIjMxL52BAQAe+gPtAAAA') format('woff'),
+  url('iconfont.ttf?t=1528945846527') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1528945846527#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fenxiang:before { content: "\e603";margin-bottom: 5px;}
+/*商品搜索*/
+.item{display: flex;align-items: center;font-size: 15px;padding: 10px 0;background-color: #fff;margin: 0 0 5px 0}
+.itemlist{display: flex;align-items: center;justify-content: center;width: 22%;}
+.itemlist img{width: 15px;height: 15px;padding-left:2px}
+.active{color: #fa2b3f}
+.newhengs{display: block;align-items: center;display: flex;justify-content: space-between;padding: 10px 0 20px 0;  color: #656768;margin-top: 5px}
+.newhengs img{width: 15px;height: 15px;}
+.section_goods_list{
+  background: #f5f5f5;
+  padding: 0 10px;
+}
+      </style>
+  </head>
+  <body>
+    <header class="wgy_search" id="wgy_search">
+        <div class="left-icon pull-left" onclick="backUrl()">
+          <img class="show_one" src="./image/icon-back-white.png" alt="">
+          <img class="show_two hide" src="./image/icon-back.png"  alt="">
+        </div>
+        <!-- <div class="wgy_goods_search">
+          <form action="#" onsubmit="return false">
+            <span class="wgy_icon_search"></span>
+            <input type="search" class="wgy_input_search" id="keyword" placeholder="搜索商品" onkeyup="yShopSearch(event)"/>
+          </form>
+        </div> -->
+        <div class="left-icon pull-right staa" id="share" onclick="share()" style="display: none">
+          <i class="iconfont icon-fenxiang show_one" style="color:#fff"></i>
+          <i class="iconfont icon-fenxiang share_two hide" style="color:#000"></i>
+          <!-- <img class="show_one" src="./image/share_white.png" alt="" >
+          <img class="share_two hide" src="./image/share_black.png" alt="" > -->
+        </div>
+    </header>
+    <div class="salerContainer">
+        <div class="logoBox">
+            <img id="adimg">
+            <div id="shop_logo_ctn" class="shopLogoContainer" onclick="openset()">
+                <img id="user_head" src="">
+            </div>
+            <div class="infoBox">
+                <h3 id="user_name">斯奥的攸店</h3>
+                <h3 style="font-size:13px">全部商品 <span id="yuserprocount"></span> 件</h3>
+                <!-- <h4 id='wxnumber' style="font-size:12px;"></h4> -->
+            </div>
+        </div>
+        <!-- <div class="salerInfoContainer">
+            <div class="operationBox">
+                <ul>
+                    <li><a href="javascript:;"><span id="yuserprocount" class="icon"></span><span class="text">全部商品</span></a> </li>
+                    <li>
+                        <div id="collection"><span class="icon icon-shoucang"></span><span class="text">收藏本店</span></div>
+                    </li>
+                    <li onclick="erweima()">
+                        <div id="erwei"><span class="icon icon-erweima"></span><span class="text">二维码</span></div>
+                    </li>
+                    <li onclick="changeList()" class="img-container"><a href="javascript:;"><img src="./image/icon-heng.png" alt="" class="showImg"><span class="text">切换</span></a> </li>
+                </ul>
+            </div>
+        </div> -->
+    </div>
+    <div class="goods_search" id='notice'>
+    <p style="font-weight:700;color:#000;">个性签名&nbsp;&nbsp;|&nbsp;&nbsp;</p>
+      <div style="width:70%;margin:0 auto;white-space: nowrap;overflow:hidden;height:30px;" id="scroll_div" class="scroll_div">
+      <div id="scroll_begin"></div>
+      <div id="scroll_end"></div>
+      </div>
+    </div>
+<section>
+  <div class="item">
+    <div class="itemlist active" onclick="onactive(1)" id='zonghe'>
+      <p>综合</p>
+    </div>
+    <div class="itemlist" onclick="onactive(2)" id='xiaoliang'>
+      <p>销量</p>
+      <img src="./image/sort_default.png" id='xiaoliangu'></img>
+    </div>
+    <div class="itemlist" onclick="onactive(3)" id='jiage'>
+      <p>价格</p>
+      <img src="./image/sort_default.png" id='jiageu'></img>
+    </div>
+    <div class="itemlist" onclick="onactive(4)" id='renqi'>
+      <p>人气</p>
+      <img src="./image/sort_default.png" id='renqiu'></img>
+    </div>
+    <div class="itemlist" style="width:10%" onclick="changeList()">
+      <img src="./image/qiehuan_1.png" style="width:20px;height:20px" id="showImg"></img>
+    </div>
+  </div>
+</section>
+<section class="contenter">
+    <div class="section_goods_list">
+        <ul class="section_goods_dress heng" id="yshopprolist">
+
+        </ul>
+    </div>
+</section>
+
+<img src="./image/loading_more.gif" width="30px" height="30px" id="goods_loading" class="hide">
+  </body>
+  <script src="./common/js/api.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script src="./common/js/config.js"></script>
+  <script type="text/javascript">
+
+
+
+  var pageIndex = 1 ;
+  var pageSize = 8;
+  var stopload = false ;
+  var shopName = "";
+  var sharelanguage = "入手全球尖货，优选品质生活";
+  var shoplogo = "";
+  var timer = 0;
+  var sort=''
+  var gundong=true
+  if(openapp){
+    apiready = function(){
+      data()
+    }
+  }else{
+    window.onload=function(){
+      data()
+    }
+  }
+
+  function data(){
+    var statustop=$api.getStorage('statustop');
+$api.dom('.wgy_search').style.paddingTop=statustop+'px'
+// $api.dom('.left-icon').style.top=statustop+'px'
+// $api.dom('.staa').style.top=statustop+'px'
+    // scrollChange();
+    DataBind(pageIndex);
+    if(window.api){
+    api.setCustomRefreshHeaderInfo({
+  bgColor: '#fff',
+  images: [
+    'widget://image/suaxin1.png',
+    'widget://image/suaxin2.png',
+    'widget://image/suaxin3.png',
+    'widget://image/suaxin4.png',
+    'widget://image/suaxin5.png',
+    'widget://image/suaxin6.png',
+    'widget://image/suaxin7.png'
+  ],
+  tips: {
+    pull: '下拉刷新',
+    threshold: '松开立即刷新',
+    load: '正在刷新'
+  }
+  }, function() {
+  window.onscroll=function(){
+  var top=document.body.scrollTop;
+  if(top>0){
+  api.refreshHeaderLoadDone();
+  }
+  }
+  setTimeout(function(){
+    var isPulldowm = true;
+    pageIndex = 1;
+    stopload = false ;
+    DataBind(pageIndex,isPulldowm);
+    timer = 0;
+  },1000)
+  });
+
+    api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+      if(!stopload){
+        pageIndex = pageIndex +1;
+        DataBind(pageIndex);
+      }
+    });
+  }
+  }
+  //弹出二维码
+  function erweima() {
+    api.openFrame({
+        name: 'yshop_qrcode',
+        url: './yshop_qrcode.html',
+        rect: {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto'
+        },
+        pageParam: {
+            yshopid: api.pageParam.yshopid
+        },
+        bounces: false,
+        bgColor: 'rgba(36,36,36,.5)',
+        vScrollBarEnabled: false,
+        hScrollBarEnabled: false
+    });
+
+  }
+  //切换样式
+  function changeList(){
+      var msg = $api.attr($api.byId('showImg'),'src');
+      var n
+      if(msg =='./image/qiehuan_1.png'){
+       n = './image/qiehuan_2.png';
+      }
+      else{
+       n = './image/qiehuan_1.png';
+      }
+      $api.attr($api.byId('showImg'),'src',n);
+      $api.toggleCls($api.dom('#yshopprolist'), 'heng');
+      var titles = $api.domAll('.title_bkg');
+      var cans = $api.domAll('.canshow');
+      var earns = $api.domAll('.earn_hd');
+      var sa=$api.domAll('.fang_heng')
+      var sea=$api.domAll('.fang_hengs')
+      var sess=$api.domAll('.newhengs')
+      for(var i =0;i<sa.length;i++){
+        if(msg =='./image/qiehuan_1.png'){
+          $api.css(sa[i],'display:flex;')
+          $api.css(sea[i],'display:inline-block;')
+          $api.css(sess[i],'display:none;')
+        }else{
+          $api.css(sa[i],'display:none;')
+          $api.css(sea[i],'display:none;')
+          $api.css(sess[i],'display:flex;')
+        }
+      }
+      for(var i =0;i<earns.length;i++){
+        $api.toggleCls(titles[i], 'show-item');
+        $api.toggleCls(cans[i], 'show-item');
+        if(msg =='./image/qiehuan_1.png'){
+          $api.css(earns[i],'display:none;')
+          $api.css(sa[i],'display:flex;')
+        }else{
+          $api.css(earns[i],'display:flex;')
+          $api.css(sa[i],'display:none;')
+        }
+      }
+  }
+  function DataBind(page,isPulldowm){
+    $api.toggleCls($api.byId('goods_loading'),'hide');
+    var act ="";
+    if($api.val($api.byId('keyword'))!=""){
+      act = "search";
+    }
+    https({
+      url: siteUrl +'Main/Main/GetYShopProductListJson',
+      method: 'get',
+      data:{
+          currpage:page,
+          pageSize:pageSize,
+          uid:getname(),
+          act:act,
+          key:$api.val($api.byId('keyword')),
+          fxshopid: getname('SessionShopID'),
+          sort:sort
+      },
+      successBack:function(ret){
+      if(ret){
+        callFunction(ret,page,isPulldowm);
+      }
+      else{
+          $api.toggleCls($api.byId('goods_loading'),'hide');
+          promptMsg(err.msg);
+      }
+      if(window.api)
+      api.refreshHeaderLoadDone();
+    }
+    });
+    //会员信息
+      shopnum()
+  }
+  function shopnum(){
+    https({
+      url: siteUrl +'Main/Member/GetUserShopJson',
+      method: 'get',
+      data:{
+          uid:getname(),
+          yshopid:pageParam('yshopid')
+      },
+      headers:1,
+      successBack:function(ret){
+        if(ret.success){
+            if(ret.status==1 && ret.Data!=null){
+              var data =  ret.Data;
+              if(data.shopname!=null && data.shopname!=""){
+                if(data.sharelanguage) {
+                  sharelanguage = data.sharelanguage;
+                }
+                shoplogo = data.shoplogo;
+                shopName = data.shopname;
+                $api.html($api.byId('user_name'),data.shopname);
+              }
+              if(data.wxnumber!=null && data.wxnumber!=""){
+                $api.html($api.byId('wxnumber'),'微信号:'+data.wxnumber+'');
+              }
+              if(data.shoplogo!=null && data.shoplogo!=""){
+                $api.attr($api.byId('user_head'),'src', data.shoplogo);
+              }
+              if(data.adimg!=null && data.adimg!=""){
+                $api.attr($api.byId('adimg'),'src', data.adimg);
+              }
+              if(data.yuserprocount!=null && data.yuserprocount!=""){
+                $api.html($api.byId('yuserprocount'),data.yuserprocount);
+              }if(data.yuserprocount==0){
+                $api.html($api.byId('yuserprocount'),'0');
+              }if(data.notice!=null&&data.notice!=""){
+                // $api.html($api.byId('notice'),'<span style="font-weight:700;color:#000">个性签名&nbsp;&nbsp;|&nbsp;&nbsp;</span><div id="msg_container"><div id="content">'+data.notice+'</div></div>' );
+                // var content = $api.byId('content');
+                // var WIDTH = $api.offset(content).w/16;
+                // if(data.notice.length > WIDTH){
+                //   var i = 0;
+                //   timer = setInterval(function(){
+                //       if((i/16) > data.notice.length)
+                //         i = 0;
+                //       i+=16
+                //       var itemHtml = $api.html(content)
+                //       var html = itemHtml.substr(0,i/16)
+                //       $api.html(content, itemHtml.substr(i/16,0)+html)
+                //   },800)
+                // }
+                $api.html($api.byId('scroll_begin'),data.notice)
+                // ScrollImgLeft()
+              }
+            }
+            else{
+              promptMsg("找不到会员");
+            }
+        }
+        else {
+            promptMsg(ret.err);
+        }
+      }
+    });
+  }
+  //ajax搜索回调函数
+  function callFunction(ret,page,isPulldowm) {
+    if(ret.success){
+        var shtml = "";
+        if(page == 1)
+          $api.html($api.byId("yshopprolist"), '');
+          var thisImg = $api.hasCls($api.byId('yshopprolist'),'heng');
+        if(ret.status==1 && ret.Data!=null && ret.Data.length){
+          data = ret.Data;
+          if(data.length>0){
+              data.forEach(function(item,index){
+                shtml += '<li class="mall-item">';
+                shtml += '    <a href="javascript:;" onclick="OpenProdctPage(\''+item.pid+'\',\''+pageParam('yshopid')+'\')">';
+                shtml += '        <div class="mall-item_content">';
+                shtml += '            <div class="cover img-url"><img src="'+item.pic+'"> ';
+                // if(isPulldowm){
+                //   if(thisImg){
+                //     // shtml += '            <div class="title_bkg" ><span class="title_bkg_fl">赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span> <span class="title_bkg_fr"><em>'+item.jifen+'积分</em></span></div>'
+                //   }else{
+                //     // shtml += '            <div class="title_bkg show-item" ><span class="title_bkg_fl">赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span> <span class="title_bkg_fr"><em>'+item.jifen+'积分</em></span></div>'
+                //   }
+                // }else{
+                //   // shtml += '            <div class="title_bkg" ><span class="title_bkg_fl">赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span> <span class="title_bkg_fr"><em>'+item.jifen+'积分</em></span></div>'
+                // }
+                shtml += '            </div>';
+                shtml += '            <div class="text-container">'
+                shtml += '              <div class="title">'+item.name+'</div>';
+                shtml += '              <div class="info">';
+                shtml += '                <div class="price"><span class="s_yen">¥</span>'+ smallpirce.call(this,item.salePrice)+''
+                if(!thisImg){
+                    // shtml += '  <span class="fang_hengs" style="color: #999;font-size:13px;">&nbsp;&nbsp;赚¥'+item.commPrice.toFixed(2)+'</span>'
+                    shtml+='<div class="newhengs" style="display:none">'
+                  shtml+='<p>赚'+item.commPrice.toFixed(2)+'元</p>'
+                  shtml+='<img src="./image/jian.png">'
+                  shtml+='</div>'
+                }else{
+                  shtml+='<div class="newhengs" >'
+                  shtml+='<p>赚'+item.commPrice.toFixed(2)+'元</p>'
+                  shtml+='<img src="./image/jian.png" onclick="AddPro(\''+item.pid+'\',this,1)">'
+                  shtml+='</div>'
+                  // shtml += '  <span class="fang_hengs" style="color: #999;font-size:13px;display:none">&nbsp;&nbsp;赚¥'+item.commPrice.toFixed(2)+'</span>'
+                }
+                shtml +='</div>';
+                shtml += '              </div>';
+                shtml += '            </div>';
+                if(!thisImg){
+                    shtml +='<div class="fang_heng newheng"><span style="line-height:30px;padding-left:5px" class="new_p">赚¥'+item.commPrice.toFixed(2)+'&nbsp;&nbsp;'+item.chenjiaoNum+'人卖过</span><img src="./image/jian.png" alt=""  onclick="AddPro(\''+item.pid+'\',this,1)" id="pro_'+item.pid+'" class="price_fr_img"   style="padding-right:5px"/></div>'
+                }else{
+                  shtml +='<div style="display:none" class="fang_heng newheng"><span style="line-height:30px;padding-left:5px" class="new_p">赚¥'+item.commPrice.toFixed(2)+'&nbsp;&nbsp;'+item.chenjiaoNum+'人卖过</span><img src="./image/jian.png" alt=""  onclick="AddPro(\''+item.pid+'\',this,1)" id="pro_'+item.pid+'" class="price_fr_img"  style="padding-right:5px" /></div>'
+                }
+                shtml += '        </div>';
+                shtml += '    </a>';
+
+                  if(thisImg){
+                    // shtml += '    <div class="ltri canshow" id="pro_"'+item.pid+' onclick="AddPro(\''+item.pid+'\',this,1)"><img  src="./image/jian.png" class="price_fr_img"></div>'
+                    // shtml += '    <div class="earn_hd " ><div><span>赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span>&nbsp;&nbsp;<span><em>'+item.jifen+'</em>积分</span><span>&nbsp;'+item.chenjiaoNum+'人卖过</span></div>   <div onclick="AddPro(\''+item.pid+'\',this,1)" class="ltri" id="pro_'+item.pid+'"><img src="./image/jian.png" class="price_fr_img" ></div></div>';
+                  }else{
+                    // shtml += '    <div class="ltri "  id="pro_"'+item.pid+' onclick="AddPro(\''+item.pid+'\',this,1)"><img  src="./image/jian.png" class="price_fr_img"></div>'
+                    // shtml += '    <div class="earn_hd " style="display:none;"><div><span>赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span>&nbsp;&nbsp;<span><em>'+item.jifen+'</em>积分</span><span>&nbsp;'+item.chenjiaoNum+'人卖过</span></div>   <div onclick="AddPro(\''+item.pid+'\',this,1)" class="ltri" id="pro_'+item.pid+'"><img src="./image/jian.png" class="price_fr_img" ></div></div>';
+                  }
+
+                shtml += '</li>';
+              });
+          }
+        }
+        else if(page==1){
+          shtml +='<div class="noRec" id="noRec">';
+          shtml +='    <div class="square">';
+          shtml +='        <img src="./img/noorders.png" alt="" width="100%">';
+          shtml +='    </div>';
+          shtml +='    <div class="ic_text">';
+          shtml +='       此处还没有商品哦';
+          shtml +='    </div>';
+          shtml +='    </div>';
+        }
+        else {
+          stopload = true;
+        }
+        $api.toggleCls($api.byId('goods_loading'),'hide');
+        $api.append($api.byId("yshopprolist"), shtml);
+    }
+    else {
+        $api.toggleCls($api.byId('goods_loading'),'hide');
+        promptMsg(ret.err);
+    }
+  };
+  //攸店商品搜索
+  function yShopSearch(e){
+    if(e.keyCode == 13) {
+      pageIndex = 1;
+      DataBind(pageIndex);
+    }
+  };
+  // 分享
+  function share() {
+    url = indexSiteUrl+"170718164338876176/fxshopindex.html?fxshopid="+api.pageParam.yshopid;
+    // fenxiang(url,shopName,sharelanguage,shoplogo);
+    api.openFrame({
+        name: 'yshop_share',
+        url: './yshop_share.html',
+        pageParam: {
+            url: url,
+            shopName:shopName,
+            sharelanguage:sharelanguage,
+            shoplogo:shoplogo,
+            yshopid: api.pageParam.yshopid
+        },
+        bgColor:'rgba(0,0,0,0)'
+    });
+
+  };
+//搜索框滚动到一定距离变样式
+// function scrollChange() {
+//   window.onscroll=function(e){
+//     var top=document.body.scrollTop;
+//     var height = document.querySelector('.logoBox').scrollHeight;
+//     if(top>height){
+//       $api.css($api.dom('.wgy_search'),'background-color:#fff;opacity:1');
+//       $api.css($api.dom('.wgy_input_search'),'background-color:#D7DAE0;')
+//       $api.addCls($api.dom('.show_one'),'hide')
+//       $api.removeCls($api.dom('.show_two'),'hide')
+//       $api.css($api.dom('.show_two'),'background-color:#fff;')
+//       $api.css($api.dom('.share_two'),'background-color:#fff;')
+//       $api.removeCls($api.dom('.share_two'),'hide')
+//     }else{
+//       $api.css($api.dom('.wgy_search'),'background-color:transparent;opacity:.7;');
+//       $api.css($api.dom('.wgy_input_search'),'background-color:#fff;')
+//       $api.removeCls($api.dom('.show_one'),'hide')
+//       $api.css($api.dom('.show_two'),'background-color:rgba(0,0,0,0.7)')
+//       $api.css($api.dom('.share_two'),'background-color:rgba(0,0,0,0.7)')
+//       $api.addCls($api.dom('.show_two'),'hide')
+//       $api.addCls($api.dom('.share_two'),'hide')
+//     }
+//   }
+// }
+function openset(){
+  window.event? window.event.cancelBubble = true : e.stopPropagation();
+  openWin({name: 'yshopset',url: 'yshopset1.7.html',bounces: false,bgColor: '#fff',
+  pageParam:{
+    title:'攸店管理'
+  }},1);
+
+}
+function onactive(index){
+  if(index==1){
+    if($api.hasCls($api.byId('zonghe'), 'active')){
+    }else{
+      $api.attr($api.byId('xiaoliangu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('jiageu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('renqiu'),'src','./image/sort_default.png')
+      $api.removeCls($api.byId('xiaoliang'), 'active')
+      $api.removeCls($api.byId('jiage'), 'active')
+      $api.removeCls($api.byId('renqi'), 'active')
+      $api.addCls($api.byId('zonghe'), 'active')
+      sort=''
+      stopload = false;
+      pageIndex = 1
+      DataBind(pageIndex);
+    }
+  }else if(index==2){
+    if($api.hasCls($api.byId('xiaoliang'), 'active')){
+      if(sort=='sale_asc'){
+      $api.attr($api.byId('xiaoliangu'),'src','./image/sort_down.png')
+        sort='sale_desc'
+      }else if(sort=='sale_desc'){
+        $api.attr($api.byId('xiaoliangu'),'src','./image/sort_up.png')
+        sort='sale_asc'
+      }
+      stopload = false;
+      pageIndex = 1
+      DataBind(pageIndex);
+    }else{
+      $api.attr($api.byId('jiageu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('renqiu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('xiaoliangu'),'src','./image/sort_up.png')
+      $api.addCls($api.byId('xiaoliang'), 'active')
+      $api.removeCls($api.byId('jiage'), 'active')
+      $api.removeCls($api.byId('renqi'), 'active')
+      $api.removeCls($api.byId('zonghe'), 'active')
+      sort='sale_asc'
+      stopload = false;
+      pageIndex = 1
+      DataBind(pageIndex);
+    }
+  }else if(index==3){
+    if($api.hasCls($api.byId('jiage'), 'active')){
+      if(sort=='price_asc'){
+        $api.attr($api.byId('jiageu'),'src','./image/sort_down.png')
+        sort='price_desc'
+      }else if(sort=='price_desc'){
+        $api.attr($api.byId('jiageu'),'src','./image/sort_up.png')
+        sort='price_asc'
+      }
+      stopload = false;
+      pageIndex = 1
+      DataBind(pageIndex);
+    }else{
+      $api.attr($api.byId('xiaoliangu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('renqiu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('jiageu'),'src','./image/sort_up.png')
+      $api.removeCls($api.byId('xiaoliang'), 'active')
+      $api.addCls($api.byId('jiage'), 'active')
+      $api.removeCls($api.byId('renqi'), 'active')
+      $api.removeCls($api.byId('zonghe'), 'active')
+      sort='price_asc'
+      stopload = false;
+      pageIndex = 1;
+      DataBind(pageIndex);
+    }
+  }else if(index==4){
+    if($api.hasCls($api.byId('renqi'), 'active')){
+      if(sort=='collect_asc'){
+        $api.attr($api.byId('renqiu'),'src','./image/sort_down.png')
+        sort='collect_desc'
+      }else if(sort=='collect_desc'){
+        $api.attr($api.byId('renqiu'),'src','./image/sort_up.png')
+        sort='collect_asc'
+      }
+      stopload = false;
+      pageIndex = 1
+      DataBind(pageIndex);
+    }else{
+      $api.attr($api.byId('xiaoliangu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('jiageu'),'src','./image/sort_default.png')
+      $api.attr($api.byId('renqiu'),'src','./image/sort_up.png')
+      $api.removeCls($api.byId('xiaoliang'), 'active')
+      $api.removeCls($api.byId('jiage'), 'active')
+      $api.addCls($api.byId('renqi'), 'active')
+      $api.removeCls($api.byId('zonghe'), 'active')
+      sort='collect_asc'
+      stopload = false;
+      pageIndex = 1;
+      DataBind(pageIndex);
+    }
+  }
+}
+function ScrollImgLeft(){
+  if(gundong){
+    gundong=false
+var speed=50;
+var scroll_begin = document.getElementById("scroll_begin");
+var scroll_end = document.getElementById("scroll_end");
+var scroll_div = document.getElementById("scroll_div");
+var MyMar
+scroll_end.innerHTML=scroll_begin.innerHTML;
+for(var i=0;i<99;i++){
+  $api.append(scroll_end,scroll_begin.innerHTML)
+}
+function Marquee(){
+if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0)
+scroll_div.scrollLeft-=scroll_begin.offsetWidth;
+else
+scroll_div.scrollLeft++;
+}
+MyMar=setInterval(Marquee,speed);
+scroll_div.onmouseover=function() {clearInterval(MyMar);}
+scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);}
+}
+}
+  </script>
+  </html>

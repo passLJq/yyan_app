@@ -1,0 +1,194 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  line-height: rems(28);
+  font-size: rems(28);
+  background-color: #f5f5f5;
+}
+
+.flex {
+  display: flex;
+}
+.flex_v {
+  flex-direction: column;
+}
+.flex_align_center {
+  align-items: center;
+}
+.flex_pack_center {
+  justify-content: center;
+}
+.flex_pack_right {
+  justify-content: flex-end;
+}
+.text_center {
+  text-align: center;
+}
+
+.fs_10 {
+  font-size: rems(20);
+}
+.mr_12 {
+  margin-right: rem(12);
+}
+.fs_12 {
+  font-size: rem(12);
+}
+.fs_13 {
+  font-size: rem(13);
+}
+
+.flex_pack_justify_between {
+  justify-content: space-between;
+}
+.mt_35 {
+  margin-top: rem(35);
+}
+
+.line_over_2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.my {
+  width: 100%;
+  box-sizing: content-box;
+}
+.my .itm {
+  width: 100%;
+  background-color: #fff;
+}
+.my .itm + .itm {
+  margin-top: rem(10);
+}
+.my .itm:nth-child(1) {
+  padding-top: rem(27);
+}
+.my .head {
+  width: 100%;
+  height: rem(48);
+  padding: 0 rem(20) 0 rem(15);
+  position: relative;
+}
+
+.my .head span:nth-child(1) {
+  font-size: rem(14);
+  color: #9B9B9B;
+}
+.my .head span:nth-child(2) {
+  font-size: rem(14);
+  color: #EB6100;
+}
+
+/* 横线 */
+.line {
+  width: rem(345);
+  height: rem(1);
+  background-color: #DEDEE1;
+}
+
+.my .itm .content {
+  width: 100%;
+  height: rem(140);
+}
+.my .itm .content .pic {
+  width: rem(96);
+  height: rem(96);
+  margin-top: rem(10);
+  margin-left: rem(15);
+}
+.my .itm .content .pic img {
+  width: 100%;
+  height: 100%;
+}
+.my .itm .data {
+  width: rem(241);
+  margin-top: rem(11);
+  margin-left: rem(8);
+}
+.my .itm .data .title {
+  font-size: rem(13);
+  color: #666464;
+  // height: rem(48);
+  width: 100%;
+  line-height: rem(22);
+}
+.my .itm .data .progress {
+  width: rem(220);
+  height: rem(10);
+  border-radius: rem(7);
+  background-color: #f6f6fa;
+  margin-top: rem(4);
+  overflow: hidden;
+  margin-left: rem(2);
+}
+.my .itm .data .progress div {
+  height: 100%;
+}
+.my .itm .data .join {
+  width: rem(220);
+  margin-left: rem(2);
+  margin-top: rem(5);
+}
+.my .itm .data .join span {
+  font-size: rem(10);
+  color: #B2B2B2;
+}
+.my .itm .data .price {
+  width: 100%;
+  height: rem(25);
+  color: #FF5541;
+  margin-top: rem(10);
+  display: flex;
+  align-items: center;
+}
+.my .itm .data .price span:nth-child(1) {
+  font-size: rem(12);
+  font-weight: 600;
+}
+.my .itm .data .price span:nth-child(2) {
+  font-size: rem(18);
+  font-weight: 600;
+}
+.my .itm .data .price span:nth-child(3) {
+  font-size: rem(10);
+  color: #999;
+  margin-left: rem(15);
+}
+.my .itm .btnGroup {
+  width: 100%;
+  height: rem(48);
+  padding-right: rem(15);
+}
+.my .itm .btnGroup .btn {
+  width: rem(80);
+  height: rem(29);
+  font-size: rem(14);
+  color: #fff;
+  background-color: #427161;
+  border-radius: rem(16);
+}
+.my .itm .btnGroup .btn + .btn {
+  margin-left: rem(10);
+}
+.noda {
+  width: rem(200);
+  height: rem(200);
+  overflow: hidden;
+  margin-top: rem(79);
+}
+.look {
+  font-size: rem(14);
+  color: #ff5541;
+  padding: rem(8) rem(22.5);
+  margin-top: rem(24);
+  border: rem(1) solid #ff5541;
+  border-radius: rem(17.5);
+}

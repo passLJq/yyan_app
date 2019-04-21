@@ -1,0 +1,121 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  line-height: rems(24);
+  font-size: rems(24);
+  background-color: #fff;
+}
+
+.line_over_2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.head {
+  width: 100%;
+  height: rems(92);
+  background-color: #508372;
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  .back {
+    color: #fff;
+    font-size: rems(36);
+    padding: rems(20) rems(30);
+  }
+  .searchbar {
+    width: rems(630);
+    height: rems(56);
+    background-color: #e6e6e6;
+    border-radius: rems(56);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 rems(20) 0 rems(30);
+    p:nth-child(1) {
+      color: #9FA0A0;
+      font-size: rems(24);
+    }
+    p:nth-child(2) {
+      font-size: rems(36);
+      color: #666464;
+    }
+  }
+}
+
+.classMain {
+  width: 100%;
+  // height: 200px;
+  display: flex;
+  .leftBar {
+    width: 24.8%;
+    background-color: #F2F2F2;
+    overflow-y: scroll;
+    .leftItem {
+      width: 100%;
+      height: rems(122);
+      color: #9FA0A0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: rems(32);
+      &.select {
+        background-color: #F5AC9E;
+        color: #fff;
+      }
+    }
+  }
+  .rightBar {
+    width: 75.2%;
+    overflow-y: scroll;
+    .titt {
+      width: 100%;
+      height: rems(120);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .line {
+        width: rems(40);
+        height: rems(2);
+        background-color: #508372;
+      }
+      p {
+        color: #508372;
+        font-size: rems(28);
+        margin: 0 rems(10);
+      }
+    }
+    .contentt {
+      width: 100%;
+      .conItem {
+        width: 33.3333%;
+        float: left;
+        img {
+          width: 100%;
+          max-height: rems(188);
+          display: block;
+        }
+        p {
+          font-size: rems(24);
+          color: #9FA0A0;
+          text-align: center;
+          margin-top: rems(20);
+        }
+      }
+    }
+  }
+}
+.mt_35 {
+  margin-top: rems(35);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

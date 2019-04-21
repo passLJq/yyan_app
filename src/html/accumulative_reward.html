@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+      <script src="./common/js/highcharts.js"></script>
+      <style>
+      body{background-color: #f5f5f5}
+      .main{text-align: center;margin-top:45px}
+      .main_top{display: flex;justify-content:space-between;border-bottom: 1px solid #e6e6e6;padding: 8px 10px;}
+      .main_tops{display: flex;justify-content:space-between;padding: 8px 15px;color: #464646; font-size: 16px;}
+      .main_top p{font-size: 16px;padding-left: 10px;padding-top: 4px}
+       .foot{margin-top: 15px;background-color: #fff;}
+      .main-foot{color: #747474;display: flex;width: 100%;padding-bottom: 15px;padding-top: 10px}
+      .main-foot .jl{flex-grow:1;margin-top: 6px}
+      .main-foot .jl p{font-size: 13px; color: #575757;}
+      .jl-kuang{font-size: 20px;}
+      #head{position: fixed;top:0;z-index: 99999;width: 100%}
+
+      .title_container{height: 44px; width: 100%; box-sizing: border-box; overflow: hidden; background-color: #fff; margin-top: 10px; color: #464646; line-height: 44px; padding: 0 15px; font-size: 16px;font-weight: 700;}
+      .fr{float:right; }.fl{float: left;} .clear{content: ""; display: block; clear: both;}
+      .year_container{background-color: #fff;}
+      .year_container .title_year{background-color: #F6F5FA; height: 40px; line-height: 40px; padding: 0 15px; color: #A8A8A8;}
+      .year_container li {height: 45px; line-height: 45px; box-sizing: border-box; overflow: hidden; padding: 0 15px; color: #393939; border-bottom: 1px solid #eee;}
+      .right_icon{margin-left: 10px; height: 8px; width: 8px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; transform:rotate(45deg);-ms-transform:rotate(45deg); -moz-transform:rotate(45deg); -webkit-transform:rotate(45deg);-o-transform:rotate(45deg); }
+      .color_grient{color: #2C5B33;}
+      .main-head{
+        background:linear-gradient(49deg,rgba(255,234,224,1),rgba(247,195,179,1));
+        color: #666464;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="head">
+      <div class="ym_head">
+          <div class="ym_head_back" style="transform: translateY(-50%);" onclick="backUrl()">
+            <img src="./image/icon-back.png">
+          </div>
+          <div class="ym_head_title">
+            <p>累计收益</p>
+          </div>
+          <!-- <div class="yu_head_share" onclick="gorunl()">
+            <img src="../../image/duobaoguizhi.png">
+          </div> -->
+      </div>
+    </div>
+    <div class="main">
+      <!-- <div class="main_top"><p>累计收益金额</p></div> -->
+      <div class="main-head">
+        <p style="color:#838383;font-size:14px;padding-top:10px">总收益</p>
+        <p  class="color_grient" style='font-weight:700;font-size:24px;padding:10px 0' id='totalCommision'>0</p>
+        <p style="color:#2C5B33;font-size:15px" id='lastMonthCommision'>上月收益：&yen;0</p>
+        <div class="main-foot">
+          <div class="jl">
+            <span class="jl-kuang" id='todaycommision'>0元</span>
+            <p>今日收益</p>
+          </div>
+          <div class="jl">
+            <span class="jl-kuang" id='weekCommision'>0元</span>
+            <p>本周收益</p>
+          </div>
+          <div class="jl">
+            <span class="jl-kuang" id='monthCommision'>0元</span>
+            <p>本月收益</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="main_tops"><p>七日收益柱状图</p></div>
+      <div id="container" style="max-width:800px;height:200px;"></div>
+    </div>
+    <div class="title_container" style="display: flex;justify-content: space-between;align-items: center;">
+      <div>本月累计分红</div>
+      <div id="totalCom"></div>
+    </div>
+    <div id="user_detail_container">
+      <ul class="year_container">
+
+      </ul>
+    </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>  
+  <script type="text/javascript">
+  if(openapp){
+    window.apiready=function(){
+      headTitle($api.byId('head'),'累计收益')
+      var statustop=$api.getStorage('statustop');
+       var hee=45+Number(statustop)+'px'
+        $api.dom('.main').style.marginTop=hee;
+      //   $api.css($api.dom('.ym_head'),'padding-top:'+statustop+'px;height:'+hee+'px')
+        BindData()
+        getYearDetail()
+        zhu()
+    }
+  } else{
+    window.onload=function(){
+      headTitle($api.byId('head'),'累计收益')
+      var statustop=$api.getStorage('statustop');
+       var hee=45+Number(statustop)+'px'
+        $api.dom('.main').style.marginTop=hee;
+      //   var hee=45+Number(statustop)+'px'
+      //   $api.css($api.dom('.ym_head'),'padding-top:'+statustop+'px;height:'+hee+'px')
+        BindData()
+        getYearDetail()
+        zhu()
+    }
+    }
+
+      function BindData(){
+        https({
+          url:  siteUrl +'Main/Member/GetMemberJson',
+          method: 'get',
+          data:{
+            uid:getname(),
+              yshopid: getname('SessionShopID')
+          },
+          headers:1,
+          successBack:function(ret){
+            if(ret.success){
+                  var data=ret.Data
+                  $api.html($api.byId('totalCommision'), data.totalCommision);
+                  $api.html($api.byId('lastMonthCommision'), '上月收益：&yen;'+data.lastMonthCommision);
+                  $api.html($api.byId('todaycommision'), data.todaycommision+"元");
+                  $api.html($api.byId('weekCommision'), data.weekCommision+"元");
+                  $api.html($api.byId('monthCommision'), data.monthCommision+"元");
+                  $api.html($api.byId('totalCom'), '￥'+data.monthCommision);
+
+                }else {
+                  promptMsg(ret.err)
+                }           
+          }      
+        })
+      }
+      function getYearDetail(){
+        https({
+          url:  siteUrl +'Main/Member/GetUserCommissionDetail',
+          data:{
+              uid:getname()
+          },
+          headers:1,
+          successBack:function(ret){
+            if(ret.success && ret.status == 1){
+                  var data=ret.Data
+                  if(data) {
+                    var html = ""
+                    for(var i = 0; i < data.length; i++) {
+                      html += '<ul class="year_container">'
+                      if(data[i].year) {
+                        html += '<li class="title_year">'+ data[i].year +'</li>'
+                      }
+                      if(data[i].monthdata.length > 0) {
+                        for(var r = 0; r < data[i].monthdata.length; r++) {
+                          if(data[i].monthdata[r].month && data[i].monthdata[r].commision) {
+                            var year = data[i].monthdata[r].month.split("年")[0]
+                            var month = data[i].monthdata[r].month.split("年")[1].split("月")[0]
+                            html += '<li class="clear" onclick="toMonthDetail(\''+year+'\', \''+month+'\')"><span class="fl">'+ data[i].monthdata[r].month +'</span><span class="fr">&yen;'+ data[i].monthdata[r].commision +'<span class="right_icon"></span></span></li>'
+                          }
+                        }
+                      }
+                      html += '</ul>'
+                    }
+                    $api.html($api.byId("user_detail_container"), html)
+                  }
+                }else {
+                  promptMsg(ret.err)
+                }           
+          }     
+        })
+
+      }
+
+      function zhu(){
+        https({
+          url:  siteUrl +'Main/Member/GetUserSevenDaysCommission',
+          data:{
+              uid:getname(),
+              yshopid: getname('SessionShopID')
+          },
+          headers:1,
+          successBack:function(ret){
+            if(ret.success){
+                  var ynumber=[];
+                  var data=ret.Data
+                  var myDate = new Date(); //获取今天日期
+                  myDate.setDate(myDate.getDate() - 6);
+                  var dateArray = [];
+                  var dateTemp;
+                  var flag = 1;
+                  for (var i = 0; i < 7; i++) {
+                    var month=myDate.getMonth()+1
+                    var dat=myDate.getDate()
+                      dateTemp = (month <10?'0'+month:''+month)+"-"+(dat<10?'0'+dat:''+dat);
+                      dateArray.push(dateTemp);
+                      myDate.setDate(myDate.getDate() + flag);
+                  }
+                  dateArray.forEach(function(item,index){
+                    ynumber.push(parseFloat(data[item].toFixed(2)))
+                  })
+                  //图表
+                    var chart = Highcharts.chart('container', {
+                      xAxis:{
+                        lineColor: '#fcf',
+                        type:'category',
+                        categories:dateArray,
+                        index:0,
+                        tickLength: 0,
+                      },
+                      title: {
+                        text: null
+                      },
+                      yAxis: {
+                          lineColor: '#fff',
+                          lineWidth: 1,
+                                title: {
+                                text: null,
+                            },
+                            opposite: true,
+                            allowDecimals:false
+                      },
+                      exporting: {
+                          enabled: false
+                      },
+                          credits: {
+                          enabled: false
+                      },
+                          series: [{
+                              name: '收益',
+                              data: ynumber,
+                              color:'#F5AC9E',
+                          }],
+                          responsive: {
+                              rules: [{
+                                  condition: {
+                                      maxWidth: 500
+                                  },
+                                  chartOptions: {
+                                      legend: {
+                                          layout: 'horizontal',
+                                          align: 'right',
+                                          verticalAlign: 'top',
+                                          y:-18,
+                                          enabled:false
+                                      }
+                                  }
+                              }]
+                          },
+                          chart: {
+                                    type: 'column'
+                                }
+            });
+          }else{
+              promptMsg(ret.err)
+          }        
+          }         
+        })
+
+      }
+      function toMonthDetail(year, month) {
+        openWin({
+            name: 'commission',
+            url: './commission.html',
+            pageParam: {
+                pageName: year+'年'+month+'月收益',
+                year: year,
+                month: month,
+                title:year+'年'+month+'月收益'
+            }
+        },1);
+
+      }
+      function gorunl(){
+        api.openFrame({
+            name: 'rule',
+            url: '../tool/rule.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0.5)',
+        });
+      }
+  </script>
+  </html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+    <style>
+
+  *{padding:0;margin:0;}
+    /*#aui-header,.aui-bar,.aui-bar-nav {
+    background-image:url(../image/bg.png);background-repeat:no-repeat;background-size:100%;
+
+    }
+    .aui-pull-left{width:100%;height:100%;}
+    .aui-pull-left:after {
+          position: fixed;
+          left: 25px;
+          top: 28px;
+          display: block;
+          height: 10px;
+          width: 10px;
+          content: '';
+          border-left: 2px solid #fff;
+          border-bottom: 2px solid #fff;
+          -webkit-transform: rotate(45deg);
+          z-index: 100000;
+      }*/
+      #header {
+          text-align: center;
+      }
+      #header {
+          text-align: center;
+          background-color: #fff;
+          color: #000;
+          width: 100%;
+          height: 45px;
+          position: relative;
+          border-bottom: 1px solid #ccc;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      .btn_box {
+          width: 52px;
+          position: absolute;
+          z-index:9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          top:0;
+          bottom:0
+      }
+
+      .pull-left {
+          left:0
+      }
+            .pull-right {
+                right: 0
+            }
+      .btn_box img {
+        width: 20px;
+    }
+    #header span {
+        color: #000;
+        font-size:18px;
+    }
+    /*分享图片样式*/
+    .fenxiang{ padding: 13px 20px 0 10px; background-color: #FFFFFF; overflow: hidden; width: 25px; }
+    .fenxiang>img{ width: 20px; height: 20px; }
+    #kong{
+      width:52px;
+      height:45px;
+      float:right;
+      display: none;
+    }
+    .statop{width: 100%;}
+.statopshow{background-color: #fff}
+.hide{
+    display: none
+}
+img{display: block;}
+    </style>
+</head>
+<body>
+  <div id="header" class="hide">
+      <div class="btn_box pull-left" tapmode="tap-active" onclick="go_back()">
+          <img src="./image/icon-back.png" alt="">
+      </div>
+      <div class="btn_box pull-right" id="share" onclick="share()">
+        <img src="./image/share_white.png" alt=""  id="share_img">
+      </div>
+      <!-- 顶部栏标题 -->
+      <span> </span>
+      <!-- <div id="kong"></div> -->
+  </div>
+<script type="text/javascript" src="./common/js/api.js"></script>
+<script type="text/javascript" src="./common/js/config.js"></script>
+<script type="text/javascript" src="./common/js/common.js"></script>
+<script>
+  var statustop=$api.getStorage('statustop');
+    // 分享
+    function share() {
+        var url = api.pageParam.url;
+        if(api.pageParam.title=='邀请店主'){
+            url=memberSiteUrl+'/Fx/new_inve.aspx?shopid=170718164338876176&fxshopid='+getname('SessionShopID')+'&userId='+getname()
+            onshareimg(url)
+            return
+        }
+      fenxiang(url,"邀您一起轻创业！","攸妍","./img/couponback.png");
+    };
+
+    function onshareimg(url){
+  var dialogBox = api.require('dialogBox');
+  dialogBox.actionMenu ({
+      rect:{
+          h: 120
+      },
+      items:[
+      {
+          text: '微信好友',
+          icon: api.wgtRootDir+'/image/share_weixin.png'
+      }
+      ],
+      tapClose:true,
+      isCuttingLine: true,
+      styles:{
+          // bg:api.wgtRootDir+'/image/share_bg_text.png',
+          bg: '#fff',
+          column: 3,
+          itemText: {
+              color: '#333',
+              size: 14,
+              marginT:8
+          },
+          itemIcon:{
+              size:50
+          }
+      }
+  },function(ret){
+    switch (ret.index) {
+      case 0://跳转微信好友分享
+      var wx = api.require('wx');
+          wx.shareProgram({
+            apiKey: '',
+            scene: 'session',
+            title: '邀您开启轻创业之旅',
+            description: '攸妍',
+            thumb: 'widget://image/ins.png',
+            webpageUrl: url,
+            userName: 'gh_bbe69506855a',
+            miniProgramType: 'release',
+            path: 'pages/websouer/websouer?ruid='+api.getPrefs({sync: true,key: 'SessionUserID'})+'&url='+escape(url),
+          }, function(ret, err) {
+            if (ret.status) {
+                alert('分享成功');
+            } else {
+                alert(err.code);
+            }
+          });
+        return;
+      case 1://跳转微信朋友圈分享
+        return;
+      case 2://跳转复制链接分享
+        return;
+      case 3://跳转微博分享
+        return;
+    }
+  });
+}
+
+    var arrurl =[];//创建url栈
+    var arrtitle=[];
+    var arrlength = 0;//栈长度
+    var isaddinarr = true ; //是否入栈
+    apiready = function () {
+        //监听安卓back按键
+        api.addEventListener({
+        name: 'keyback'
+        }, function(ret, err) {
+          if(api.pageParam.data.name=='payshow'){
+            //支付用
+              api.execScript({
+                  name: api.winName,
+                  frameName: 'paytou',
+                  script: 'go_back();'
+              });
+          }else{
+            api.closeWin();
+          }
+        });
+      // $api.byId('header').style.paddingTop=statustop+'px';
+      $api.byId('header').style.height=45+Number(statustop)+'px';
+      api.showProgress({
+          text: '请耐心等待...',
+          modal: true
+      });
+      // 阻止首页弹动
+      api.setWinAttr({
+          bounces: false
+      });
+      // 阻止首页弹动 end
+      api.parseTapmode();
+      var header = $api.byId('header');
+          //$api.fixStatusBar(header);
+          var headerPos = $api.offset(header);
+          var url = api.pageParam.url;
+          var title = api.pageParam.title;
+          var share = $api.byId('share');
+          console.log(title)
+          if(title=="推广图片"||title=="创业邀请"||title=='邀请店主'||api.pageParam.sucai=='sucai'){
+            $api.attr($api.byId('share_img'), 'src', './image/share_black.png');
+            // $api.css(share,'display:block')
+            headerPos.h=0
+          console.log(5)
+          }else{
+            $api.css(share,'display:none');
+            $api.css($api.byId('kong'),'display:block')
+          }
+          if(title=='提现'){
+            
+           }else{
+            $api.dom('#header span').innerHTML = title;
+           }
+
+                    //隐藏头部
+         if(title!='创业邀请'){
+            $api.removeCls(header, 'hide');
+            headerPos.h=45+Number(statustop)
+          }
+          var sessionuser = api.getPrefs({sync: true,key: 'SessionUserID'});
+          var sessionkey = api.getPrefs({sync: true,key: 'SessionKey'});
+          if(url.indexOf("?") > 0){
+            url += "&";
+          }
+          else url += "?";
+          url += "SessionUserID="+sessionuser+"&SessionKey="+sessionkey+"&isApp=true";
+          // 新浪支付
+          if(api.pageParam.data.name=='payshow'){
+                api.openFrame({
+                    name: 'webframepagese',
+                    url: url,
+                    rect: {
+                        x: 0,
+                        y: Number(statustop),
+                        w: 'auto',
+                        h: 'auto',
+                    },
+                  bgColor:"#fff"
+                });
+                api.openFrame({
+                    name: 'paytou',
+                    url: './paytou.html',
+                    rect: {
+                        x: 0,
+                        y: Number(statustop),
+                        w: 'auto',
+                        h: 45,
+                    },
+                    pageParam:{
+                      data:api.pageParam.data,
+                      titles:api.pageParam.title
+                    },
+                   bgColor:"#fff"
+                })
+                //新浪提现外链
+              }else{
+          api.openFrame({
+              name: 'webframepage',
+              url: url,
+              rect: {
+                  x: 0,
+                  y: headerPos.h,
+                  w: 'auto',
+                  h: 'auto',
+              },
+              bgColor:'#fff'
+              // header:{
+              //     "Authorization": "{'user':'" + sessionuser + "','key':'" + sessionkey +"'}"
+              // }
+          });
+        }
+          if(title=="创业邀请"){
+            api.openFrame({
+                name: 'web_bianti',
+                url: './web_bianti.html',
+                rect: {
+                    x: 0,
+                    y: 25,
+                    w: 'auto',
+                    h: 'auto',
+                },
+                pageParam:{
+                  url:url
+                }
+            });
+          }
+      api.setFrameClient({
+        frameName: 'webframepage'
+        }, function(ret, err) {
+            switch (ret.state) {
+                case 0:
+                    if(isaddinarr){
+                        arrurl.push(ret.url);
+                        arrtitle.push($api.dom('#header span').innerHTML);
+                        arrlength ++ ;
+                    }
+                    isaddinarr = true;
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
+        });
+        api.hideProgress();
+    }
+    function go_back(){
+      if(arrlength>1){
+        isaddinarr = false ;
+        $api.dom('#header span').innerHTML = arrtitle[arrlength-2];
+        var js = 'window.location.href="'+arrurl[arrlength-2]+'"';
+        api.execScript({
+              frameName : 'webframepage',
+              script : js
+        });
+        arrurl.pop();
+        arrtitle.pop();
+        arrlength--;
+      }
+      else if(arrlength==1){
+        api.closeWin();
+      }
+
+    }
+    function changeTitle(title){
+      $api.dom('#header span').innerHTML = title;
+    }
+    function toProDetail (pid) {
+      api.openWin({
+          name: 'product_'+pid,
+          url: api.wgtRootDir+'/html/shopping/new_productdetail.html',
+          historyGestureEnabled:true,
+          bgColor:"#fff",
+          pageParam: {
+              pid : pid
+          },
+          useWKWebView:true
+      });
+    }
+</script>
+</body>
+</html>

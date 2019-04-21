@@ -1,0 +1,184 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  line-height: rems(24);
+  font-size: rems(24);
+  background-color: #f5f5f5;
+}
+.van-swipe-item{
+  transform: translateX(0px) !important;
+}
+.my_coupon_header {
+  width: 100%;
+  height: rems(80);
+  background-color: #fff;
+  border-top: rems(2) solid #f2f2f2;
+  padding: 0 rems(31);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  .mo {
+    font-size: rems(28);
+    color: #2C5B33;
+    width: rems(96);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    span {
+      font-size: rems(21);
+      color: #fff;
+      background-color: #EA5504;
+      padding: rems(2) rems(6);
+      position: absolute;
+      top: 15%;
+      right: -20%;
+      border-radius: rems(20);
+    }
+  }
+  .line {
+    width: rems(96);
+    height: rems(5);
+    background-color: #2C5B33;
+    position: absolute;
+    
+    bottom: 0;
+  }
+}
+
+.van-swipe__indicators {
+  display: none;
+}
+.couponContent {
+  width: 100%;
+  height: 100% !important;
+  overflow: scroll;
+  padding: rems(30) rems(30); 
+  .coupon_item {
+    width: 100%;
+    min-height: rems(220);
+    background-color: #fff;
+    border-radius:rems(8);
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    .left {
+      width: rems(555);
+      padding: 0 rems(31) 0 rems(43);
+      display: flex;
+      flex-direction: column;
+      .top {
+        width: 100%;
+        height: rems(140);
+        border-bottom: rems(2) dashed #BFC0C0;
+        display: flex;
+        justify-content: space-between;
+        .price {
+          color: #F5AC9E;
+          font-size: rems(36);
+          line-height: rems(150);
+          .p {
+            font-size: rems(92);
+          }
+        }
+        .exp {
+          text-align: right;
+          color: #BFC0C0;
+          font-size: rems(32);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end; 
+          justify-content: center;
+          p:nth-child(1) {
+            margin-top: rems(20);
+            margin-bottom: rems(20);
+          }
+          p:nth-child(2) {
+            font-size: rems(24);
+          }
+        }
+      }
+      .bottom {
+        width: 100%;
+        min-height: rems(79);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: rems(24);
+        color: #BFC0C0;
+        .btn {
+          color: #fff;
+          font-size: rems(24);
+          padding: rems(6) rems(20);
+          background-color: #F5AC9E;
+          border-radius: rems(18);
+        }
+      }
+    }
+    .right {
+      width: rems(135);
+      // height: 100%;
+      background-color: #427161;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: rems(32);
+      line-height: rems(40);
+    }
+    &.pass {
+      color: #BFC0C0 !important;
+      .top {
+        border-color: #BFC0C0;
+        p,span {
+          color: #BFC0C0 !important;
+        }
+      }
+      .btn {
+        background-color: #BFC0C0 !important;
+      }
+      .right {
+        background-color: #BFC0C0;
+      }
+    }
+  }
+  .coupon_item + .coupon_item {
+    margin-top: rems(15);
+  }
+  .no_coupon {
+    width: 100%;
+    // height: 100%;
+    margin-top: rems(250);
+    img {
+      width: rems(200);
+      height: rems(200);
+      display: block;
+      margin: 0 auto;
+    }
+    p {
+      margin: rems(40) auto;
+      text-align: center;
+      font-size: rems(32);
+      color: #BFC0C0;
+    }
+    div {
+      width: rems(170);
+      height: rems(64);
+      color: #EB6100;
+      font-size: rems(30);
+      border: rems(2) solid #EB6100;
+      margin: 0 auto;
+      display: flex;
+      line-height: 0;
+      justify-content: center;
+      align-items: center;
+      border-radius: rems(32);
+    }
+  }
+}

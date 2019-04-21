@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>评价详情</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+    body{background-color: #F3F2F2;color:#484848;}
+    .flex{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    }
+    .fl{float:left;}
+    .clear:after{content:"";display: block;clear: both;}
+    /*评价详情样式*/
+    .container_detaill{background-color: #fff; box-sizing: border-box; overflow: hidden;}
+    .container_detaill>div{padding:10px;}
+    .user_pic{width:40px;height:40px;}
+    .user_pic img{width:100%;height:100%;border-radius: 50%;}
+    .user_top{padding:0 10px; line-height:40px}
+    .stars{padding-left:10px;}
+    .stars img{width:12px;height:12px;}
+    .detaill_time{color:#A0A0A0;padding:10px 0;font-size:12px;}
+    .assess_imgs{width:100%;padding:20px 0;}
+    .container_detaill>div.assess_imgs{width:100%; box-sizing: border-box; overflow: hidden; margin:20px 2%; padding: 0;}
+    .assess_imgs>span{width:24%;height:90px; float: left;}
+    .assess_imgs>span img{width:100%;height:100%;}
+  </style>
+</head>
+<body>
+  <div id="head"></div>
+  <div id="content">
+
+  </div>
+
+
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<!-- <script src="../../lib/look_assess_section.js"></script> -->
+<script>
+  if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+    getMsg()
+  }
+  function getMsg() {
+    https({
+      url: siteUrl+"Main/Shopping/GetOneOrderComment",
+      data: {
+        uid: getname(),
+          itemid: pageParam('id')
+      },
+      headers: 1,
+      successBack: function (ret) {
+        console.log(ret)
+        if(ret.success){
+          if(ret.Data.length > 0){
+            var data = ret.Data
+            var html = ""
+            for(var i = 0 ; i< data.length; i++){
+              var reg = /^[1][3,4,5,7,8][0-9]{9}$/
+              if(reg.test(data[i].name)) {
+                var userName = data[i].name.replace(/^(.{3}).+(.{4})$/g, '$1****$2')
+              }else {
+                var userName = data[i].name.replace(/^(.).+(.)$/g, '$1*$2')
+              }
+              html += `
+              <div class="container_detaill clear">
+                <div class="clear">
+                  <div class="fl user_pic ">
+                    <img src="${data[i].phtot? data[i].phtot: './image/man.jpg'}" alt="">
+                  </div>
+                  <div class="fl user_top">
+                    <span>
+                      ${userName}
+                    </span>
+                    <span class="stars">
+                    `;
+                  if(data[i].level > 0) {
+                    for(var g = 0; g < data[i].level; g++){
+                        html += '<img src="./img/stars.png" alt="">';
+                    }
+                    var new_level = 5 - data[i].level
+                    if (data[i].level < 5) {
+                        for (var r = 0; r < new_level; r++) {
+                            html += '<img src="./image/starg.png" alt="">'
+                        }
+                    }
+                  }
+                    html += `
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p class="detaill_time">${data[i].time}</p>
+                  <p class="detaill_text" id="detaill_text">${data[i].content}</p>
+                </div>
+                <div class="assess_imgs" id="imgs_container">
+                `;
+                if (data[i].img.length > 3) {
+                    if (data[i].img.indexOf(",") != -1) {
+                        var new_imgs = data[i].img.substring(1, data[i].img.length - 1).split(",")
+                        for (var n = 0; n < new_imgs.length; n++) {
+                          var successText = iGetInnerText(new_imgs[n])
+                          var imgUrl = successText.match(/[^\"].*[^\"]/)[0]
+                            html += `
+                            <span>
+                              <img src="${imgUrl}" class="allImgs" alt="">
+                            </span>
+                    `;
+                        }
+                    } else {
+                        var one_new_imgs = data[i].img.substring(1, data[i].img.length - 1)
+                        var one_successText = iGetInnerText(one_new_imgs)
+                        html += `
+                        <span>
+                          <img src=${one_successText} class="allImgs" alt="">
+                        </span>
+                    `;
+                    }
+                }
+                html +=`
+                  </div>
+                </div>
+                `;
+            }
+            $api.html($api.byId('content'), html)
+            //预览大图
+            document.getElementById("imgs_container").addEventListener("touchend", function(e) {
+              var tar = e.target
+              if(tar.nodeName == "IMG") {
+                var imgList = document.querySelectorAll(".allImgs")
+                var idx = 0
+                var imgUrl = []
+                for(var  i = 0; i < imgList.length; i++) {
+                  imgUrl.push(imgList[i].src)
+                  if(tar == imgList[i]) {
+                    idx = i
+                  }
+                }
+                showBigImages(imgUrl, idx)
+              }
+            })
+          }else{
+            $api.html($api.byId('content'), '<div style="width:100%;height:100%;text-align:center;margin-top:20vh;"><img src="[WShop.WSourceUrl]/WMember/images/no_assess.png" style="width:50%;">')
+          }
+        }
+      }
+    })
+  }
+
+</script>
+</body>
+</html>

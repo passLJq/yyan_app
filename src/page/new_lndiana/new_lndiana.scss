@@ -1,0 +1,322 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  line-height: rems(24);
+  font-size: rems(24);
+  background-color: #f5f5f5;
+}
+
+
+
+/* 活动规则 */
+.rule {
+  width:rem(70);
+  height:rem(24);
+  background-color: #EB6100;
+  border-radius:rem(12) 0 0 rem(12);
+  text-align: center;
+  line-height: rem(24);
+  font-size: rem(12);
+  color: #fff;
+  position: absolute;
+  top: rem(26);
+  right: 0;
+  z-index: 99;
+}
+
+/* 轮播 */
+#swiper {
+  width: 100%;
+  img {
+    width: 100%;
+    display: block;
+    height: rems(300);
+  }
+}
+
+.van-swipe__track {
+  width: 100% !important;
+}
+
+.imgBox {
+  width:100% !important;
+}
+
+#wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#pagination {
+  margin-bottom: rem(-10);
+}
+
+/* 拼团说明 */
+#shuoming {
+  background-color: #427161;
+}
+
+.explain {
+  height: rem(48);
+  padding: 0 rem(15);
+  justify-content: center;
+}
+
+.explain .step {
+  width: rem(22);
+  height: rem(22);
+}
+
+.explain .step + .step {
+  margin-left: rem(7);
+}
+
+.explain .step div {
+  font-size: rem(11);
+  display: block;
+  background-color: #EB6100;
+  width: rem(16);
+  height: rem(16);
+  line-height: rem(16);
+  color: #fff;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.explain span {
+  color: #fff;
+  font-size: rem(12);
+  margin-left: rem(5);
+}
+
+.explain .right {
+  width: rem(22);
+  height: rem(22);
+  margin-left: rem(10);
+  background: url('../../img/right@3x.png') no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.explain .right img {
+  width: 100%;
+  height: 100%;
+}
+#shuoming {
+  margin-bottom: rem(10);
+}
+/* 导航nav */
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.nav {
+  width: 100%;
+  height: rem(35);
+  overflow: hidden;
+  background-color: #fff;
+  font-size: rem(14);
+  z-index: 999;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.nav #nav_item {
+  width: rem(125);
+  height: rem(35);
+  display: inline-block;
+  font-size: rem(14);
+  line-height: rem(35);
+  color: #9B9B9B;
+}
+
+.nav #nav_item.active {
+  color: #427161;
+}
+
+.nav .bottomBar {
+  width: rem(45);
+  height: rem(2);
+  background: #FAAFA0;
+  -webkit-border-radius: rem(2);
+  border-radius: rem(2);
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  transition: all 0.5s ease-out
+}
+
+/* 商品列表 */
+
+.productList {
+  width: 100%;
+  overflow: hidden;
+}
+
+.productList .list-item {
+  width: 100%;
+  height: rem(165);
+  background-color: #fff;
+  padding: rem(22) rem(19) 0 rem(19);
+}
+
+.productList .list-item + .list-item {
+  margin-top: rem(10);
+}
+
+.productList .list-item .pic {
+  width: rem(100);
+  height: rem(100);
+}
+
+.productList .list-item .pic img {
+  width: 100%;
+  height: 100%;
+}
+
+.productList .list-item .proDetails {
+  width: rem(227);
+  height: rem(121);
+  margin-left: rem(10);
+  position: relative;
+}
+
+.productList .list-item .proDetails .slogan {
+  width: 100%;
+  max-height: rem(45);
+  font-size: rem(15);
+  line-height: rem(22);
+  color: #666464;
+}
+.productList .list-item .proDetails .slogan div {
+  display: inline-block;
+  /* width: 80rpx; */
+  padding: 0 rem(7);
+  height: rem(16);
+  font-size: rem(10);
+  color: #fff;
+  border-radius: rem(8);
+  line-height: rem(16);
+  margin: 0 rem(4);
+  transform: translateY(rem(-1));
+  -webkit-transform: translateY(rem(-1));
+}
+.productList .progress {
+  width: 100%;
+  height: rem(10);
+  border-radius:rem(11);
+  background-color: #f6f6fa;
+  overflow: hidden;
+  position: absolute;
+  top: rem(50);
+  left: 0;
+}
+.productList .progress > div {
+  height: 100%;
+  background-color: #F5AC9E;  
+}
+
+.productList .list-item .member {
+  width: 100%;
+  height: rem(32);
+  position: absolute;
+  top: rem(60);
+  left: 0;
+}
+
+.productList .member span {
+  font-size: rem(10);
+  margin-right: rem(10);
+}
+
+.productList .pricediv {
+  width: 100%;
+}
+.productList .pricediv .priceText {
+  width: rem(147);
+  height: rem(25);
+}
+.productList .pricediv .priceText span:nth-child(1) {
+  font-size: rem(18);
+  font-weight: 600;
+  color: #E69888;
+}
+.productList .pricediv .priceText span:nth-child(2) {
+  font-size: rem(12);
+  color: #999;
+}
+.productList .pricediv .btn {
+  width: rem(80);
+  height: rem(30);
+  font-size: rem(12);
+  color: #fff;
+  // border: rem(1) solid #FF5541;
+  background-color: #427161;
+  border-radius:rem(30);
+}
+.productList .pricediv .btn.close {
+  // border: rem(1) solid #d8d8d8;
+  background-color: transparent;
+  border: rems(2) solid #9B9B9B;
+  color: #9B9B9B;
+}
+
+.noda {
+  width: rem(200);
+  height: rem(200);
+  overflow: hidden;
+}
+.noda img {
+  width: rem(400);
+}
+
+.flex {
+  display: flex;
+}
+.flex_v {
+  flex-direction: column;
+}
+.flex_align_center {
+  align-items: center;
+}
+.flex_pack_center {
+  justify-content: center;
+}
+.text_center {
+  text-align: center;
+}
+
+.fs_10 {
+  font-size: rems(20);
+}
+.mr_12 {
+  margin-right: rem(12);
+}
+.fs_13 {
+  font-size: rem(13);
+}
+
+.flex_pack_justify_between {
+  justify-content: space-between;
+}
+.mt_35 {
+  margin-top: rem(35);
+}
+
+.line_over_2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

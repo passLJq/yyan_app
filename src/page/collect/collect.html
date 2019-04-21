@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>我的收藏</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #fff; padding:0; margin: 0;}
+  .flex{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;}
+  .flex_v { -webkit-box-orient: vertical; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }
+  .flex_justify_around { -webkit-box-pack: justify; -webkit-justify-content: space-around; -ms-flex-pack: justify; justify-content: space-around; }
+  a {color: #333;background: transparent;text-decoration: none;}
+ .pro_block {width: 100%; overflow: hidden; box-sizing:  border-box; display: -webkit-box; padding: 15px; border-bottom: 1px solid #F6F6FA; background-color: #fff; position: relative; z-index: 100;}
+ .block_left { display: -webkit-box; width: 100%; -webkit-box-flex: 1; }
+.pro_img { padding-right: 23px; height: 90px; overflow: hidden; }
+.pro_img img { width: 90px; margin-top: 50%; transform: translateY(-50%); }
+.shop_img{ height: 80px;}
+.shop_img img{ width: 80px;}
+.pro_text { -webkit-box-flex: 1; }
+.pro_name { color: #666464; height: 40px; overflow: hidden; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; font-size: 14px!important; }
+.pro_price { color: #E69888; }
+.shop_price{color: #999; font-size: 12px;}
+.pro_collect { color: #a9a9a9; font-size: 13px}
+.right_ico{line-height: 80px;}
+.icon_right:after { content: " "; display: inline-block; height: 6px; width: 6px; border-width: 2px 2px 0 0; border-color: #C8C8CD; border-style: solid; -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0); transform: matrix(0.71, 0.71, -0.71, 0.71,0, 0);}
+/*nav样式*/
+.nav_container{height: 40px; line-height: 38px; overflow: hidden; width:100%; background-color: #fff; margin-bottom: 10px; -moz-box-shadow:0px 5px 10px #FEFEFE; -webkit-box-shadow:0px 5px 10px #FEFEFE; box-shadow:0px 5px 10px #FEFEFE;}
+.nav_container li {flex-grow: 1; text-align: center;}
+.nav_container li.actived span{border-bottom: 2px solid #FF422C; color: #FF422C;}
+/*列表*/
+.clear:after{content: ""; display: block; clear: both;}
+.list_container{position:relative; }
+/*删除样式*/
+ .slideleft {width: 60px; text-align: center; height: 100%; display: -webkit-box; -webkit-box-pack: center; -webkit-box-align: center; position: absolute; top: 0; right: 0; z-index: 0; }
+ .slideleft span { padding: 0 10px; display: -webkit-box; -webkit-box-pack:center; -webkit-box-align: center;}
+.bg-red { background-color: #F5AC9E; }
+.f-white { color: #FFF !important; }
+.animated { -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+
+  </style>
+</head>
+<body>
+  <!-- <div class="nav_container">
+    <ul class="flex">
+      <li class="lis actived" onclick="changeList(1, this)">
+        <span style="padding: 0 20px;">商品</span>
+      </li>
+      <li class="lis" onclick="changeList(3, this)">
+        <span style="padding: 0 20px;">店铺</span>
+      </li>
+    </ul>
+  </div> -->
+  <ul id="msg_container">
+    <!-- <li class="list_container clear">
+      <div class="pro_block animated"  ontouchstart="return touchstartF(event,this);"  ontouchmove="return touchmoveF(event,this);">
+        <a href="http://m.weigouyi.cn/170718164338876176/product.html?id=180205182710891776" class="block_left">
+          <div class="pro_img">
+            <img src="http://images.weigouyi.cn/_P/201802/182654000692.jpg" alt="">
+          </div>
+          <div class="pro_text">
+            <p class="pro_name">测试测试forvincent</p>
+            <p class="pro_price">￥0.05</p>
+          </div>
+        </a>
+      </div>
+      <div class="slideleft bg-red">
+        <span class="bg-red f-white  dels">取消收藏</span>
+      </div>
+    </li> -->
+  </ul>
+
+<script src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/jquery-3.2.1.min.js"></script>
+</body>
+</html>

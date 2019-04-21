@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>意见反馈</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #fff;}
+  *{padding: 0; margin: 0;}
+  .fl{float: left;} .fr{float: right;} .clear:after{content: ""; display: block; clear: both;}
+  .hide{display: none!important;}
+  #head{margin-bottom: 10px;position:relative; height:46px;}
+ .foot_sub{background-color: #D8D8D8; color: #fff; height: 49px; width: 100%; text-align: center; font-size: 17px; line-height: 49px; position: fixed; bottom: 0;}
+ .main_container{padding: 0 15px; box-sizing: border-box; overflow: hidden; margin-bottom: 5px;}
+ .feed_type {width: 100%; height: 48px; line-height: 48px; border-bottom: 1px solid #F6F6FA; color: #333; font-size: 14px; position: relative;}
+ .feed_type:active{background-color: #eee;}
+ .title_right{color:#999;position:absolute;right: 0;}
+ .menber-list-li {color: #505050;  background: #FFF; width: 100%; overflow: hidden; box-sizing: border-box;}
+ .menber-list-li.text textarea { width: 100%; padding: 14px 18px; font-size: 14px; border: 0; cursor: pointer; -webkit-appearance: none; outline: none;box-sizing: border-box; overflow: auto; line-height: 20px;}
+ .text_align{text-align: right; padding: 0 18px; line-height: 44px; font-size: 14px; color: #999;}
+ .bottom_prompt{background-color: rgba(0,0,0,0.3); position: fixed; bottom: 0; width: 100%; height: 100vh;}
+ .bottom_content{position: absolute; bottom: 0; background-color: #fff; width: 100%;}
+ .bottom_content>div{padding: 0 16px; height: 45px; line-height: 45px; font-size: 14px; color: #333;}
+ .bottom_content>div:active{background-color: #eee;}
+ /*上传图片样式*/
+.imgs_reload_container{width: 100%; box-sizing: border-box; padding: 10px 18px; overflow: hidden;}
+.camera_container{width:85px;height:85px;background-color: #EAE9E9;position:relative; }
+.camera_container>img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+#imgs_container{width: 100%; margin:10px 5%; box-sizing: border-box; overflow: hidden;}
+#imgs_container img{width:30%;height:100px;float: left;padding-right: 10px;padding-bottom: 10px;}
+  </style>
+</head>
+<body>
+  <div id="head" class="clear">
+    <div onclick="backUrl()" style="display: inline-block;position: absolute; left: 15px; top: 50%; transform: translateY(-50%);">
+      <img src="./image/icon-back.png" style="vertical-align: top;width: 20px; height:20px;">
+    </div>
+    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #333; font-size: 17px;">
+      意见反馈
+    </div>
+    <div style="font-size:12px; color: #333;display: inline-block;position: absolute; right: 15px; top: 50%; transform: translateY(-50%);" onclick="tonotes()">反馈记录</div>
+  </div>
+  <div class="main_container" onclick="selectType()">
+    <div class="feed_type"><span id="feedType">请选择反馈类型</span><span class="title_right"><img src="./image/enter_icon.png" alt="" style="width:24px;height:24px;vertical-align: middle;"></span></div>
+  </div>
+  <div class="menber-list-li text">
+      <textarea maxlength="500" name="txtMsg" id="txtMsg" rows="8" placeholder="您对我们的平台、商品、服务还有哪些建议呢？请您留言告诉我们…" onpropertychange="changeMsg(this)" oninput="changeMsg(this)"></textarea>
+  </div>
+  <div class="text_align">
+    <span id="counts">0</span>/500
+  </div>
+  <!-- 上传图片 -->
+  <div class="imgs_reload_container">
+    <div class="camera_container" ontouchstart = 'putImgs()'>
+      <img src="./image/camera.png" alt="" >
+    </div>
+    <div id="imgs_container">
+
+    </div>
+  </div>
+  <!-- 我的意见列表 -->
+  <!-- <div style="margin-top: 70px; min-height: 100px; margin-bottom: 50px;">
+    <div style="padding: 10px; color: #fff; font-size: 16px; background-color: #ccc;">反馈记录</div>
+    <ul id="myFeed">
+
+    </ul>
+  </div> -->
+  <div class="foot_sub" >
+    提交
+  </div>
+  <div class="bottom_prompt hide">
+    <div class="bottom_content">
+
+    </div>
+  </div>
+
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+  var isOk = false
+  var phon = []//上传图片容器
+  var imgCounts = 0;
+  if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+      var statustop=$api.getStorage('statustop');
+      var hee=45+Number(statustop)+'px'
+      $api.css($api.byId("head"), "margin-top: "+statustop+"px")
+      getType()
+      document.querySelector(".bottom_prompt").addEventListener("click", function (e) {
+        if(e.target.className == "bottom_prompt") {
+          $api.addCls($api.dom(".bottom_prompt"), "hide")
+        }
+      })
+      document.querySelector(".bottom_content").addEventListener("click", function (e) {
+        if(e.target.className == "item") {
+          document.getElementById("feedType").innerHTML = e.target.innerHTML
+          $api.attr(document.getElementById("feedType"), "data-id", e.target.getAttribute("data-id"))
+          if(document.getElementById('txtMsg').value.length > 0) {
+            document.querySelector(".foot_sub").style.backgroundColor = "#FF422C"
+          }
+          $api.addCls($api.dom(".bottom_prompt"), "hide")
+        }
+      })
+  }
+  function putImgs() {
+  if(phon.length >= 5){
+    return;
+  }
+  if(api.systemType=="android"){
+    var UIAlbumBrowser = api.require('UIAlbumBrowser');
+    UIAlbumBrowser.imagePicker({
+      max: 5,
+      styles: {
+      bg: '#333',
+      cameraImg:'widget://res/cameraImg.png',
+      mark: {
+          icon: '',
+          position: 'bottom_left',
+          size: 20
+      },
+      nav: {
+          bg: '#000',
+          cancelColor: '#fff',
+          cancelSize: 16,
+          nextStepColor: '#fff',
+          nextStepSize: 16
+      }
+      },
+      animation:true,
+  }, function(ret) {
+      var UIAlbumBrowser = api.require('UIAlbumBrowser');
+      UIAlbumBrowser.closePicker();
+      if (ret.eventType == 'nextStep') {
+           var imglist = ret.list;
+           if(imglist.length>0){
+             api.showProgress({
+                 text: '图片上传请稍候',
+                 modal: true
+             });
+               for(var i=0;i<imglist.length;i++){
+                 var promise = new Promise(function(resolve, reject) {
+                     var img = imglist[i].path
+                     if($api.domAll('.assess_imgs').length < 5) {
+                     $api.append($api.byId('imgs_container'), '<img src="'+img+'" class="assess_imgs">');
+                   }
+                     api.ajax({
+                         url: memberSiteUrl+'/Ajax/FileUpload.ashx',
+                         method: 'post',
+                         data:{
+                           files: {
+                               file: img
+                           }
+                         }
+                     }, function(rets, err) {
+                       if (rets) {
+                           if(rets.success){
+                               if(phon.length >= 5) {
+                                 $api.css($api.dom('.camera_container'), 'display:none')
+                                 api.hideProgress();
+                                 return;
+                               }
+                               phon.push(rets.fullurl)
+                               imgCounts += 1
+                           }
+                       } else {
+                           promptMsg(err.msg)
+                       }
+                       if(i==imglist.length)
+                         resolve();
+                     });
+                 });
+               }
+             promise.then(function() {
+                api.hideProgress();
+             });
+           }
+       }
+     });
+
+   }
+   else if(api.systemType=="ios"){
+     iosPutImgs()
+   }
+}
+
+//ios上传
+function iosPutImgs(){
+      api.getPicture({
+      sourceType: 'library',
+      mediaValue: 'pic',
+      destinationType: 'base64',
+      allowEdit: false,
+      targetWidth: 375,
+      targetHeight: 750,
+      saveToPhotoAlbum: false
+  }, function(ret, err) {
+    if (ret) {
+      if($api.domAll('.assess_imgs').length < 5) {
+        $api.append($api.byId('imgs_container'), '<img src="'+ret.data+'" class="imgsList assess_imgs">');
+      }
+        var promise = new Promise(function(resolve, reject) {
+            api.ajax({
+                url: memberSiteUrl+'/Ajax/FileUpload.ashx',
+                method: 'post',
+                data: {
+                    files: {
+                        file: ret.data
+                    }
+                }
+            }, function(ret, err) {
+                    //解决奇怪的ios端问题
+                    var iosdata = JSON.parse(err.body.replace(/'/g,'"'));
+
+                    if(iosdata.success){
+                        phon.push(iosdata.fullurl)
+                        if(phon.length >= 5) {
+                          $api.css($api.dom('.camera_container'), 'display:none')
+                          api.hideProgress();
+                          return;
+                        }
+                    }else{
+                        promptMsg(err.msg)
+                    }
+                    resolve();
+            });
+        });
+        promise.then(function() {
+          api.hideProgress();
+        });
+    }
+    else {
+        promptMsg('上传取消')
+    }
+    api.hideProgress();
+  });
+}
+  function tonotes() {
+    openWin({
+        name: 'feedback_notes',
+        url: './feedback_notes.html',
+        pageParam:{
+          title:'反馈记录'
+        }
+    },1);
+
+  }
+  function changeMsg(obj) {
+    if(obj.value.length > 0) {
+      document.querySelector(".foot_sub").style.backgroundColor = "#FF422C"
+      $api.attr(document.querySelector(".foot_sub"), 'onclick', 'btnSubmit()');
+    }else {
+      document.querySelector(".foot_sub").style.backgroundColor = "#D8D8D8"
+      $api.removeAttr(document.querySelector(".foot_sub"), 'onclick');
+    }
+    if(obj.value.length <= 500) {
+      document.getElementById("counts").innerHTML = obj.value.length
+    }else {
+      document.getElementById("counts").innerHTML = document.getElementById("counts").innerHTML.substring(0, 500)
+    }
+  }
+  function selectType() {
+    $api.removeCls($api.dom(".bottom_prompt"), "hide")
+  }
+  function getType() {
+      api.ajax({
+        url: siteUrl +'Main/Member/GetAdviceType?uid='+api.getPrefs({sync: true,key: 'SessionUserID'}),
+        method: 'get',
+        headers:{
+          "Authorization": api.getPrefs({sync: true,key: 'SessionKey'}),
+          "Content-Type": 'application/json; charset=utf-8'
+        }
+      }, function(ret, err) {
+        if(ret) {
+          if(ret.success && ret.status == 1) {
+            var data = ret.Data
+            var html = ""
+            data.forEach(function(item, i) {
+              html += '<div class="item" data-id="'+item.type+'">'+item.typename+'</div>'
+            })
+            document.querySelector(".bottom_content").innerHTML = html
+          }
+        }
+      })
+  }
+  function btnSubmit(){
+    if(isOk) {return;}
+    var type = $api.attr(document.getElementById("feedType"), "data-id")
+    var content = $api.trim(document.getElementById('txtMsg').value)
+    if(!type) {
+      alert("请选择反馈类型")
+      return false;
+    }
+    if (content.length < 1) {
+        alert('请填写留言内容'); return false;
+    }
+    showLoading()
+    var newImg = phon.join()
+    api.ajax({
+      url: siteUrl +'Main/Member/InsertAdvice?uid='+ api.getPrefs({sync: true,key: 'SessionUserID'}),
+      method: 'post',
+      data:{
+        body:{
+          uid: api.getPrefs({sync: true,key: 'SessionUserID'}),
+          content: content,
+          type:type,
+          img: newImg
+        }
+      },
+      headers:{
+        "Authorization": api.getPrefs({sync: true,key: 'SessionKey'}),
+        "Content-Type": 'application/json; charset=utf-8'
+      }
+    }, function(ret, err) {
+        var isError = false
+        if(ret) {
+          if(ret.success && ret.status == 1) {
+            isOk = true
+            hideLoading()
+            setTimeout(function () {
+              promptMsg("提交成功, 感谢你的支持")
+            }, 100)
+
+            setTimeout(function () {
+              api.closeWin();
+            }, 1000)
+          }else {
+            isError = true
+          }
+        }else {
+          isError = true
+        }
+        if(isError) {
+          promptMsg("提交失败")
+          hideLoading()
+          document.getElementById('txtMsg').value = ""
+        }
+    })
+  }
+  function newInputMsg(obj) {
+    if(obj.value.length>11) {
+      obj.value=obj.value.slice(0,11)
+    }
+    obj.value = obj.value.replace(/\D/g,"")
+  }
+
+</script>
+</body>
+</html>

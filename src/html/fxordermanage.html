@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>销售管理</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+    <script src="./common/js/highcharts.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<style>
+  body{background-color: #F6F5FA;}
+  .fl{float: left;} .fr{float: right;} .clear:after{content: ""; display: block; clear: both;}
+  /*规则弹窗*/
+  .prompt_title{position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: rgba(0,0,0,0.4);}
+  .msg_container{position: absolute; top: 50%; left: 50%; overflow-y: auto; transform: translate(-50%, -50%); opacity: 0; width: 40%; height: 30%; border-radius: 16px; background-color: #fff; padding: 15px; transition: all ease-in-out 0.1s; -moz-transition: all ease-in-out 0.1s; -webkit-transition: all ease-in-out 0.1s; -o-transition: all ease-in-out 0.1s; }
+  .msg_container > p{padding-bottom: 10px;}
+  .hide{display: none;}
+  .animationOpacitySize{opacity: 1; width: 80%; height:60%; }
+  /*头部nav*/
+  .nav_container{width: 100%; height: 90px; box-sizing: border-box; overflow: hidden; color: #333; font-size: 14px; text-align: center; background-color: #fff;}
+  .nav_container>ul{height: 100%;}
+  .nav_container> ul>li>div:nth-child(2) {font-size: 12px;}
+  .nav_container>ul>li{width: 32%; height: 100%; display: inline-block; padding-top: 10px; border-right: 1px solid #F6F5FA; overflow: hidden;position: relative;}
+  .nav_list_container{position: absolute; top: 50%; transform: translateY(-50%); width: 100%; color: #AC9374;}
+  .nav_list_container > div:nth-child(1) {font-size: 18px; }
+  .year_title{color: #999; font-size: 12px; height: 40px; line-height: 40px; padding-left: 15px; }
+  .price_month:after{content:" ";display:inline-block;-webkit-transform:rotate(45deg);transform:rotate(45deg);height:6px;width:6px;border-width:2px 2px 0 0;border-color:#c8c8cd;border-style:solid;position:relative;top:-2px;top:-1px;margin-left:.3em}
+  .li_everymonth_container{height: 45px; width: 100%; padding: 0 15px; line-height: 45px; box-sizing: border-box; overflow: hidden; background-color: #fff; margin-bottom: 1px; color: #666464; font-size: 14px;}
+  header{background: RGBA(51, 51, 51, 1);width: 100%;background-size: 100% 100%}
+@font-face {font-family: "iconfont";
+src: url('iconfont.eot?t=1522748055375'); /* IE9*/
+src: url('iconfont.eot?t=1522748055375#iefix') format('embedded-opentype'), /* IE6-IE8 */
+url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAToAAsAAAAABzAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFZW7kf+Y21hcAAAAYAAAABeAAABhpmIBr5nbHlmAAAB4AAAARcAAAEYrqKYBWhlYWQAAAL4AAAALwAAADYQ8hsraGhlYQAAAygAAAAcAAAAJAfeA4RobXR4AAADRAAAAAwAAAAMC+kAAGxvY2EAAANQAAAACAAAAAgAdgCMbWF4cAAAA1gAAAAfAAAAIAESAF1uYW1lAAADeAAAAUUAAAJtPlT+fXBvc3QAAATAAAAAJwAAADhUX1fueJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2Bk/sE4gYGVgYOpk+kMAwNDP4RmfM1gxMjBwMDEwMrMgBUEpLmmMDgwVDwTYW7438AQw9zA0AAUZgTJAQAk2AyAeJzFkMENgDAMAy9t6QPx7BA8GIgXc3TirlFMKA8mqCXHimMpUYAFiOIhJrAL48Ep19yPrO4nz2SpEait9K7+U0U0y65BJTMNNm/1H5vXfXT6CnVQJ7byknADgJ8L3wAAeJwNj71OwlAARu936y0tQiu3/4UCpcLVIE2slcFGWFw0DiZOjD6ADjqwOLCYOGjiMxgTX4LV0Ycw+gRdTa725BtPvuQQRsjfl7JWfGKRHbJPTsgFIVDHGBg0QizylI7hxMzxbEMRiYhrySBVjuENVNvNpvnIU2uqCQNdHMTZVKRU4DCf0QKZGwFBO7zkww5XXlD3RfdBntFXOL2kY84m8nRvbmd9S1s2OA84f9JUxjRKN0wD156rM72uyjdmhs66t0t7aAQiPF80+21+9ZjfRENPB1YrWO2+8T5vha1q96Fr8aC21dT8sJls21j+bPpWIxp9kwpUrc/0V7kjVTXTUR3QT2mgTOURPm5RopzIQhaV+g8Dhi/MAHicY2BkYGAAYh8tzrB4fpuvDNwsDCBw7WX2dAT9v5eFgbkYyOVgYAKJAgAOeAoYAHicY2BkYGBu+N/AEMPCAAJAkpEBFTADAEcJAmwEAAAAA+kAAAQAAAAAAAAAAHYAjHicY2BkYGBgZghkYGUAASYg5gJCBob/YD4DABD3AXAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAmZGJkZmRhYGxgquqND8rMzGvJL+UgQEAK3YE9wA=') format('woff'),
+url('iconfont.ttf?t=1522748055375') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+url('iconfont.svg?t=1522748055375#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+font-family:"iconfont" !important;
+font-size:16px;
+font-style:normal;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+@font-face {font-family: "iconfont";
+src: url('iconfont.eot?t=1522821489639'); /* IE9*/
+src: url('iconfont.eot?t=1522821489639#iefix') format('embedded-opentype'), /* IE6-IE8 */
+url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAVwAAsAAAAACAgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFZW7kilY21hcAAAAYAAAABnAAABnM/HbMdnbHlmAAAB6AAAAYkAAAHMAIRMqWhlYWQAAAN0AAAALwAAADYQ9FjgaGhlYQAAA6QAAAAcAAAAJAfeA4VobXR4AAADwAAAABAAAAAQD+kAAGxvY2EAAAPQAAAACgAAAAoBXACmbWF4cAAAA9wAAAAfAAAAIAETAF1uYW1lAAAD/AAAAUUAAAJtPlT+fXBvc3QAAAVEAAAALAAAAD3GdZuqeJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2Bk/sU4gYGVgYOpk+kMAwNDP4RmfM1gxMjBwMDEwMrMgBUEpLmmMDgwVDzbydzwv4EhhrmBoQEozAiSAwAxvQ0neJzFkMENgCAMRX8pGmIcxaNxF66eHIHVWKhrYFu4MAGfvNL+/KQEABsAVi4lAvSBYHrVJfcZh/sRj85JT9C7SJba2tSZyBPJO7Yk7VgmWrd61un1HpP9dxnoEyV3zJfaQfgB6R8TuwB4nF1QTUvDQBCd2XXTVttU89G022bTJNpV1KBpWkFtRRCL4kHw5MGDP0CvInjwInjw4G/QglfPGtCT/0P0TygYTRURHIY3j3nwmDfAAD6faUzLoMMkzMMabAOgMo2eSmx0ZRSQaTRdZlqGSqUv3YzvBbSDlqcYpbAdNSwloxRRRYFNN2zLgEhsRV2yhGHJRqxU+Y42UdPoJQ6XpThLNskVmo5fK3Znk42ZFSOs69mjvKZVNO0iqzCWJWSoqOKBVcqx3LCS9FmRm7EzRRzMVyTf2i3Uq9r+eXRoT1g5xNNT1Kt19WZljI+lfcJLulbJjBayZV7wxw08eh0p63m78QJpkTTrI32gqzAKtTRlKIihEi8g6b04yOK7g1RN/NjrH/d6x/2768G4xmUxNyeSdRGGgq6mi7s/OaFOx7Y7zq//E72nizACMvVXMSPQ6uJCgLpvqug1ZMsPMGovNFvd9D+W2RRoKATid8be42/0b5FPcrw1ODf+KF1kb3H8xr4xqf1Tfyh8AbN7WjsAAAB4nGNgZGBgAGLfFycl4/ltvjJwszCAwLVXXYUI+v8BFgZmRyCXg4EJJAoARtILTwB4nGNgZGBgbvjfwBDDwgACQJKRARWwAABHCgJtBAAAAAPpAAAEAAAABAAAAAAAAAAAdgCmAOYAAHicY2BkYGBgYQhkYGUAASYg5gJCBob/YD4DABESAXEAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAhZGJkZmRhZGVgbGCM7c4rzRTt7g0iTkrM5GBAQA6rwV/') format('woff'),
+url('iconfont.ttf?t=1522821489639') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+url('iconfont.svg?t=1522821489639#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+font-family:"iconfont" !important;
+font-size:16px;
+font-style:normal;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-msnui-sub:before { content: "\e6b9"; }
+
+.icon-jia:before { content: "\e659"; }
+
+.icon-zuojiantou:before { content: "\e614"; }
+.item{display: flex;align-items: center;padding-top: 80px;justify-content:space-between}
+.headcolor{background-color: rgba(32,32,32,0);width: 100%;position: fixed;top: 0;z-index: 99999;}
+.headcolortwo{background-color: #fff;width: 100%;position: fixed;top: 0;z-index: 99999;color: #000}
+.touxiang{display: flex;align-items: center;padding-left: 10px}
+.touxiang img{width: 60px;height: 60px;display: block;border-radius:50%;}
+.item-title {padding-left: 10px;}
+.item-title :nth-child(1){font-size: 14px;color: #fff;}
+.item-title :nth-child(2){font-size: 16px;color: #fff;font-weight: 700;padding-top: 2px;}
+.item-right{padding-right: 20px}
+.item-right img{width: 110px;height: 110px;display: block}
+.loding{padding-top: 20px}
+.loding img{ width: 100%;padding: 0 20px;}
+/*进度条样式*/
+#progressBar{
+width: 90%;
+height: 50px;
+position: relative;
+margin: 0 auto;
+margin-top: 20px
+}
+#progressBar div{
+width: 100%;
+height: 5px;
+position: absolute;
+top:50%;
+left: 0;
+margin-top:-30px;
+background: #1b1b1b;
+}
+#progressBar div span{
+position: absolute;
+display: inline-block;
+background: RGBA(172, 147, 116, 1);
+height: 5px;
+}
+#progressBar>span{
+position: absolute;
+top:0;
+margin-top: -10px;
+width: 15px;
+height: 15px;
+border-radius: 50%;
+background: RGBA(172, 147, 116, 1);
+margin-left: -10px;
+color:#fff;
+}
+#progressBar>span:nth-child(1){
+left: 0%;
+}
+#progressBar>span:nth-child(2){
+  left: 0%;
+  background:rgba(172, 147, 116, 1);
+}
+#progressBar>span:nth-child(3){
+left: 33%;
+background:#1b1b1b;
+}
+#progressBar>span:nth-child(4){
+left: 66%;
+background:#1b1b1b;
+}
+#progressBar>span:nth-child(5){
+left: 100%;
+background:#1b1b1b;
+}
+#progressBar section{
+position: absolute;
+left: -3%;
+top: 17%;
+}
+#progressBar :nth-child(7){
+  text-align: center;
+  left: 26%;
+  top: 17%;
+}
+#progressBar :nth-child(8){
+  text-align: center;
+  left: 59%;
+  top: 17%;
+}
+#progressBar :nth-child(9){
+  text-align: right;
+  left: 89%;
+  top: 17%;
+}
+#progressBar :nth-child(10){
+text-align: center;
+left: 69%;
+top:17%
+}
+#progressBar :nth-child(11){
+text-align: right;
+left: 90%;
+top:17%
+}
+/*进度气泡样式*/
+.tag{width: 35px;left:-21px;display: table;padding: 1px 2px;position:relative; background-color:rgba(0,0,0,0);font-size: 13px;text-align: center;border: 1px solid RGBA(172, 147, 116, 1);border-radius: 5px}
+.jiaobiao{color:  RGBA(172, 147, 116, 1)}
+.arrow{ position:absolute; width:40px; height:40px; bottom:-47px; left:9px;}
+.arrow *{ display:block; border-width:8px; position:absolute; border-style:solid dashed dashed dashed; font-size:0; line-height:0; }
+.arrow span{border-color:RGBA(172, 147, 116, 1) transparent transparent; top:-7px;left: 2px;}
+.itemshengji{display: flex;align-items: center;margin: 10px 0}
+.itemshengji p{color: RGBA(172, 147, 116, 1);font-size: 14px;padding: 5px 10px;}
+.itemshengji span{background-color: RGBA(172, 147, 116, 1);color: #fff;padding: 1px 10px;margin-right: 5px;border-radius: 5px;font-size: 14px}
+
+
+/*//新*/
+.main{text-align: center;border-top: 1px solid #e8e8e8}
+.main_top{display: flex;justify-content:space-between;border-bottom: 1px solid #e6e6e6;padding: 8px 10px;}
+.main_tops{display: flex;justify-content:space-between;padding: 8px 15px;color: #464646; font-size: 16px;}
+.main_top p{font-size: 16px;padding-left: 10px;padding-top: 4px}
+.main,.foot{background-color: #fff;}
+.main-foot{color: #747474;display: flex;width: 100%;padding-bottom: 25px;padding-top: 20px;background:linear-gradient(49deg,rgba(255,234,224,1),rgba(247,195,179,1));}
+.main-foot .jl{flex-grow:1;margin-top: 6px}
+.main-foot .jl:nth-child(1){
+  border-right: 1px solid #FFFFFF
+}
+.main-foot .jl:nth-child(2){
+  border-right: 1px solid #FFFFFF
+}
+.main-foot .jl p{font-size: 13px; color: #575757;}
+.jl-kuang{color: #333; font-size: 20px;	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;}
+
+#head{position: fixed;top:0;z-index: 99999;width: 100%}
+.title_container{height: 44px; width: 100%; box-sizing: border-box; overflow: hidden; background-color: #fff; margin-top: 10px; color: #464646; line-height: 44px; padding: 0 15px; font-size: 16px;}
+.fr{float:right; }.fl{float: left;} .clear{content: ""; display: block; clear: both;}
+.year_container{background-color: #fff;}
+.year_container .title_year{background-color: #F6F5FA; height: 40px; line-height: 40px; padding: 0 15px; color: #A8A8A8;}
+.year_container li {height: 45px; line-height: 45px; box-sizing: border-box; overflow: hidden; padding: 0 15px; color: #393939; border-bottom: 1px solid #eee;}
+.right_icon{margin-left: 10px; height: 8px; width: 8px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; transform:rotate(45deg);-ms-transform:rotate(45deg); -moz-transform:rotate(45deg); -webkit-transform:rotate(45deg);-o-transform:rotate(45deg); }
+.color_grient{color: #AC9374;}
+</style>
+</head>
+<body>
+  <!-- <header>
+<div class="loding">
+  <div style="width:90%;margin:0 auto" id="bigjiao">
+    <div class="tag">
+   <div class="arrow">
+       <span></span>
+      </div>
+      <span class="jiaobiao"></span>
+  </div>
+  </div>
+  <div id="progressBar"> -->
+       <!-- 进度条 -->
+       <!-- <div id="lodwidth">
+           <span id="yellolod"></span>
+       </div> -->
+       <!-- 五个圆 -->
+       <!-- <span id='p1'></span>
+       <span id='p2'></span>
+       <span id='p3'></span>
+       <span id='p4'></span> -->
+       <!-- <span id='p5'></span> -->
+  <!-- </div>
+</div>
+
+<div class="itemshengji">
+</div>
+</header> -->
+  <!-- <div class="nav_container">
+    <ul>
+      <li>
+        <div class="nav_list_container">
+          <div>&yen;<span id='todaysales'>0.00</span></div>
+          <div>今日销售额</div>
+        </div>
+      </li>
+      <li>
+        <div class="nav_list_container">
+          <div>&yen;<span id='weeksales'>0.00</span></div>
+          <div>本周销售额</div>
+        </div>
+      </li>
+      <li>
+        <div class="nav_list_container">
+          <div>&yen;<span id='totalsales'>0.00</span></div>
+          <div>累计销售额</div>
+        </div>
+      </li>
+    </ul>
+  </div> -->
+  <div class="main">
+  <!-- <div class="main_top"><p>累计收益金额</p></div> -->
+  <div class="main-head">
+    <!-- <p style="color:#838383;font-size:14px;padding-top:10px">总销售额</p>
+    <p class="color_grient" style='font-weight:700;font-size:24px;padding:10px 0' id='zongxiao'>0</p>
+    <p style="color:#747474;font-size:15px" id='lastmonthsales'>上月销售额：&yen;0</p> -->
+    <div class="main-foot">
+      <div class="jl">
+        <span class="jl-kuang" id='todaysales'>0元</span>
+        <p>销售额</p>
+        <p>(今日实时)</p>
+      </div>
+      <div class="jl">
+        <span class="jl-kuang" id='weeksales'>0元</span>
+        <p>销售额</p>
+        <p>(所有未结算)</p>
+      </div>
+      <div class="jl">
+        <span class="jl-kuang" id='totalsales'>0元</span>
+        <p>销售额</p>
+        <p>(所有已结算)</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="foot">
+  <div class="main_tops"><p>七日销售柱状图</p></div>
+  <div id="container" style="max-width:800px;height:200px;"></div>
+</div> -->
+<div class="title_container">
+  <div>每月销售额明细</div>
+</div>
+  <div id="manages_container">
+
+  </div>
+  <div class="prompt_title hide" id="prompt_title" onclick="closemsg()">
+    <div class="msg_container">
+      <p>
+        一、关于业绩销售额说明
+      </p>
+      <p style="color: #333; font-size: 14px;">
+        1.销售额的计算方法<br/>
+        在每月的月底前7天完成订单，并且在完成确认收货后，不产生退款的情况下，订单的销售额就会累计进入本月的销售额；若产生退款，则不累计为本月的销售额。
+      </p>
+      <p style="font-size: 12px; color: #999;">
+        举例：以某月31天计算，用户需要在24日完成订单，若在不产生退款的情况下，则累计为本月的销售额；若在25日~31日之间完成确认收货，并不产生退款则订单的销售额累计为下月的销售额。<br/>
+        如此类推，以31天计算，那么本月24日~下月23日作为每月销售业绩周期，在不产生退款的情况下，则累计为本月的销售业绩。
+      </p>
+      <p style="color: #333; font-size: 14px;">
+        2.确认收货最晚14天内完成，请尽快完成确认收货，缩短销售额的统计时间。
+      </p>
+      <p style="color: #333; font-size: 14px;">
+        3.当您的订单全部完成退款，则该订单的销售额是不统计的。
+      </p>
+      <p style="color: #333; font-size: 14px;">
+        4.拼团订单不计算销售额。
+      </p>
+      <p>
+        二、关于店铺累计销售额升级说明
+      </p>
+      <p style="color: #333; font-size: 14px;">
+        1.当用户取消所下订单时，系统将扣除与订单金额相对应的销售金额。扣除销售金额之后，剩余销售额如果低于某个等级的最低标准线时，用户店铺等级将自动下降。例如：用户原有销售为1999元，用户要取消一个110.00的订单，系统将扣除相对应的110销售额，这时1999-110=1889。剩余销售额低于铂金店铺最低要求1999元，系统将自动将用户的等级下降为黄金店铺。如果用户取消的订单扣除相应销售金额之后，剩余销售金额仍然大于当前等级的最低要求，用户的等级将不受影响。例如：用户原有销售额为2600元，用户要取消一个600元的订单，系统将扣除相对应的600元销售额，这时2600-6000=2000。剩余销售额高于铂金店铺最低要求1999元，用户等级将不受影响，仍然是铂金店铺。
+      </p>
+    </div>
+  </div>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+
+if(openapp){
+  window.apiready=function(){
+    data()
+  }
+}else{
+  window.onload=function(){
+    data()
+  }
+}
+
+function data(){
+  getMsg()
+  // zhu()
+  if(window.api){
+    //下拉刷新
+    api.setCustomRefreshHeaderInfo({
+      bgColor: '#f8f8f8',
+      images: [
+          'widget://image/suaxin1.png',
+          'widget://image/suaxin2.png',
+          'widget://image/suaxin3.png',
+          'widget://image/suaxin4.png',
+          'widget://image/suaxin5.png',
+          'widget://image/suaxin6.png',
+          'widget://image/suaxin7.png'
+      ],
+      tips: {
+          pull: '下拉刷新',
+          threshold: '松开立即刷新',
+          load: '正在刷新'
+      }
+    }, function() {
+          setTimeout(function () {
+            getMsg();
+          }, 500)
+
+      });
+    }
+}
+
+  function levea(){
+  //个人店铺数据
+  https({
+    url: siteUrl +'Main/Shopping/GetUserShopLevelJson',
+    method: 'get',
+    data:{
+        uid:getname()
+    },
+    headers:1,
+    successBack:function(ret){
+      if(ret.success){
+          if(ret.status==1 && ret.Data!=null){
+            var data = ret.Data;
+            console.log($api.jsonToStr(data));
+            var chtml=''
+            var lodwidth=Number($api.byId('lodwidth').scrollWidth)
+            var qibao
+            switch (data.mylevel) {
+              case 1:
+              lodwidth=(Number(data.pointtotal))*((lodwidth*0.25)/(Number(data.shoplevellist[0].condition)))
+              qibao=(Number(lodwidth)-21)+'px'
+              lodwidth=lodwidth+'px'
+              var a=Number(data.pointtotal).toFixed(0)
+              $api.html($api.dom('.jiaobiao'),a);
+              $api.css($api.dom('.tag'), 'left:'+qibao);
+              $api.css($api.byId('yellolod'), 'width:'+lodwidth);
+                break;
+                case 2:
+                lodwidth=(Number(data.pointtotal)-Number(data.shoplevellist[0].condition))*((lodwidth*0.33)/(Number(data.shoplevellist[1].condition)-Number(data.shoplevellist[0].condition)))
+                  qibao=(Number(lodwidth)-21)+'px'
+                lodwidth=lodwidth+'px'
+                var a=Number(data.pointtotal).toFixed(0)
+                if(a==0){
+                  $api.css($api.dom('.tag'), 'display:none');
+                }
+                $api.html($api.dom('.jiaobiao'),a);
+                $api.css($api.dom('.tag'), 'left:'+qibao);
+                $api.css($api.byId('yellolod'), 'width:'+lodwidth);
+                $api.css($api.byId('p1'), 'background: RGBA(172, 147, 116, 1);');
+                  break;
+                  case 3:
+                  lodwidth=(Number(data.pointtotal)-Number(data.shoplevellist[1].condition))*((lodwidth*0.33)/(Number(data.shoplevellist[2].condition)-Number(data.shoplevellist[1].condition)))+lodwidth*0.33
+                  qibao=(Number(lodwidth)-21)+'px'
+                lodwidth=lodwidth+'px'
+                var a=Number(data.pointtotal).toFixed(0)
+                $api.html($api.dom('.jiaobiao'),a);
+                $api.css($api.dom('.tag'), 'left:'+qibao);
+                $api.css($api.byId('yellolod'), 'width:'+lodwidth);
+                  $api.css($api.byId('p1'), 'background: RGBA(172, 147, 116, 1);');
+                  $api.css($api.byId('p2'), 'background: RGBA(172, 147, 116, 1);');
+                    break;
+                    case 4:
+                    lodwidth=(Number(data.pointtotal)-Number(data.shoplevellist[2].condition))*((lodwidth*0.33)/(Number(data.shoplevellist[3].condition)-Number(data.shoplevellist[2].condition)))+lodwidth*0.66
+                    qibao=(Number(lodwidth)-21)+'px'
+                  lodwidth=lodwidth+'px'
+                  var a=Number(data.pointtotal).toFixed(0)
+                  $api.html($api.dom('.jiaobiao'),a);
+                  $api.css($api.dom('.tag'), 'left:'+qibao);
+                  $api.css($api.byId('yellolod'), 'width:'+lodwidth);
+                    $api.css($api.byId('p1'), 'background: RGBA(172, 147, 116, 1);');
+                    $api.css($api.byId('p2'), 'background: RGBA(172, 147, 116, 1);');
+                    $api.css($api.byId('p3'), 'background: RGBA(172, 147, 116, 1);');
+                      break;
+                      case 5:
+                    var a=Number(data.pointtotal).toFixed(0)
+                    $api.html($api.dom('.jiaobiao'),a);
+                    $api.css($api.dom('.tag'), 'left:'+qibao);
+                    $api.css($api.byId('bigjiao'), 'display:none');
+                    $api.css($api.byId('yellolod'), 'width:100%');
+                    $api.css($api.byId('p1'), 'background: RGBA(172, 147, 116, 1);');
+                    $api.css($api.byId('p2'), 'background: RGBA(172, 147, 116, 1);');
+                    $api.css($api.byId('p3'), 'background: RGBA(172, 147, 116, 1);');
+                    $api.css($api.byId('p4'), 'background: RGBA(172, 147, 116, 1);');
+                        break;
+              default:
+
+            }
+            var shtml=''
+            if(data.mylevel==5){
+              shtml='<p>亲爱的'+data.username+'，你已经是最高等级了</p>'
+            }else{
+              shtml='<p><span>升级</span>亲爱的'+data.username+'，再获取'+data.point+'元即可升级为'+data.newlevelname+'</p>'
+            }
+            console.log(shtml);
+            $api.html($api.dom('.itemshengji'),shtml)
+            data.shoplevellist.forEach(function(item,index){
+              chtml+='<section>'
+              chtml+='<p style="color:RGBA(216, 216, 216, 0.6)">'+Number(item.condition).toFixed(0)+'</p>'
+              chtml+='<p style="color:RGBA(216, 216, 216, 0.6)">'+item.levelname.replace("店铺","")+'</p>'
+              chtml+='</section>'
+            })
+            $api.append($api.byId('progressBar'), chtml);
+
+
+          }
+      }
+         api.hideProgress();
+          api.refreshHeaderLoadDone();
+  }
+});
+}
+function getMsg() {
+  https({
+    url: siteUrl +'Main/Member/GetUserSalesList',
+    method: 'get',
+    data:{
+        uid: getname()
+    },
+    headers:1,
+    successBack:function(ret){
+      if(ret.success && ret.status == 1) {
+        document.getElementById("todaysales").innerHTML = '&yen;'+ret.todaysales || '&yen;'+"0.00"
+        document.getElementById("weeksales").innerHTML = '&yen;'+(Number(ret.weeksales)-Number(ret.totalsales)).toFixed(2) || '&yen;'+"0.00"
+        document.getElementById("totalsales").innerHTML = '&yen;'+ret.monthsales || '&yen;'+"0.00"
+        // document.getElementById("zongxiao").innerHTML = ret.totalsales || "0"
+        // document.getElementById("lastmonthsales").innerHTML = '上月销售额：&yen;'+ret.lastmonthsales|| '上月销售额：&yen;0'
+        if(ret.Data.length > 0) {
+          var html = ""
+          for(var r = 0; r < ret.Data.length; r++) {
+            html += '<div class="year_title">'+ret.Data[r].year+'</div>'
+            if(ret.Data[r].monthdata.length > 0) {
+              html += '<ul>'
+              for(var i = 0; i < ret.Data[r].monthdata.length; i++) {
+                var monthdata = ret.Data[r].monthdata[i]
+                html += '<li class="li_everymonth_container clear" onclick="toFxorder(\''+monthdata.month+'\')"><span class="fl">'+monthdata.month+'</span><span class="price_month fr">&yen;'+monthdata.amount+'</span></li>'
+              }
+              html += '</ul>'
+            }
+
+          }
+          document.getElementById("manages_container").innerHTML = html
+        }
+      }
+    api.refreshHeaderLoadDone();
+  }
+  })
+}
+function promptTitle() {
+  api.setFrameAttr({
+      name: api.frameName,
+      bounces: false
+  });
+  $api.removeCls($api.byId("prompt_title"), 'hide');
+  setTimeout(function () {
+    $api.addCls($api.dom(".msg_container"), 'animationOpacitySize');
+  }, 50)
+}
+function closemsg() {
+  api.execScript({
+      name: 'fxordermanage',
+      frameName: 'fxordermanage_top',
+      script: 'removeBg_color();'
+  });
+  $api.addCls($api.byId("prompt_title"), 'hide');
+  setTimeout(function () {
+    $api.removeCls($api.dom(".msg_container"), 'animationOpacitySize');
+  }, 50)
+  api.setFrameAttr({
+      name: api.frameName,
+      bounces: true
+  });
+}
+function toFxorder(monthdata) {
+  openWin({
+      name: 'fxorders',
+      url: './fxorders.html',
+      pageParam: {
+        monthdata: monthdata,
+        title:'销售订单'
+      }
+  },1);
+
+}
+
+function zhu(){
+  https({
+    url:  siteUrl +'Main/Member/GetUserSevenDaysSale',
+    data:{
+        uid:getname(),
+    },
+    headers:1,
+    successBack:function(ret){
+          if(ret.success){
+            console.log($api.jsonToStr(ret));
+            var xnumber=[];
+            var ynumber=[];
+            var data=ret.Data
+            // for(var i in data){
+            //   xnumber.push(i)
+            //   ynumber.push(parseFloat(data[i].toFixed(2)))
+            // }
+            data.forEach(function(item,index){
+              xnumber.push((item.time).substring(5,10))
+              ynumber.push(parseFloat(Number(item.sale).toFixed(2)))
+            })
+            //图表
+              var chart = Highcharts.chart('container', {
+          xAxis:{
+            lineColor: '#fcf',
+            type:'category',
+            categories:xnumber,
+            index:0,
+            tickLength: 0,
+          },
+          title: {
+          text: null
+      },
+          yAxis: {
+          lineColor: '#fff',
+          lineWidth: 1,
+                title: {
+                text: null,
+            },
+            opposite: true,
+            allowDecimals:false
+      },
+          exporting: {
+          enabled: false
+      },
+          credits: {
+          enabled: false
+      },
+          series: [{
+              name: '销售额',
+              data: ynumber,
+              color:'#CDA86E',
+          }],
+          responsive: {
+              rules: [{
+                  condition: {
+                      maxWidth: 500
+                  },
+                  chartOptions: {
+                      legend: {
+                          layout: 'horizontal',
+                          align: 'right',
+                          verticalAlign: 'top',
+                          y:-18,
+                          enabled:false
+                      }
+                  }
+              }]
+          },
+          chart: {
+                    type: 'column'
+                }
+      });
+    }else{
+        promptMsg(ret.err)
+    }
+  }
+  });
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>商品详情的弹出框</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <style>
+          body{
+              background-color: rgba(0,0,0,0.5)
+          }
+          .box{position: fixed;bottom:0;width: 100%;font-size: 15px;z-index: 9999;background-color: #fff}
+        .item{display: flex;background-color: #fff;}
+        .item-div{width: 20%;text-align: center;}
+        .item-div img{height:45px;width: 45px;display: block;margin:0 auto;padding: 10px 0}
+        .item-div p{padding-bottom: 10px}
+        .zuan{background: #fff;text-align: center;padding: 10px 0}
+        .hide{display: none}
+        .zhezhao{position: fixed;z-index: 999;width: 100%;height: 100%;top:0}
+      </style>
+  </head>
+  <body>
+    <div class="zhezhao" onclick="clos()"></div>
+    <div class="box">
+    <div class="zuan hide">
+      <p>分享好友下单赚<span style="color:#fb2f3b" id="money">6.66</span>元</p>
+    </div>
+    <div class="item">
+      <!-- <div class="item-div">
+        <img src="./image/share_weixin.png" alt="" onclick="shareText(0)">
+        <p>微信好友</p>
+      </div> -->
+      <div class="item-div">
+        <img src="./image/xiaochengx.png" alt="" onclick="shareText(4)">
+        <p>小程序</p>
+      </div>
+      <div class="item-div">
+        <img src="./image/share_pengyouquan.png" alt="" onclick="shareText(3,1)">
+        <p>朋友圈</p>
+      </div>
+      <!-- <div class="item-div">
+        <img src="./image/share_url.png" alt="" onclick="shareText(2)">
+        <p>复制链接</p>
+      </div> -->
+      <div class="item-div">
+        <img src="./image/shengcheng.png" alt="" onclick="shareText(3)">
+        <p>生成海报</p>
+      </div>
+    </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript">
+  var promsg = ''
+    var isrushbuy=false
+    //判断是否为高佣专区
+ var isuserpers=false
+ //判断是否为开店礼包
+ var openshop=false
+      apiready = function(){
+        $api.dom('.box').style.paddingBottom=(api.getPrefs({sync: true,key: 'safeAreaBottom'}))+'px'
+        var fxshopid = api.getPrefs({sync: true,key: 'SessionShopID'});
+        if(fxshopid!=null&&fxshopid!=""){
+          if(api.pageParam.zuan) {
+            $api.html($api.byId('money'), api.pageParam.zuan);
+            $api.removeCls($api.dom('.zuan'), 'hide');
+          }
+        }
+      };
+      function clos(){
+        api.closeFrame({
+            name: 'pro_sharediv'
+        });
+
+      }
+      function shareText(index,other) {
+        var msg = "";
+        var shareid='1'
+      if(api.getPrefs({sync: true,key: 'loginStatus'})=="loginSuccess"){
+        shareid=api.getPrefs({sync: true,key: 'SessionUserID'})
+      }
+        //请求商品详情
+        var fxshopid = api.getPrefs({sync: true,key: 'SessionShopID'});
+        if(fxshopid!=null&&fxshopid!=""){
+        api.ajax({
+          url: siteUrl +'Main/Member/GetUserShopJson',
+          method: 'get',
+          data:{
+            values:{
+              uid:api.getPrefs({sync: true,key: 'SessionUserID'}),
+              yshopid:api.pageParam.yshopid
+            }
+          },
+          headers:{Authorization:api.getPrefs({sync: true,key: 'SessionKey'})}
+        }, function(ret, err) {
+          if(ret){
+            if(ret.success){
+              var data =  ret.Data;
+                msg = ret.Data.prosharelanguage;
+                //请求商品分享语
+                pridata(index,msg,other,shareid)
+            }else{
+              promptMsg(err.msg);
+            }
+          }
+      }
+    )
+  }else{
+    pridata(index,msg,other,shareid)
+  }
+  }
+
+  function pridata(index,msg,other,shareid){
+    var fxshopid = api.getPrefs({sync: true,key: 'SessionShopID'});
+    api.ajax({
+      url: siteUrl +'Main/Main/GetProductDetailJson',
+      method: 'get',
+      data:{
+        values:{
+          productId:api.pageParam.pid,
+          yshopid:fxshopid,
+          userid:api.getPrefs({sync: true,key: 'SessionUserID'})
+        }
+      }
+    }, function(ret, err) {
+        var data = ret.Data;
+        promsg = ret.Data
+        productName = data.name;
+        if(data.isrushbuy){
+          isrushbuy=true
+        }
+        if(data.isuserper){
+          isuserpers=true
+        }
+        if(data.propackageprice!=0){
+          openshop=true
+        }
+        if(msg!=''){
+          var url = indexSiteUrl + '170718164338876176/product.html?id=' + api.pageParam.pid+'&shareid='+shareid;
+        }else{
+          msg = "入手全球尖货,优选品质生活!";
+        }
+        if(api.pageParam.packageid) {
+          var url = memberSiteUrl + 'MyShop/ProDetail.aspx?shopid=170718164338876176&proid='+api.pageParam.pid+'&packageids='+api.pageParam.packageid+'&rUserID='+shareid
+        }else {
+          var url = indexSiteUrl + '170718164338876176/product.html?id='+ api.pageParam.pid+'&shareid='+shareid;
+        }
+        // fenxiang(url,productName,msg,data.pic);
+        switch (index) {
+          case 0://跳转微信好友分享
+            someShare(url,'session',productName,msg,data.pic)
+            setTimeout(function(){
+              clos()
+            },500)
+            return;
+          case 1://跳转微信朋友圈分享
+            someShare(url,'timeline',productName,msg,data.pic)
+            setTimeout(function(){
+              clos()
+            },500)
+            return;
+          case 2://跳转复制链接分享
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+            value: url
+              }, function(ret, err) {
+                if (ret) {
+                    alert("复制成功");
+                } else {
+                    alert('复制失败');
+                }
+              }
+            );
+            return;
+          case 3://
+          var pricese
+          //海报有头像需要登录
+          if(api.getPrefs({sync: true,key: 'SessionUserID'})==''){
+            alert('请登录后再使用此功能')
+          }
+          if(checkLoginStatus()){
+          if(data.isrushbuy){
+            var rudata=$api.strToJson(data.rushbuy.specjson)
+            pricese=rudata[0].Price
+          }else if(api.pageParam.packageid){
+              pricese=data.propackageprice
+          }else{
+            pricese=data.saleprice
+          }
+          openimg(url,productName,msg,data.pic,pricese,data.marketingprice,other)
+        }
+            return;
+            case 4:
+          var wx = api.require('wx');
+          var fxshopid = api.getPrefs({sync: true,key: 'SessionShopID'});
+          var scene = ''
+          // if(fxshopid!=''&&fxshopid!=null){
+          //   scene=api.getPrefs({sync: true,key: 'SessionUserID'})
+          // }else{
+          //   //没开店的默认给一个入手体验店铺
+          //   scene='111111111111111111'
+          // }
+          scene = getname()
+          //创业礼包
+          var pckid=''
+          if(api.pageParam.packageid){
+            pckid=api.pageParam.packageid
+          }
+          console.log(scene+'+'+api.pageParam.pid+'+'+pckid);
+              wx.launchMiniProgram({
+                  apiKey: '',
+                  miniProgramType: 'release',
+                  userName: 'gh_bbe69506855a',
+                  path: 'pages/productdetail/productdetail?ruid='+scene+'&pid='+ api.pageParam.pid+'&packageid='+pckid,
+              }, function(ret, err) {
+                  if (ret.status) {
+                      alert('打开成功');
+                  } else {
+                      alert(err.code);
+                  }
+              });
+          return
+        }
+    })
+  }
+
+  function openimg(url,productName,msg,pic,saleprice,marketingprice,other){
+    // openimg(url,productName,msg,data.pic,data.saleprice)
+    api.openFrame({
+        name: 'pro_shareimg',
+        url: './pro_shareimg.html',
+        rect: {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto'
+        },
+        pageParam: {
+            url: url,
+            productName:productName,
+            pid:api.pageParam.pid,
+            msg:msg,
+            pic:pic,
+            saleprice:saleprice,
+            oldsaleprice: promsg.saleprice,   // 售价
+            marketingprice:marketingprice,
+             isrushbuy:isrushbuy,
+          packageid:api.pageParam.packageid,
+          other:other
+        },
+        bounces: false,
+        bgColor: 'rgba(0,0,0,0)'
+    });
+    setTimeout(function(){
+      clos()
+    },500)
+  }
+  </script>
+  </html>

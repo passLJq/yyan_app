@@ -1,0 +1,254 @@
+body{
+  background-color: #F6F6FA;
+}
+.toubai{
+  height: 45px;
+  width: 100%;
+  background: #fff;
+}
+#app2{
+    background-color: #fff;
+}
+img{display: block};
+@mixin item {
+  display: flex;
+  align-items: center;
+}
+@mixin font1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+@mixin font2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.select{
+  position: relative;
+  width: rems(44);
+  height: rems(44);
+  border-radius: 50%;
+  margin-right: rems(26);
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0);
+  img{
+    width: rems(44);
+    height: rems(44);
+  }
+}
+.blockone{
+  @include item;
+  padding: rems(28) 0 rems(28) rems(24) ;
+  background-color: rgb(242,242,242);
+  p{
+    font-size: rems(28);
+    color: #427161;
+  }
+}
+.prolist{
+  margin: 0 rems(24);
+}
+.items{
+  @include item;
+}
+.shopnamebox{
+  @include item;
+  justify-content: space-between;
+  padding: rems(28) 0 rems(28) 0 ;
+  background-color: #fff;
+  border-bottom: 1px solid #F6F6FA;
+  .s_namebox{
+    @include item;
+    img{
+      width: rems(38);
+      height: rems(38);
+      margin-right: rems(12);
+    }
+    p{
+      font-size: rems(28);
+      color: #427161;
+    }
+  }
+}
+.useimg{
+  color: #E69888;
+  font-size: rems(24);
+ margin-right: rems(10);
+}
+.pro-xiangqing{
+  width: 100%;
+  z-index: 9999;
+  background-color: #fff;
+}
+.pro-main{
+  @include item;
+  overflow: hidden;
+  // padding: rems(28) 0;
+  background: #fff;
+  transition:transform 100ms ease-in-out;
+  padding: rems(16) 0;
+  .pro_img{
+    flex-shrink: 0;
+    width: rems(160);
+    height: rems(160);
+    margin-right: rems(16);
+  }
+  .shouwan{
+    position: absolute;
+    width: rems(120);
+    height: rems(120);
+    top:rems(20);
+    left: rems(20);
+  }
+  .pro-title{
+    @include item;
+    p{
+      @include font2;
+      font-size: rems(24);
+      color: #666464;
+    }
+  }
+  .pro-sku{
+    @include font1;
+    font-size: rems(24);
+    color: #999;
+    height: rems(36);
+    line-height: rems(36);
+    padding: rems(8) 0;
+  }
+  .pro-jiage{
+    @include item;
+    justify-content: space-between;
+    .p12{
+      font-size: rems(28);
+      color: #EB6100;
+    };
+    .numbox{
+      @include item;
+      font-size: rems(36);
+      overflow: hidden;
+      i{
+        font-size:rems(36);
+        border: 1px solid rgba(205,205,205,1);
+        height: rems(40);
+        line-height: rems(38);
+      }
+    }
+    .num{
+      width: rems(72);
+      height: rems(40);
+      background-color: #F6F6FA;
+      font-size: rems(24);
+      text-align: center;
+      overflow: hidden;
+      line-height: rems(38);
+      border-top: 1px solid rgba(205,205,205,1);
+      border-bottom:  1px solid rgba(205,205,205,1);
+    }
+  }
+}
+.pro-delel{
+  font-size: rems(32);
+  height: rems(176);
+  width: 80px;
+  padding: rems(28) 0;
+  position: absolute;
+  right: rems(-24);
+  color: #fff;
+  background-color:#F5AC9E;
+  @include item;
+  justify-content: center;
+  top: 0;
+  z-index: -99
+}
+.btnbox{
+  @include item;
+  font-size: rems(30);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 9999999;
+  background-color: #fff;
+  color: #666464;
+  height: 54px;
+  justify-content:flex-end;
+  .setprioc{
+    span{
+      font-size: rems(48);
+      color: #F5AC9E;
+      font-weight: 700;
+      margin-left: rems(6)
+    }
+  }
+  .qujie{
+    background:#F5AC9E;
+      font-size: rems(28);
+      border-radius: 30px;
+      color: #fff;
+      padding: rems(16) rems(78);
+      margin-right: rems(32);
+      margin-left: rems(20);
+    }
+}
+  .allquer{
+    color: #fff;
+    font-size: rems(20);
+background:linear-gradient(121deg,rgba(205,2,249,1) 0%,rgba(159,1,241,1) 100%);
+border-radius:16px;
+padding: rems(2) rems(6);
+margin-right: rems(4);
+  }
+.xianshi{
+  color: #fff;
+  font-size: rems(20);
+background:orange;
+border-radius:16px;
+padding: rems(2) rems(6);
+margin-right: rems(4);
+}
+.catoubu{
+  height: 45px;
+  @include item;
+  justify-content: center;
+  font-size: rems(34);
+  background: #fff;
+  font-family:PingFangSC-Medium;
+  font-weight:500;
+  color: #2C5B33;
+  position: fixed;
+  top:0;
+  width: 100%;
+  z-index: 99999;
+}
+.nodedata{
+  background-color: #F6F6FA;
+  margin: 0 auto;
+  text-align: center;
+  font-size: rems(34);
+  padding-top: rems(80);
+  img{
+    width: 50%;
+    margin: 0 auto;
+  }
+  .wenzi{
+    margin-top: -20px;
+    color: #999;
+  }
+  .tag_big{
+    font-size: rems(28);
+    border: 1px solid #F5AC9E;
+    padding: rems(14) 0;
+    width:rems(230);
+    margin: 0 auto;
+    border-radius: 30px;
+    color: #F5AC9E;
+  }
+  .fontSize12{
+    padding: rems(16) 0;
+  }
+}

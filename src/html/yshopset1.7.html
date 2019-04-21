@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>攸店管理</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <style>
+    /*右箭头*/
+      @font-face {font-family: "iconfont";
+        src: url('iconfont.eot?t=1527761629911'); /* IE9*/
+        src: url('iconfont.eot?t=1527761629911#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAUMAAsAAAAAB3AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFZW7kjKY21hcAAAAYAAAABeAAABhpy4Br5nbHlmAAAB4AAAATwAAAFYFUMl5mhlYWQAAAMcAAAALwAAADYRixuwaGhlYQAAA0wAAAAcAAAAJAfeA4RobXR4AAADaAAAAAwAAAAMC+kAAGxvY2EAAAN0AAAACAAAAAgAdgCsbWF4cAAAA3wAAAAfAAAAIAESAF1uYW1lAAADnAAAAUUAAAJtPlT+fXBvc3QAAATkAAAAJwAAADhTWV3ueJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2Bk/sE4gYGVgYOpk+kMAwNDP4RmfM1gxMjBwMDEwMrMgBUEpLmmMDgwVDx7wNzwv4EhhrmBoQEozAiSAwAz/A1MeJzFkMENgDAMAy9t6QMxCA8G4sUcHbevrlFMKA8mqCXHimMpUYAFiOIhJrAL48Ep19yPrO4nz2SpESit9q7+U0U0y65BJTMNNm/1H5vXfXT6CmVQJ7b6knADkd0PDwAAeJwdij1Ow0AQhWfWeG0viU3W/06MY4d4QYFINiZIIJwGIYEokKjShZIC2jQUaZAoKDhChJC4RK5CgeAcDiaj0bx533sgA6y+paXkgQm7kME53AAgHWCikxBjUQzJAO1Ytl1Ll0RPxEovGUpn6CbUcvJRkbpUoQbquI2HcT4SQyLwqCjJKeZOiOi3g1ve73DpDZkntp+rK/KOdtTrGOVBdbk/tvKuqc4anPucv6pUllVCNgwdH1xHkzVGqw/ZCOxltEcibPgiuJ40u21+91I8hn1XQ5zP0Wx39c9xK2jV+xQ4JveVrabqBc3ejoWz303PbITpD9RD1ueLrMCACKCPo9zNHEtBmogsLTRMi+OsRBdrltEEL3DKfMZYtahFw/tqoWn1V1PGwhOcrl0dMtrBEif/XSKvy+wP5gMzP3icY2BkYGAA4sqkO5vi+W2+MnCzMIDAddPXdxH0/4csDMwSQC4HAxNIFABWwQvLAHicY2BkYGBu+N/AEMPCAAJAkpEBFTADAEcJAmwEAAAAA+kAAAQAAAAAAAAAAHYArHicY2BkYGBgZghkYGUAASYg5gJCBob/YD4DABD3AXAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAmZGJkZmRhYGxgqsyvzQrMzGvJL+UgQEAK2QE9gA=') format('woff'),
+        url('iconfont.ttf?t=1527761629911') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+        url('iconfont.svg?t=1527761629911#iconfont') format('svg'); /* iOS 4.1- */
+      }
+
+      .iconfont {
+        font-family:"iconfont" !important;
+        font-size:16px;
+        font-style:normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .icon-youjiantou:before { content: "\e6e0"; }
+        /*右箭头end*/
+        *{padding: 0;margin: 0}
+        header{text-align: center;}
+        .setp1{font-size: 17px;padding: 10px 0}
+        .setp2{font-size: 12px;padding: 10px 0;text-decoration:underline}
+        .pai{height: 160px;max-width: 90%;margin: 0 auto;text-align: center;}
+        .biaoti{font-size: 14px;background:rgba(246,246,250,1);height: 35px;line-height: 35px;padding: 0 10px;color: RGBA(153, 153, 153, 1)}
+        .setitem{display: flex;align-items: center;padding: 10px 10px;border-bottom: 1px solid rgba(246,246,250,1);justify-content: space-between;}
+        .setitems{display: flex;align-items: center}
+        .setp3{font-size: 14px;margin-bottom: 5px}
+        .setp5{font-size: 14px;}
+        .setp4{font-size: 12px;color: RGBA(153, 153, 153, 1)}
+        .headname{width: 48px;height: 48px}
+        .youcolor{color: rgb(187,187,187);margin-left: 8px}
+        #head{position: fixed;top: 0;width: 100%;z-index: 9999}
+        /*选择头像遮罩层*/
+        .mask_container{position: fixed; top: 0; left: 0; height: 100%; width:100%; background-color: rgba(4,4,15,0.4) ;z-index: 999999}
+        .mask_container>div{position: absolute; bottom: 11px; left: 5%; width: 90%; text-align: center; color: #007AFF; font-size: 20px;}
+        .mask_list{background-color: rgba(248,248,248,1); border-radius: 14px;  overflow: hidden; box-sizing: border-box;}
+        .mask_cancel{margin: 7px 0 11px 0; background-color: rgba(255,255,255,1); border-radius: 14px; height: 56px; line-height: 56px;}
+        .mask_title{height: 48px; line-height: 48px; font-size: 14px; color: #999;}
+        .mask_camera,.mask_album{height: 57px; line-height: 57px; border-top: 1px solid rgba(4,4,15,0.3);}
+        .mask_camera:hover,.mask_album:hover,.mask_cancel:hover{background-color: #eee; }
+        .hide{display: none}
+      </style>
+</head>
+
+<body>
+  <!-- <div id="head"></div> -->
+  <header>
+    <p class="setp1">攸店招牌展示效果</p>
+    <img src="" alt="" class="pai" id="adimg">
+    <p class="setp2" onclick="openmask(1)">点击更换招牌（600*300）像素</p>
+  </header>
+  <section>
+    <p class="biaoti">基本信息</p>
+    <div class="setitem">
+      <div>
+        <p class="setp3">攸店LOGO</p>
+        <p class="setp4">建议尺寸为120*120像素的图片</p>
+      </div>
+      <div class="setitems" onclick="openmask(2)">
+        <img src="./img/man.jpg" alt="" class="headname" id='shoplogo'>
+        <i class="iconfont icon-youjiantou youcolor"></i>
+      </div>
+    </div>
+    <div class="setitem" onclick="openset(1)">
+      <p class="setp5">攸店名称</p>
+      <div class="setitems">
+        <p class="setp4" id="shopname">啊组的小店</p>
+        <i class="iconfont icon-youjiantou youcolor"></i>
+      </div>
+    </div>
+    <div class="setitem" onclick="openset(2)">
+      <p class="setp5">个性签名</p>
+      <div class="setitems">
+        <p class="setp4" id="notice">入手全球尖货，优选品质生活</p>
+        <i class="iconfont icon-youjiantou youcolor"></i>
+      </div>
+    </div>
+    <!-- <p class="biaoti">分享设置</p>
+    <div class="setitem" onclick="openset(3)">
+      <p class="setp5">店铺分享语</p>
+      <div class="setitems">
+        <p class="setp4" id="sharelanguage"></p>
+        <i class="iconfont icon-youjiantou youcolor"></i>
+      </div>
+    </div>
+    <div class="setitem" onclick="openset(4)">
+      <p class="setp5">商品分享语</p>
+      <div class="setitems">
+        <p class="setp4" id="prosharelanguage"></p>
+        <i class="iconfont icon-youjiantou youcolor"></i>
+      </div>
+    </div> -->
+  </section>
+  <!-- 上拉弹出框 -->
+  <div class="mask_container hide" onclick="closeMask(event)">
+    <div>
+      <div class="mask_list">
+        <ul>
+          <li class="mask_title"></li>
+          <li class="mask_camera" onclick="checkMsg(event, 1)"></li>
+          <li class="mask_album" onclick="checkMsg(event, 2)"></li>
+        </ul>
+      </div>
+      <div class="mask_cancel" onclick="closeMask()">
+        <div>取消</div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script type="text/javascript">
+  var who; //表示打开那个地方的相册 1表示招牌2表示头像
+  var phon = '' //暂存相片地址
+  var yishopid = ''; //用户Id
+  var phonlogo = ''
+  var headphon = ''
+  var statustop = $api.getStorage('statustop');
+  if (openapp) {
+    window.apiready = function () {
+      data()
+    }
+  } else {
+    window.onload = function () {
+      data()
+    }
+  }
+
+  function data() {
+    shopzl()
+    // headTitle($api.byId('head'),'攸店设置')
+    if (window.api) {
+      $api.dom('header').style.marginTop = 46 + Number(statustop) + 'px'
+      //返回到这个页面刷新
+      api.addEventListener({
+        name: 'viewappear'
+      }, function (ret, err) {
+        if (api.getPrefs({
+            sync: true,
+            key: 'loginStatus'
+          }) == "loginSuccess") {
+          shopzl()
+        }
+      });
+    }
+  }
+  var shoplogo = $api.byId('shoplogo');
+  var shopname = $api.byId('shopname')
+  var adimg = $api.byId('adimg')
+  var notice = $api.byId('notice')
+  var sharelanguage = $api.byId('sharelanguage')
+  var prosharelanguage = $api.byId('prosharelanguage')
+  //读取资料
+  function shopzl() {
+    https({
+      url: siteUrl + 'Main/Member/GetUserShopJson',
+      method: 'get',
+      data: {
+        uid: getname()
+      },
+      headers: 1,
+      successBack: function (ret) {
+        if (ret.success) {
+          var data = ret.Data;
+          $api.html(shopname, data.shopname);
+          $api.html(notice, data.notice);
+          $api.attr(shoplogo, 'src', data.shoplogo);
+          $api.attr(adimg, 'src', data.adimg);
+          // $api.html(sharelanguage, data.sharelanguage);
+          // $api.html(prosharelanguage, data.prosharelanguage);
+          yishopid = data.yshopid
+        }
+      }
+    });
+  }
+  //打开弹出框
+  function openmask(type) {
+    if (type == 1) {
+      who = type
+      $api.html($api.dom(".mask_title"), "更改招牌")
+      $api.html($api.dom(".mask_camera"), "拍照")
+      $api.html($api.dom(".mask_album"), "从图库选择")
+    } else {
+      who = type
+      $api.html($api.dom(".mask_title"), "更改头像")
+      $api.html($api.dom(".mask_camera"), "拍照")
+      $api.html($api.dom(".mask_album"), "从图库选择")
+    }
+    $api.removeCls($api.dom(".mask_container"), 'hide');
+  }
+  //关闭弹出框
+  function closeMask(e) {
+    if (e) {
+      if (e.target.className == "mask_container") {
+        $api.addCls($api.dom(".mask_container"), 'hide');
+      }
+    } else {
+      $api.addCls($api.dom(".mask_container"), 'hide');
+    }
+  }
+  //选择哪个方式获取招牌 1是拍照2是从相册中获取
+  function checkMsg(e, type) {
+    if (type == 1) {
+      openSystemPic('camera')
+    } else {
+      openSystemPic('album')
+    }
+    $api.addCls($api.dom(".mask_container"), 'hide');
+  }
+  //打开相册
+  function openSystemPic(type) {
+    $api.addCls($api.dom(".mask_container"), 'hide');
+    api.getPicture({
+      sourceType: type,
+      mediaValue: 'pic',
+      destinationType: 'base64',
+      allowEdit: true,
+      targetWidth: 800,
+      targetHeight: 800,
+      saveToPhotoAlbum: false
+    }, function (ret, err) {
+      if (ret.data) {
+        showjindu('上传图片中')
+        api.ajax({
+          url: memberSiteUrl + '/Ajax/FileUpload.ashx',
+          method: 'post',
+          data: {
+            files: {
+              file: ret.data
+            }
+          }
+        }, function (ret, err) {
+          if (api.systemType == "android") {
+            if (ret) {
+              if (ret.success) {
+                if (who == 1) {
+                  headphon = ret.fullurl
+                  sub()
+                } else {
+                  phonlogo = ret.fullurl
+                  sub()
+                }
+              }
+            } else {
+              promptMsg(err.msg)
+            }
+          } else if (api.systemType == "ios") {
+            //解决奇怪的ios端问题
+            var iosdata = JSON.parse(err.body.replace(/'/g, '"'));
+            if (iosdata.success) {
+              if (who == 1) {
+                headphon = iosdata.fullurl
+                sub()
+              } else {
+                phonlogo = iosdata.fullurl
+                sub()
+              }
+            } else {
+              promptMsg(err.msg)
+            }
+          }
+        });
+      } else {
+        promptMsg('上传失败')
+      }
+    });
+  }
+  //更新数据
+  function sub() {
+    https({
+      url: siteUrl + 'Main/Member/ShopEdit?uid=' + getname(),
+      method: 'post',
+      data: {
+        uid: getname(),
+        yshopid: yishopid,
+        shoplogo: unescape(phonlogo),
+        adimg: unescape(headphon),
+      },
+      headers: 1,
+      successBack: function (ret) {
+        if (ret.status == 1) {
+          hideLoading()
+          promptMsg('保存成功');
+          shopzl()
+        } else {
+          promptMsg(ret.err);
+        }
+      }
+    });
+  }
+
+  function openset(text) {
+    var title = ''
+    if (text == 1) {
+      title = '攸店名称'
+    } else if (text == 2) {
+      title = '个性签名'
+    } else if (text == 3) {
+      title = '店铺分享语'
+    } else if (text == 4) {
+      title = '商品分享语'
+    }
+    openWin({
+      name: 'yshopset_only',
+      url: './yshopset_only.html',
+      pageParam: {
+        index: text,
+        title: title
+      },
+      bgColor: '#fff'
+    }, 1);
+
+  }
+</script>
+
+</html>

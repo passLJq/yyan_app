@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/style.css"/>
+      <link rel="stylesheet" type="text/css" href="./common/css/orderList.css"/>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <link rel="stylesheet" type="text/css" href="./common/css/icon-weigoyi.css"/>
+      <link rel="stylesheet" type="text/css" href="https://source.rushouvip.cn/WMainShop/Module/Css/page.css">
+      <link rel="stylesheet" type="text/css" href="https://source.rushouvip.cn/WPublic/Css/base.css">
+
+      <style>
+      section .page {
+    margin: 0px 10px;
+}
+img {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+  }
+    section{width: 100%; overflow: hidden; padding-bottom: 20px;}
+    #head{position: fixed;top:0;width: 100%;background-color: #fff;z-index: 999}
+    .head{height: 45px;width: 100%;}
+    #header{background-color: #fff}
+      </style>
+  </head>
+  <body>
+    <div id="head"></div>
+    <!-- <div class='head'></div> -->
+    <section>
+            <div id='main' class="page"></div>
+    </section>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript">
+      if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+          // headTitle(document.getElementById('head'), pageParam('columnname'))
+          // var statustop=$api.getStorage('statustop');
+          // $api.dom('.head').style.paddingTop=statustop+'px'
+          Databind()
+      };
+      function Databind(){
+        https({
+            url: siteUrl +'Main/Main/GetColumnListJson',
+            method: 'get',
+            data: {
+                columntype:'aboutus',
+                columnid:pageParam('columnid')
+            },
+            successBack: function(ret, err){
+            if (ret) {
+                if(ret.success){
+                  var data=ret.Data;
+                  chtml='';
+                  chtml += data[0].content
+                  $api.html($api.byId('main'), chtml);
+                }else {
+                  promptMsg(ret.err)
+                }
+            } else {
+                alert( JSON.stringify( err ) );
+            }
+        }
+        });
+
+      }
+
+  </script>
+  </html>

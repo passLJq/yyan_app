@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>创业导师</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+    body{background-color: #f5f5f5;    color: #666464 !important;}
+    .fl {float: left; } .fr{float: right;} .clear:after{display: block; content: ""; clear: both;}
+    .padding_20{padding: 0 20px;} .border_bottom{border-bottom: 1px solid #F6F6FA; width:100%; }
+    .font_17{font-size: 17px;} .font_14{font-size: 14px;}
+    .list_container{width: 100%; height: 48px;}
+    .list_content{width: 100%; height: 48px;line-height: 48px; font-size: 14px; color: #333;}
+    .flex { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; }
+    .flex-v { -webkit-box-orient: vertical; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }
+    .flex-pack-justify { -webkit-box-pack:justify; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; }
+    .overflow_boxsizing{overflow: hidden; box-sizing: border-box;}
+    .top_container{width: 100%; padding: 27px 14px 16px; color: #fff;}
+    .top_content{width: 100%; height:120px; border-radius: 5px; background:linear-gradient(49deg,rgba(255,234,224,1),rgba(247,195,179,1));}
+    .mytutor{text-indent: 30px; padding: 20px 0 16px; font-size: 12px;}
+    .totor_img_container{padding: 0 20px 0 30px;}
+    .totor_img{width: 48px; height: 48px; border-radius: 50%;}
+    .footer_container{position: absolute; bottom: 0; font-size: 14px; color: #333;}
+    .footer_container>div{ border-top: 1px solid #F6F6FA; width: 100%; padding: 16px 0 36px;}
+  </style>
+</head>
+<body>
+<div id="head">
+
+</div>
+<div class="top_container overflow_boxsizing">
+  <div class="top_content">
+    <div class="mytutor">我的创业导师</div>
+    <div class="clear">
+      <div class="fl totor_img_container">
+        <img class="totor_img" id="tutorImg" src="./image/logoshou.png" alt="">
+      </div>
+      <div class="fl">
+        <div class="font_17" id="tutorName">手手</div>
+        <div class="font_14" id="tutorLevel">市场总监 | 皇冠店铺</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="padding_20 list_container overflow_boxsizing">
+  <div class="border_bottom list_content overflow_boxsizing clear">
+    <div class="fl">微信号</div>
+    <div class="fr" id="tutorWX">rushouyouxuan</div>
+  </div>
+</div>
+<div class="padding_20 list_container overflow_boxsizing">
+  <div class="border_bottom list_content overflow_boxsizing clear">
+    <div class="fl">开店时间</div>
+    <div class="fr" id="tutorTime">2017-09-16</div>
+  </div>
+</div>
+<div class="padding_20 footer_container overflow_boxsizing">
+  <div>
+    <p>创业导师的职责：</p>
+    <p>1.帮助店主了解产品和平台政策，解答店主创业中的疑惑；</p>
+    <p>2、积极培训、管理、扶持团队市场，帮助团队健康发展。</p>
+  </div>
+</div>
+<script type="text/javascript" src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="./common/js/config.js"></script>
+<script type="text/javascript" src="./common/js/common.js"></script>
+<script>
+  if(openapp){
+    window.apiready=function(){
+      getMsg()
+    }
+}else{
+    window.onload=function(){
+      getMsg()
+    }
+}
+  function getMsg() {
+    https({
+      url: siteUrl +'Main/Member/Mentors',
+      method: 'get',
+      data:{
+          uid: getname()
+      },
+      headers:1,
+      successBack:function(ret){
+        if(ret.success && ret.Data != null) {
+          document.getElementById("tutorName").innerHTML = ret.Data.wxname
+          document.getElementById("tutorLevel").innerHTML = ret.Data.titlename +" | "+ ret.Data.levername
+          document.getElementById("tutorWX").innerHTML = ret.Data.wxnumber
+          document.getElementById("tutorTime").innerHTML = ret.Data.createtime? ret.Data.createtime.split(" ")[0]: ""
+          document.getElementById("tutorImg").src = ret.Data.wximg || "./image/logoshou.png"
+        }
+      }
+    })
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./common/css/api.css">
+  <title>反馈记录</title>
+  <style>
+  body{background-color: #f5f5f5;}
+  *{padding:0; margin: 0;} .fl{float: left; } .fr{float:right; } .clear:after{content: ""; display: block; clear:both;}
+    .flex { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; }
+    .flex_v { -webkit-box-orient: vertical; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }
+    .flex_1 { -webkit-box-flex: 1; -webkit-flex: 1; -ms-flex: 1; flex: 1; }
+    .content_container{padding: 0 15px; box-sizing: border-box; overflow: hidden; margin-top: 8px;}
+    .content_container>div{border-bottom: 1px solid #F8F8FB; width: 100%;}
+    .img_container{width: 60px; height: 90px; padding: 21px 0;padding-right: 12px; box-sizing: border-box;margin-left: 15px;}
+    .img_container>img{width: 48px; height:48px; border-radius: 50%;}
+    .right_content{height: 70px;justify-content: space-around;overflow: hidden;margin-top: 10px;}
+    #feedMsg{max-width: 80%; overflow: hidden; text-overflow:ellipsis; white-space: nowrap;}
+    .icon_right_container{width: 44px; height: 90px;line-height: 90px;text-align: right;}
+    .items {
+      position: relative;
+      box-sizing: border-box;
+      /* padding: 15px 0; */
+      background-color: #fff;
+    }
+    .items:active{background-color: #eee;}
+    .redpoint {
+      width:8px; height: 8px; border-radius: 50%; background-color: #E69888;margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+  <div class="content_container">
+      
+  </div>
+
+  <script src="./common/js/api.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script src="./common/js/config.js"></script>
+  <script>
+    if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+      getMsg()
+      if (!window.api) return
+      //下拉刷新
+      api.setCustomRefreshHeaderInfo({
+        bgColor: '#fff',
+        images: [
+            'widget://image/suaxin1.png',
+            'widget://image/suaxin2.png',
+            'widget://image/suaxin3.png',
+            'widget://image/suaxin4.png',
+            'widget://image/suaxin5.png',
+            'widget://image/suaxin6.png',
+            'widget://image/suaxin7.png'
+        ],
+        tips: {
+            pull: '下拉刷新',
+            threshold: '松开立即刷新',
+            load: '正在刷新'
+        }
+      }, function() {
+        var timer = setTimeout(function () {
+          getMsg()
+        }, 1000)
+      });
+    }
+    function todetail(aid) {
+      openWin({
+          name: 'feed_detail',
+          url: './feed_detail.html',
+          pageParam: {
+              aid: aid
+          }
+      })
+
+    }
+    function getMsg() {
+        https({
+          url: siteUrl +'Main/Member/GetMyAdvice',
+          method: 'get',
+          data: {
+            uid: getname()
+          },
+          headers:1,
+          successBack: function(ret, err) {
+          if(ret) {
+            if(ret.success && ret.status == 1) {
+              var html = ""
+              var data = ret.Data
+              data.forEach(function (item, idx) {
+                html += '<div class="clear flex items" onclick="todetail(\''+item.aid+'\')">'
+                var red_icon = item.replycontent? '<span class="redpoint"></span>':""
+                html += '  <div class="img_container"><img src="./image/feed_'+item.tpye+'.png" alt=""></div>'
+                html += '  <div class="right_content flex_1 flex flex_v">'
+                html += '    <div style="color: #215645; font-size: 17px;">'+item.tpyename+''+red_icon+'</div>'
+                html += '    <div id="feedMsg" style="color: #999; font-size: 15px;">'+item.content+'</div>'
+                html += '    <div style="color: #999; font-size: 12px;">'+item.time.split(" ")[0]+'</div>'
+                html += '  </div>'
+                html += '  <div class="icon_right_container">'
+                html += '    <img src="./image/enter_icon.png" alt="" style="width:24px;height:24px">'
+                html += '  </div>'
+                html += '</div>'
+              })
+              document.querySelector(".content_container").innerHTML = html
+            }else {
+              document.querySelector(".content_container").innerHTML = '<img style="width: 200px;height:200px;position: absolute;left: 50%;top:100px;transform: translateX(-50%);" src="./image/nofeedback.png" alt=""><div style="position: absolute;left: 0;top:270px;width:100%; height:40px; line-height:40px; border: 0; color: #ccc; text-align: center;font-size: 12px">您还没有反馈意见哦 ...</div>'
+            }
+          }
+          refreshDone();
+        }
+      })
+    }
+  </script>
+</body>
+</html>

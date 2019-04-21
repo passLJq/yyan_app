@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>评价晒单</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #F3F2F2;}
+  .flex{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  }
+  .fl{float:left;}
+  #write_container{background-color: #fff;padding:0 30px;}
+  .clear:after{content:"";display:block;clear:both;}
+  .write_head{border-bottom:1px solid #E69888;padding:10px 0;}
+  .product_img{width:100%;height:100px;display: flex;align-items: center;}
+  .product_img img{width:82px;height:82px;}
+  .title{color:#666464;font-size:1.1em;}
+  .product_stars{margin:0 0 0 10px;}
+  .product_stars>span{width:20px;height:20px;}
+  .product_stars>span img{width:100%;height:100%;}
+  .write_section{box-sizing: border-box; overflow: hidden;padding-top: 7px;}
+  .camera_container{width:70px;height:70px;background-color: #EAE9E9;position:relative;}
+  .camera_container>img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+  .write_content{width:100%;min-height:100px;}
+  .write_content> textarea{width:100%;min-height:150px;padding:5px;padding-left:0;outline:none;resize:none;}
+  .button_container{ width:100%;height: 35px;display: flex;justify-content: center;margin-top: 80px;}
+  .write_button{height:100%;line-height: 35px;padding:0 25px;background-color: #F5AC9E;color:#FEF7F7;width: 280px;border-radius: 35px;text-align: center;}
+  #imgs_container{width: 100%; margin:10px 5%; box-sizing: border-box; overflow: hidden;}
+  #imgs_container img{width:30%;height:100px;float: left;}
+  </style>
+</head>
+<body>
+  <div id="write_container">
+    <div class="write_head clear">
+      <div class="product_img">
+        <img src="./img/bkg_cover.jpg" id="productImg" alt="">
+        <p id="proname" style="width: 160px;color: #666464;line-height: 20px;margin-left:20px;font-size: 12px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"></p>
+        <p id="count" style="font-size: 12px;color: #666464;margin-left: 20px">X1</p>
+      </div>
+      <div class="" style="display: flex;align-items: center;margin-top: 30px;">
+        <p class="title">评分</p>
+        <p class="product_stars" id="product_stars" style="display: flex;align-items: center;">
+          <span><img src="./img/stars.png" alt="" class="star isChecked"></span>
+          <span><img src="./img/stars.png" alt="" class="star isChecked"></span>
+          <span><img src="./img/stars.png" alt="" class="star isChecked"></span>
+          <span><img src="./img/stars.png" alt="" class="star isChecked"></span>
+          <span><img src="./img/stars.png" alt="" class="star isChecked"></span>
+        </p>
+      </div>
+    </div>
+    <div class="write_section">
+      <div class="write_content">
+        <textarea placeholder="请输入要评价的内容,最多可输入250个字" maxlength="250" id="content"></textarea>
+      </div>
+      <div class="camera_container" ontouchstart = 'putImgs()'>
+        <img src="./image/camera.png" alt="" >
+      </div>
+      <div id="imgs_container">
+
+      </div>
+      <!-- <input type="file" accept="image/*" multiple id="uploadFile" style="visibility:hidden;position:absolute;top:0px;width:0px" onchange = "change(this)"> -->
+
+  </div>
+</div>
+  <!-- 页尾 -->
+  <div class="button_container clear">
+    <a href="javascript:;" onclick="submit()" class="write_button">提交评论</a>
+  </div>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+</body>
+<script>
+  var fileList = ""; //图片列表
+  var phon = [];
+  var imgCounts = 0;
+  if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+        $api.dom('.button_container').style.bottom = getname('safeAreaBottom') + 'px';
+        $api.byId("productImg").src = pageParam('productImg')
+        // if(api.pageParam.ordertype === '110') {
+        //   $api.css($api.byId('product_stars'), 'display: none;')
+        //   $api.css($api.byId('product_stars_title'), 'display: none;')
+        // }
+        $api.html($api.byId('proname'), pageParam('proname'))
+        $api.html($api.byId('count'), 'X' + pageParam('buycount'))
+        if (pageParam('isAssess')) {
+          $api.html($api.dom('.write_button'), '提交晒图');
+          getAssessContent();
+        }
+        //选择小星星
+        document.getElementById('product_stars').addEventListener('touchstart', function (e) {
+          if (pageParam('isAssess')) {
+            return;
+          }
+          var stars = document.getElementsByClassName("star")
+          if (e.target.nodeName == "IMG") {
+            for (var i = 0; i < stars.length; i++) {
+              $api.removeCls(stars[i], 'isChecked')
+              stars[i].src = "./image/starg.png"
+              if (stars[i] == e.target) {
+                for (var r = 0; r <= i; r++) {
+                  $api.addCls(stars[r], 'isChecked')
+                  stars[r].src = "./img/stars.png"
+                }
+              }
+            }
+          }
+        })
+  };
+  //预加载评价内容
+  function getAssessContent() {
+    
+    https({
+      url: siteUrl + "Main/Shopping/GetNoImgComment",
+      // method: 'GET',
+      data: {
+        uid: getname(),
+        itemid: pageParam('id')
+      },
+      headers: 1,
+      successBack: function (ret) {
+      $api.val($api.byId('content'), ret.Data[0].content);
+      $api.attr($api.byId('content'), 'readonly', 'readonly');
+      $api.html($api.byId('product_stars'), "");
+      // if(ret.Data) {
+      //   if(ret.Data.contentlevel != 0) {
+      //     $api.css($api.byId('product_stars'), 'display: none;')
+      //     $api.css($api.byId('product_stars_title'), 'display: none;')
+      //   }
+      // }
+      var html = "";
+      var contentlevel = ret.Data[0].contentlevel;
+      for (var i = 0; i < contentlevel; i++) {
+        html += '<span><img src="./img/stars.png" alt="" class="star isChecked"></span>';
+      }
+      if (contentlevel < 5) {
+        var new_contentlevel = 5 - contentlevel;
+        for (var r = 0; r < new_contentlevel; r++) {
+          html += '<span><img src="./image/starg.png" alt=""></span>';
+        }
+      }
+      $api.html($api.byId('product_stars'), html);
+    }
+  })
+  }
+
+  function putImgs() {
+    if (phon.length >= 9) {
+      return;
+    }
+    if (api.systemType == "android") {
+      var UIAlbumBrowser = api.require('UIAlbumBrowser');
+      UIAlbumBrowser.imagePicker({
+        max: 9,
+        styles: {
+          bg: '#333',
+          cameraImg: 'widget://res/cameraImg.png',
+          mark: {
+            icon: '',
+            position: 'bottom_left',
+            size: 20
+          },
+          nav: {
+            bg: '#000',
+            cancelColor: '#fff',
+            cancelSize: 16,
+            nextStepColor: '#fff',
+            nextStepSize: 16
+          }
+        },
+        animation: true
+      }, function (ret) {
+        var UIAlbumBrowser = api.require('UIAlbumBrowser');
+        UIAlbumBrowser.closePicker();
+        if (ret.eventType == 'nextStep') {
+          var imglist = ret.list;
+          if (imglist.length > 0) {
+            api.showProgress({
+              text: '图片上传请稍候',
+              modal: true
+            });
+            for (var i = 0; i < imglist.length; i++) {
+              var promise = new Promise(function (resolve, reject) {
+                var img = imglist[i].path;
+                if ($api.domAll('.assess_imgs').length < 9) {
+                  $api.append($api.byId('imgs_container'), '<img src="' + img + '" class="assess_imgs">');
+                }
+                api.ajax({
+                  url: memberSiteUrl + '/Ajax/FileUpload.ashx',
+                  method: 'post',
+                  data: {
+                    files: {
+                      file: img
+                    }
+                  }
+                }, function (rets, err) {
+                  if (rets) {
+                    if (rets.success) {
+                      if (phon.length >= 9) {
+                        $api.css($api.dom('.camera_container'), 'display:none');
+                        api.hideProgress();
+                        return;
+                      }
+                      phon.push(rets.fullurl);
+                      imgCounts += 1;
+                    }
+                  } else {
+                    promptMsg(err.msg);
+                  }
+                  if (i == imglist.length) resolve();
+                });
+              });
+            }
+            promise.then(function () {
+              api.hideProgress()
+            });
+          }
+        }
+      });
+    } else if (api.systemType == "ios") {
+      iosPutImgs()
+    }
+  }
+
+  //ios上传
+  function iosPutImgs() {
+    api.getPicture({
+      sourceType: 'library',
+      mediaValue: 'pic',
+      destinationType: 'base64',
+      allowEdit: false,
+      targetWidth: 375,
+      targetHeight: 750,
+      saveToPhotoAlbum: false
+    }, function (ret, err) {
+      if (ret) {
+        if ($api.domAll('.assess_imgs').length < 9) {
+          $api.append($api.byId('imgs_container'), '<img src="' + ret.data + '" class="imgsList assess_imgs">');
+        }
+
+        var promise = new Promise(function (resolve, reject) {
+          api.ajax({
+            url: memberSiteUrl + '/Ajax/FileUpload.ashx',
+            method: 'post',
+            data: {
+              files: {
+                file: ret.data
+              }
+            }
+          }, function (ret, err) {
+            //解决奇怪的ios端问题
+            var iosdata = JSON.parse(err.body.replace(/'/g, '"'));
+
+            if (iosdata.success) {
+              phon.push(iosdata.fullurl);
+              if (phon.length >= 9) {
+                $api.css($api.dom('.camera_container'), 'display:none');
+                api.hideProgress();
+                return;
+              }
+            } else {
+              promptMsg(err.msg);
+            }
+            resolve();
+          });
+        });
+        promise.then(function () {
+          api.hideProgress();
+        });
+      } else {
+        promptMsg('上传取消');
+      }
+      api.hideProgress();
+    });
+  }
+
+  function submit() {
+    if (window.api) {
+      api.showProgress({
+        text: '评论提交中...',
+        modal: true
+      });
+    }
+    var url = pageParam('isAssess') ? "UpdateOrderComment" : "InsertOrderComment";
+    var imgList = $api.domAll('.isChecked');
+    var itemid = pageParam('id');
+    var userid = getname()
+    var commentLevel = imgList.length
+    var content = $api.trim($api.val($api.byId("content")))
+    if (content == "" || content.length < 1) {
+      content = "";
+    }
+    var img = $api.jsonToStr(phon) == "[]" ? "" : $api.jsonToStr(phon)
+    if (!pageParam('isAssess')) {
+      var msg = {
+        itemid: itemid,
+        uid: userid,
+        commentLevel: commentLevel,
+        content: content,
+        img: img
+      };
+      msg.content = iGetInnerText(JSON.stringify(msg.content));
+    } else {
+      var msg = {
+        itemid: itemid,
+        uid: userid,
+        img: img
+      };
+    }
+    if (pageParam('ordertype') === '40') {
+      var newUrl = siteUrl + "Marketing/Groupbuy/InsertGroupbuyComment?uid=" +getname()
+    } else if (pageParam('ordertype') === '110') {
+      var newUrl = siteUrl + "Marketing/Cloudbuy/InsertOrderComment?uid=" +getname()
+    } else {
+      var newUrl = siteUrl + "Main/Shopping/" + url + "?uid=" +getname()
+    }
+    console.log(newUrl)
+    api.ajax({
+      url: newUrl,
+      method: "POST",
+      data: {
+        body: msg
+      },
+      headers: {
+        "Authorization": api.getPrefs({ sync: true, key: 'SessionKey' }),
+        "Content-Type": 'application/json; charset=utf-8'
+      }
+    }, function (ret, err) {
+      console.log(JSON.stringify(ret))
+      if (ret.success) {
+        api.openWin({
+          name: 'assess_success',
+          url: './assess_success.html',
+          rect: {
+            x: 0,
+            y: api.safeArea.top,
+            w: 'auto',
+            h: 'auto'
+          },
+          bounces: false
+        })
+      } else {
+        promptMsg("评论失败");
+      }
+      hideLoading()
+    });
+  }
+  //预览大图
+  document.getElementById("imgs_container").addEventListener("click", function (e) {
+    var tar = e.target;
+    if (tar.nodeName == "IMG") {
+      var imgList = document.querySelectorAll(".assess_imgs");
+      var idx = 0;
+      var imgUrl = [];
+      for (var i = 0; i < imgList.length; i++) {
+        imgUrl.push(imgList[i].src);
+        if (tar == imgList[i]) {
+          idx = i;
+        }
+      }
+      showBigImages(imgUrl, idx);
+    }
+  });
+  //去除空格换行
+  function iGetInnerText(testStr) {
+    var resultStr = testStr.replace(/( )\1{5,}/g, "");
+    resultStr = testStr.replace(/[\r\n]/g, "");
+    return resultStr;
+  }
+</script>
+</html>

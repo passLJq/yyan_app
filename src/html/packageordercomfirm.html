@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>订单确认</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <link rel="stylesheet" href="./common/css/api.css" />
+  <link rel="stylesheet" href="./common/css/iconfont.css">
+  <meta content="telephone=no" name="format-detection" />
+  <style type="text/css">
+    .page {
+      background: #f8f8f8
+    }
+
+    body {
+      font-family: "微软雅黑";
+      background-color: #f8f8f8;
+    }
+
+    .order-content {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.17647059em;
+      background-color: #f8f8f8;
+      font-size: 17px;
+      line-height: 1.41176471
+    }
+
+    .wy-media-box.address-select {
+      margin-top: 0;
+      border-bottom: 0;
+      background-size: auto 3px
+    }
+
+    .wy-media-box {
+      margin: 10px 0;
+      padding: 9pt 10px;
+      border-top: 1px solid #e1e1e1;
+      border-bottom: 1px solid #e1e1e1;
+      background: #fff
+    }
+
+    .address-name {
+      color: #666464;
+      font-size: 15px
+    }
+
+    .address-name span {
+      margin-right: 10px
+    }
+
+    .address-txt {
+      color: #666464;
+      font-size: 13px;
+      line-height: 18px
+    }
+
+    .weui-media-box_appmsg .weui-media-box__hd.proinfo-txt-l {
+      width: 30px;
+      height: auto;
+      vertical-align: top
+    }
+
+    .weui-media-box_appmsg .weui-media-box__hd {
+      margin-right: 10px;
+      width: 82px;
+      height: 82px
+    }
+
+    .promotion-label-tit {
+      color: #81838e;
+      line-height: 12px
+    }
+
+    .promotion-label-tit img {
+      width: 100%;
+    }
+
+    img {
+      border: 0;
+      vertical-align: middle
+    }
+
+    .font-14 {
+      font-weight: 400;
+      font-size: 14px
+    }
+
+    blockquote,
+    figure,
+    form,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+      margin: 0
+    }
+
+    .mg-r-10 {
+      margin-right: 10px
+    }
+
+    .fr {
+      float: right
+    }
+
+    .txt-color-red {
+      color: #e21323
+    }
+
+    .num {
+      font-family: Arial, Helvetica, sans-serif
+    }
+
+    .sitem-tip,
+    em,
+    i,
+    s {
+      font-style: normal
+    }
+
+    .sitem-tip {
+      padding: 2px 6px;
+      background: #e21323;
+      color: #fff;
+      font-size: 9pt
+    }
+
+    .toolbar-inner .close-picker,
+    .toolbar-inner .title,
+    .weui_check_label .weui_cell_bd {
+      font-size: 15px
+    }
+
+    .fontSize14 {
+      font-size: 14px
+    }
+
+    .fontSize13 {
+      font-size: 13px
+    }
+
+    .red {
+      color: red
+    }
+
+    .color6 {
+      color: #666
+    }
+
+    .bgd_white {
+      background: #fff
+    }
+
+    .pay-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 9999;
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      border-top: 1px solid #f8f8f8;
+      background-color: #fff;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none
+    }
+
+    .pull-right {
+      float: right
+    }
+
+    .btn {
+      position: relative;
+      top: 0;
+      box-sizing: border-box;
+      margin-left: 9px;
+      width: 110px;
+      height: 50px;
+      outline: 0;
+      border: 1px solid #e5e5e5;
+      border-radius: 0;
+      background-color: #f44;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer
+    }
+
+    .hg50 {
+      height: 60px
+    }
+
+    .goods_checked_icon:before {
+      font-size: 20px !important
+    }
+
+    .foot-black {
+      clear: both;
+      height: 3pc
+    }
+
+    .commodity_information_panel {
+      background: #fff
+    }
+
+    .commodity_information_title {
+      color: #656768;
+      overflow: hidden;
+      width: auto;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-wrap: normal;
+      word-wrap: break-word;
+      font-weight: 400;
+      font-size: 15px;
+      word-break: break-all
+    }
+
+    .order-pay {
+      position: relative;
+      overflow: hidden;
+      background-color: #fff
+    }
+
+    .default_receiving_address {
+      padding: 20px 15px;
+      background: #fff;
+      color: #333;
+      font-size: 15px
+    }
+
+    .default_receiving_address p:nth-child(1) {
+      font-weight: 600
+    }
+
+    .default_receiving_address p:nth-child(2) {
+      line-height: 18px
+    }
+
+    .default_address {
+      display: inline-block;
+      margin-left: 5px;
+      width: 45px;
+      background: red;
+      color: #fff;
+      text-align: center
+    }
+
+    .commodity_information {
+      position: relative;
+      display: flex;
+      display: -webkit-box;
+      display: -webkit-flex;
+      padding: 14px 15px 10px;
+      color: #333;
+      font-weight: 500;
+      font-size: 15px
+    }
+
+    .weui-tabbar.wy-foot-menu {
+      position: fixed
+    }
+
+    .weui-tabbar__item.npd,
+    .wy-foot-menu .npd {
+      padding: 2px 0
+    }
+
+    .cart-total-txt {
+      color: #222;
+      font-size: 15px;
+      line-height: 40px
+    }
+
+    .cart-total-txt i {
+      color: #e21323;
+      font-size: 13px
+    }
+
+    .cart-total-txt em {
+      color: #e21323;
+      font-weight: 700;
+      font-size: 1pc
+    }
+
+    .w-90 {
+      width: 90px
+    }
+
+    .red-color {
+      background-color: #E69888
+    }
+
+    .t-c {
+      text-align: center
+    }
+
+    .promotion-foot-menu-label {
+      color: #fff;
+      font-size: 15px;
+      line-height: 40px
+    }
+
+    .hide {
+      display: none !important
+    }
+
+    .show {
+      display: block !important
+    }
+
+    .wy-media-box.address-select {
+      margin-top: 0;
+      border-bottom: 0;
+      background-size: auto 3px;
+    }
+
+    .mg_top10 {
+      margin-top: 10px;
+    }
+
+    .weui-cell_access:active {
+      background: #fff
+    }
+
+    #head {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 999999
+    }
+
+    .pitem {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(270deg, rgba(232, 55, 74, 1) 0%, rgba(253, 94, 67, 1) 100%);
+      color: #fff;
+    }
+
+    .p_left {
+      display: flex;
+      align-items: center;
+    }
+
+    .p_left p:nth-child(1) {
+      font-size: 17px;
+      font-weight: 700;
+      margin-right: 15px;
+    }
+
+    .p_left p:nth-child(2) {
+      font-size: 14px;
+      margin-right: 15px;
+    }
+
+    .p2 {
+      font-size: 12px;
+      margin-right: 16px
+    }
+
+    /*//邀请人弹出框*/
+    .zhezaos {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 9999
+    }
+
+    .tanchuan {
+      position: fixed;
+      width: 80%;
+      left: 10%;
+      top: 18%;
+      background-color: #fff;
+      z-index: 999999;
+      height: 190px;
+      border-radius: 8px;
+    }
+
+    .absd {
+      width: 80%;
+      margin: 0 auto;
+      margin-top: 50px
+    }
+
+    #bu1 input {
+      color: #999;
+      padding: 8px 0;
+      border-bottom: 1px solid #e8e8e8;
+      width: 100%;
+      outline: none;
+    }
+
+    .appbtn {
+      width: 80%;
+      position: absolute;
+      left: 10%;
+      bottom: 15px;
+      z-index: 99999
+    }
+
+    .tuijianren {
+      text-align: center;
+    }
+
+    .tuijianren img {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto;
+      border-radius: 50%;
+      margin-bottom: 8px;
+    }
+
+    .tuijianren p:nth-child(1) {
+      color: #999;
+      font-size: 12px;
+      margin-top: 20px;
+      margin-bottom: 13px;
+    }
+
+    .tuijianren p:nth-child(3) {
+      color: #333;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .weui_cells_checkbox .weui_check:checked+.weui_icon_checked:before {
+      content: '\EA06';
+      color: rgba(230, 152, 136, 1);
+    }
+
+    .iresms {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btnbox {
+      width: 80%;
+      position: absolute;
+      left: 10%;
+      bottom: 15px;
+      z-index: 99999;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .qx,
+    .cof {
+      width: 35%;
+      background: #999;
+      border-radius: 18px;
+      padding: 6px 0;
+      text-align: center;
+      color: #fff;
+    }
+
+    .cof {
+      background: #F5AC9E;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="head"></div>
+  <div class="hide" id="yaoqinbox">
+    <div class="zhezaos" onclick="showmodel(1)"></div>
+    <div style="position:relative">
+      <div class="tanchuan">
+        <div id="bu1">
+          <div class="absd">
+            <input type="tel" placeholder="请填写推荐人邀请码" maxlength="6" id="yaoqingnum" autofocus="autofocus">
+          </div>
+        </div>
+        <div class="tuijianren hide" id="bu2">
+          <p>推荐人信息</p>
+          <img src="./img/man.jpg" alt="" id="tuiimg">
+          <p id="tuiname">群哥</p>
+        </div>
+        <div class="appbtn" onclick="nextgo()" id="next">下一步</div>
+      </div>
+    </div>
+  </div>
+  <!-- 邀请人二次弹窗 -->
+  <div class="hide" id="comfirmBox">
+    <div class="zhezaos" onclick="showmodel(1)"></div>
+    <div style="position:relative">
+      <div class="tanchuan">
+        <div class="tuijianren" id="bu2">
+          <p>请确认推荐人信息</p>
+          <img src="./img/man.jpg" alt="" id="comimg">
+          <p id="comname">群哥</p>
+        </div>
+        <div class="btnbox">
+          <div class="qx" onclick="showmodel(1)">取消</div>
+          <div class="cof" onclick="gopay()">确认</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 推荐人 -->
+  <div class="page" id="pagsin">
+    <div class="hide pitem" style="padding: 10px 0  10px 16px;margin-bottom: 10px" onclick="showmodel()">
+      <div class="p_left">
+        <p>推荐人</p>
+        <p id='showimage'>请填写推荐人邀请码</p>
+      </div>
+      <p class="p2" id="tianxie">填写</p>
+    </div>
+    <!-- 默认收货地址 -->
+    <div class="order-content" style="margin-top:0;">
+      <div class="wy-media-box weui-media-box_text address-select hide" id="addAddress" onclick="OpenAdressManage()">
+        <div class="weui-media-box_appmsg">
+          <div class="weui-media-box__hd proinfo-txt-l"><span class="promotion-label-tit"><img src="./image/add8.png"></span></div>
+          <div class="weui-media-box__bd">
+            <a href="##" class="weui-cell_access">
+              <p class="address-name"><span style="color:#666464;">新增收货地址</span></p>
+              <!-- <div class="address-txt">宿迁市洋河新区电商产业园105号</div> -->
+            </a>
+          </div>
+          <div class="weui-media-box__hd proinfo-txt-l" style="width:16px;">
+            <div class="weui-cell_access"><span class="weui-cell__ft" style="padding-bottom:8px"></span></div>
+          </div>
+        </div>
+      </div>
+      <div id="AddressText" onclick="OpenAdressManage()">
+
+      </div>
+      <!-- 商品信息 -->
+      <div id="prolist"></div>
+
+      <!-- <section onclick="openInv()" style="padding:10px 0;font-size:14px;background-color:#fff;margin:10px 0" id="fapiao">
+        <div class="weui_cell weui_cell_select weui_select_after bgd_white fontSize14 up_line under_line">
+          <div class="weui_cell_hd">
+            <label for="" class="weui_label">
+              申请开票
+            </label>
+          </div>
+          <div class="weui_cell_bd weui_cell_primary" style="text-align:right;padding-right:50px">
+                    <p id='fp_name'>不开发票</p>
+          </div>
+        </div>
+      </section> -->
+
+      <!-- <div class="weui_cell weui_cell_select weui_select_after bgd_white fontSize14 up_line under_line" id="baoyou">
+      <div class="weui_cell_hd">
+        <label for="" class="weui_label">配送方式</label>
+      </div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <select class="weui_select" name="select2" style="direction: rtl;color: #666464">
+          <option value="1" style="direction: rtl;">快递 免邮</option>
+       </select>
+     </div>
+    </div> -->
+      <div class="weui-cell weui-cell_access" href="javascript:;" style="background: #fff">
+        <div class="weui_cell_hd">
+          <p class="font-14"><span class="mg-r-10">运费:&nbsp;&nbsp;<em class="num  txt-color-red" id="freight" style="color: #E69888">&yen;0.00</em></span></p>
+        </div>
+        <div class="weui-cell__bd weui-cell_primary" style="text-align: right;font-size: 14px;">
+          <p>总计：<span style="color: #E69888" id="zongjinum">110</span></p>
+        </div>
+      </div>
+      <div class="weui_cell   bgd_white fontSize14">
+        <div class="weui_cell_hd"><label class="weui_label width70">买家留言</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+          <input class="weui_input" type="text" name="buyer_remark" placeholder="请输入留言信息" id="textremark">
+        </div>
+      </div>
+      <!-- 支付方式2 -->
+      <div class="order-pay up_line under_line mg_top10" id="paylist" style="margin-bottom:20px">
+        <div class="weui_cell no_access" id="div_cashpay" style="display:none">
+          <div class="weui_cell_hd"><img src="../../image/qianbao-pay.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+          <div class="weui_cell_bd weui_cell_primary">
+            <p class="fontSize14">钱包支付<span id='cashbalance'></span></p>
+          </div>
+          <div class="weui_cell_ft weui_cells_checkbox">
+            <label class="weui_check_label">
+              <div class="weui_cell_hd ">
+                <input type="radio" class="weui_check selectpay" name="selectpay" data-payid="20170824112865489534"
+                  data-code="cashpay" onclick="SelectPayment(this)" checked="">
+                <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+              </div>
+            </label>
+          </div>
+        </div>
+        <!-- <div class="weui_cell">
+                        <div class="weui_cell_hd"><img src="./image/zhifubao.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p class="fontSize14">支付宝支付</p>
+                        </div>
+                        <div class="weui_cell_ft weui_cells_checkbox">
+                          <label class="weui_check_label" >
+                          <div class="weui_cell_hd ">
+                              <input type="radio" class="weui_check selectpay" name="selectpay" data-payid="20091208120710069746" data-code="alipay" onclick="SelectPayment(this)"  checked="checked">
+                              <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+                          </div>
+                      </label>
+                        </div>
+                  </div> -->
+        <div class="weui_cell">
+          <div class="weui_cell_hd"><img src="./image/weiXin-pay.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+          <div class="weui_cell_bd weui_cell_primary">
+            <p class="fontSize14">微信支付</p>
+          </div>
+          <div class="weui_cell_ft weui_cells_checkbox">
+            <label class="weui_check_label">
+              <div class="weui_cell_hd ">
+                <input type="radio" class="weui_check selectpay" name="selectpay" data-payid="20180929145311965542"
+                  data-code="wxpay" onclick="SelectPayment(this)" checked="checked">
+                <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <!--底部导航-->
+      <div class="foot-black"></div>
+      <div class="weui-tabbar wy-foot-menu">
+        <div class="weui-tabbar__item  npd">
+          <p class="cart-total-txt">应付：<span class="red" id="tprice" style="color: #656768">&yen;&nbsp;0.00</span>
+            <!--(可获得<span class="red">200</span>积分)-->
+          </p>
+        </div>
+        <a href="javascript:" id="comfirmOrder" class="red-color npd w-90 t-c">
+          <p class="promotion-foot-menu-label">提交订单</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="./common/js/SHA1.js"></script>
+<script type="text/javascript" src="./common/js/config.js"></script>
+<script type="text/javascript" src="./common/js/common.js"></script>
+<script>
+  var invoiceJson = ''; // 发票数据
+  var isInvoice = false; // 是否开具发票
+  var comfirmdata;
+  var isreflashaddress = true;
+  var yaoqingma = true //开店了就是填写过邀请人
+  var modelstatu = 1 //填写邀请人的 1是填写邀请人 2是查完头像之后的
+  var codeinvet = '' //提交用的邀请吗
+  var showinvet = '' //展示用邀请人信息，
+  var openimagese = {} //开店用信息
+  var onlyone = false //只允许重复提交一次
+  var tp = 0 // 总金额
+  var freight = {}
+  freight.price = 0 // 运费
+  freight.free = 0 // 包邮金额
+  freight.in = 0 // 省内运费
+  freight.out = 0 // 省外运费
+  // var couponPrice = 0 // 全局使用优惠券的减免金额
+  var areacode = '' // 全局的地址id
+
+  if (openapp) {
+    apiready = function () {
+      data()
+    }
+  } else {
+    window.onload = function () {
+      data()
+    }
+  }
+
+  function data() {
+    headTitle($api.byId('head'), '订单确认');
+    //安卓弹窗兼容
+    if (window.api) {
+      if (api.systemType == 'android') {
+        $api.dom('.tanchuan').style.top = '30%';
+      }
+    }
+    console.log(Number(getname('statustop')))
+    // console.log(api.getPrefs({sync: true,key: 'statustop'}))
+    $api.byId('pagsin').style.marginTop = 70 + Number(getname('statustop')) + 'px'
+    if (window.api) {
+      api.addEventListener({
+        name: 'invoice_event'
+      }, function (ret) {
+        console.log(JSON.stringify(ret))
+        get_inv(ret.value.key)
+      })
+    }
+    if (window.api)
+      $api.dom('.wy-foot-menu').style.paddingBottom = api.getPrefs({
+        sync: true,
+        key: 'safeAreaBottom'
+      }) + 'px'
+    var shopid = getname('SessionShopID')
+    if (!shopid) {
+      $api.removeCls($api.dom('.pitem'), 'hide');
+      yaoqingma = false
+      //读取邀请码
+      https({
+        url: siteUrl + 'Main/Member/GetInvitationCode',
+        data: {
+          uid: getname()
+        },
+        headers: 1,
+        successBack: function (ret) {
+          if (ret.success && ret.status == 1) {
+            if (ret.reobj != null) {
+              if (ret.reobj.code) {
+                yaoqingma = true
+                codeinvet = ret.reobj.code
+                $api.html($api.byId('showimage'), ret.reobj.referee + '(' + ret.reobj.code + ')')
+                $api.html($api.byId('tianxie'), '修改');
+                $api.html($api.byId('comname'), ret.reobj.referee);
+                $api.attr($api.byId('comimg'), 'src', ret.reobj.refereeimg ? ret.reobj.refereeimg :
+                  './image/man.jpg')
+                // 已填写邀请码
+                $api.val($api.byId('yaoqingnum'), ret.reobj.code)
+              }
+            }
+          } else {
+            promptMsg(ret.err)
+          }
+        }
+      })
+    }
+    comfirmdata = pageParam('packageselectdata', 1) || [];
+    if (window.api) {
+      api.parseTapmode();
+      funListenLoginSuccess();
+    }
+    // funListenAddressPage();
+    if (checkLoginStatus()) {
+      BindData()
+      BindMember();
+
+    }
+  }
+
+  function showmodel(index) {
+    if (index) {
+      modelstatu = 1
+      $api.val($api.byId('yaoqingnum'), '')
+      $api.addCls($api.byId('yaoqinbox'), 'hide');
+      $api.addCls($api.byId('comfirmBox'), 'hide');
+      // yaoqingma = false
+    } else {
+      $api.removeCls($api.byId('yaoqinbox'), 'hide');
+      $api.removeCls($api.byId('bu1'), 'hide');
+      $api.addCls($api.byId('bu2'), 'hide');
+    }
+  }
+
+  function nextgo() {
+    console.log(1);
+    var ondex = $api.val($api.byId('yaoqingnum'))
+    if (modelstatu == 1) {
+      https({
+        url: siteUrl + 'Main/Member/GetCodeUser?uid=' + getname(),
+        data: {
+          code: ondex
+        },
+        headers: 1,
+        successBack: function (ret) {
+          if (ret.success && ret.status == 1) {
+            console.log($api.jsonToStr(ret));
+            modelstatu = 2
+            $api.html($api.byId('next'), '确定')
+            $api.addCls($api.byId('bu1'), 'hide');
+            $api.removeCls($api.byId('bu2'), 'hide');
+            showinvet = ret.reobj.referee + '(' + $api.val($api.byId('yaoqingnum')) + ')'
+            $api.attr($api.byId('tuiimg'), 'src', ret.reobj.refereeimg ? ret.reobj.refereeimg : './image/man.jpg')
+            $api.attr($api.byId('comimg'), 'src', ret.reobj.refereeimg ? ret.reobj.refereeimg : './image/man.jpg') // 邀请人二次弹窗
+            $api.html($api.byId('tuiname'), ret.reobj.referee)
+            $api.html($api.byId('comname'), ret.reobj.referee) // 邀请人二次弹窗
+          } else {
+            promptMsg(ret.err)
+          }
+        }
+      })
+    } else if (modelstatu == 2) {
+      yaoqingma = true
+      codeinvet = $api.val($api.byId('yaoqingnum'))
+      $api.html($api.byId('showimage'), showinvet)
+      $api.html($api.byId('tianxie'), '修改');
+      setTimeout(function () {
+        showmodel(1)
+      }, 1000)
+    }
+  }
+  //--------------监听事件
+  function funListenLoginSuccess() {
+    api.addEventListener({
+      name: 'loginSuccess'
+    }, function (ret, err) {
+      if (ret) {
+        BindData();
+      }
+    });
+  }
+  // function funListenAddressPage(){
+  //   if(window.api){
+  //     api.addEventListener({
+  //       name:'viewappear'
+  //   }, function(ret, err){
+  //     if(isreflashaddress)
+  //       BindAdress();
+  //     else isreflashaddress = true;
+  //   });
+  //   }else{
+  //     BindAdress();
+  //   }
+  // }
+
+  //--------------监听事件结束
+  //--------------数据绑定
+  function BindData() {
+    if (window.api) {
+      api.showProgress({
+        text: '请耐心等待...',
+        modal: true
+      });
+    }
+    //购物车数据
+    if (pageParam('way') == 'shoppingcart') {
+      https({
+        method: 'post',
+        url: siteUrl + 'Main/PackageShopping/GetPackageCartJson?uid=' + getname(),
+        data: {
+          uid: getname(),
+          cartids: apageParam('ids')
+        },
+        headers: 1,
+        successBack: function (ret) {
+          if (ret) {
+            if (ret.success) {
+              if (ret.status == 1 && ret.Data != null) {
+                var data = ret.Data;
+                var shtml = '';
+                data.forEach(function (list, index) {
+                  var amount = 0;
+                  var tprice = 0;
+                  var itemshtml = '';
+                  var comname = ''
+                  var produname = ''
+                  var buynum = ''
+                  list.forEach(function (packageitem, i) {
+                    produname = packageitem.packageitemlist.productname
+                    comname = packageitem.packageitemlist.companyname
+                    buynum = packageitem.buycount
+                    // var packageprice =  parseFloat((packageitem.price==null||packageitem.price=='')?packageitem.price:packageitem.price);
+                    // tprice += packageprice;
+                    amount += Number(packageitem.price) * packageitem.buycount
+                    itemshtml += '        <div class="weui_panel_bd border_top">';
+                    itemshtml +=
+                      '            <a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">';
+                    itemshtml += '                <div class="weui_media_hd">';
+                    itemshtml += '                  <img class="weui_media_appmsg_thumb" src="' +
+                      packageitem.packageitemlist.image + '" alt="" style="min-height:100%;">';
+                    itemshtml += '                </div>';
+                    itemshtml += '                <div class="weui_media_bd">';
+                    itemshtml += '                    <h4 class="commodity_information_title">' +
+                      packageitem.packageitemlist.productname + '</h4>';
+                    itemshtml += '                    <p class="weui_media_desc"><span>数量：x' +
+                      packageitem.buycount + '</span>&nbsp;<span>' + ((packageitem.skutext != "" &&
+                        packageitem.skutext != null) ? packageitem.skutext : '') + '</span>&nbsp;</p>';
+                    itemshtml +=
+                      '                    <p class="fontSize13"><span class="red">&yen;&nbsp;' + (Number(
+                        packageitem.price).toFixed(2) * packageitem.buycount).toFixed(2) +
+                      '</span>&nbsp;&nbsp;<!--<span class="color6">会员折扣：80%</span>--></p>';
+                    itemshtml += '                </div>';
+                    itemshtml += '            </a>';
+                    itemshtml += '        </div>';
+                    //提交数据
+                    comfirmdata.push({
+                      PackageID: packageitem.packageitemlist.packageid,
+                      BuyCount: packageitem.buycount,
+                      SkuID: packageitem.skuid,
+                      CompanyID: packageitem.companyid,
+                      CartID: packageitem.cartid
+                    });
+                  });
+                  // amount += tprice*buycount;
+                  shtml += '<div class="commodity_information_panel weui_panel_access">';
+                  shtml += '        <div class="weui_panel_hd commodity_information">' + comname + '</div>';
+                  shtml += '</div>'
+                  shtml += '<div class="commodity_information_panel weui_panel_access">';
+                  // shtml +='        <div class="weui_panel_hd commodity_information">'+produname+'</div>';
+                  shtml += itemshtml;
+                  shtml += '</div>';
+                  shtml +=
+                    ' <div class="weui-cell weui-cell_access" href="javascript:;"  style="background:#fff;margin-bottom:10px;">';
+                  shtml += '    <div class="weui-cell__bd weui-cell_primary">';
+                  shtml += '         <p class="font-14"><span class="mg-r-10">&nbsp;&nbsp;</p>';
+                  shtml += '     </div>';
+                  shtml += '<span class="fr fontSize14">总计:&nbsp;&nbsp;<em class="num  txt-color-red">&yen;' +
+                    amount.toFixed(2) + '</em></span>';
+                  shtml += '    </div>';
+                  shtml += '</div>';
+                });
+                $api.html($api.byId('prolist'), shtml);
+                $api.html($api.byId('tprice'), '&yen;' + parseFloat(ret.TotalPrice).toFixed(2));
+                $api.addEvt($api.byId('comfirmOrder'), 'click', ComfirmOrder);
+                tp = ret.TotalPrice
+                BindAdress() // 
+              } else if (ret.status == 1) {} else {
+                promptMsg(ret.err);
+              }
+            } else {
+              promptMsg(ret.err);
+            }
+          }
+        }
+      })
+      //直接购买
+    } else {
+      var packageids = [];
+      pageParam('packageselectdata', 1).forEach(function (item, i) {
+        packageids.push(item.PackageID);
+      });
+      console.log(pageParam('packageselectdata', 1))
+      https({
+        url: siteUrl + 'Main/PackageShopping/GetPackageProJson?uid=' + getname(),
+        method: 'post',
+        data: {
+          packageids: packageids.join('#'),
+          type: pageParam('type')
+        },
+        headers: 1,
+        successBack: function (ret) {
+          if (ret.success) {
+            if (ret.status == 1 && ret.Data != null) {
+              var data = ret.Data;
+              var shtml = '';
+              var amount = 0;
+              data.forEach(function (list, index) {
+                var tprice = 0;
+                var itemshtml = '';
+                var buycount = 1;
+                pageParam('packageselectdata', 1).forEach(function (item, i) {
+                  if (item.PackageID == list[0].packageid) {
+                    buycount = item.BuyCount;
+                  }
+                });
+                list[0].packageitems.forEach(function (packageitem, i) {
+                  var packageprice = parseFloat(pageParam('skuprice') ? Number(pageParam('skuprice')).toFixed(
+                    2) : packageitem.propackageprice);
+                  tprice += packageprice
+                  itemshtml += '        <div class="weui_panel_bd border_top">';
+                  itemshtml +=
+                    '            <a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">';
+                  itemshtml += '                <div class="weui_media_hd">';
+                  itemshtml += '                  <img class="weui_media_appmsg_thumb" src="' +
+                    packageitem.image + '" alt="" style="min-height:100%;">';
+                  itemshtml += '                </div>';
+                  itemshtml += '                <div class="weui_media_bd">';
+                  itemshtml += '                    <h4 class="commodity_information_title">' +
+                    packageitem.productname + '</h4>';
+                  itemshtml += '                    <p class="weui_media_desc"><span>' + ((pageParam(
+                      'skutext') != "" && pageParam('skutext') != null) ? pageParam('skutext') : '') +
+                    '</span>&nbsp;</p>';
+                  itemshtml +=
+                    '                    <p class="fontSize13 iresms"><span class="red">&yen;&nbsp;' + ((
+                      pageParam('skuprice') ? Number(pageParam('skuprice')).toFixed(2) : packageprice.toFixed(
+                        2)) * buycount).toFixed(2) + '</span>&nbsp;&nbsp;<span class="color6">x' +
+                    buycount + '</span></p>';
+                  itemshtml += '                </div>';
+                  itemshtml += '            </a>';
+                  itemshtml += '        </div>';
+                });
+                amount += tprice * buycount;
+                shtml += '<div class="commodity_information_panel weui_panel_access">';
+                shtml += '        <div class="weui_panel_hd commodity_information">' + list[0].packageitems[0]
+                  .companyname + '</div>';
+                shtml += '</div>'
+                shtml += '<div class="commodity_information_panel weui_panel_access">';
+                // shtml +='        <div class="weui_panel_hd commodity_information">'+list[0].packagename+'</div>';
+                shtml += itemshtml;
+                shtml += '</div>';
+                shtml +=
+                  ' <div class="weui-cell weui-cell_access" href="javascript:;"  style="background:#fff;margin-bottom:10px;">';
+                shtml += '    <div class="weui-cell__bd weui-cell_primary">';
+                shtml += '         <p class="font-14"><span class="mg-r-10">&nbsp;&nbsp;</p>';
+                shtml += '     </div>';
+                $api.html($api.byId('zongjinum'), '&yen;' + (tprice * buycount).toFixed(2))
+                // shtml +='<span class="fr fontSize14">总计:&nbsp;&nbsp;<em class="num  txt-color-red">&yen;'+(tprice*buycount).toFixed(2)+'</em></span>';
+                shtml += '    </div>';
+                shtml += '</div>';
+
+              });
+
+              $api.html($api.byId('prolist'), shtml);
+              $api.html($api.byId('tprice'), '&yen;' + parseFloat(amount).toFixed(2));
+              $api.addEvt($api.byId('comfirmOrder'), 'click', ComfirmOrder);
+
+              tp = parseFloat(amount)
+              freight.free = ret.packagePrice
+              freight.in = ret.provinceFreight
+              freight.out = ret.opPrice
+              BindAdress() // 
+            } else if (ret.status == 1) {} else {
+              promptMsg(ret.err);
+            }
+          } else {
+            promptMsg(ret.err);
+          }
+        }
+      });
+    }
+    if (window.api)
+      api.hideProgress();
+  }
+
+  function bindFreight() {
+    // var tf = Number(Number(tp) - Number(couponPrice))
+    var tf = Number(tp)
+    if (tf < freight.free) {
+      // 37 开头为山东省内  areacode为全局的地址id
+      if (areacode && areacode.toString().indexOf('37') == 0) {
+        freight.price = freight.in
+      } else {
+        freight.price = freight.out
+      }
+    } else {
+      freight.price = 0
+    }
+    $api.byId('freight').innerHTML = '￥' + Number(freight.price).toFixed(2)
+    $api.byId('zongjinum').innerHTML = '￥' + Number(Number(tf) + Number(freight.price)).toFixed(2)
+    $api.byId('tprice').innerHTML = '￥' + Number(Number(tf) + Number(freight.price)).toFixed(2)
+  }
+
+  function BindAdress(addressid) {
+    https({
+      url: siteUrl + 'Main/Shopping/GetAddressJson',
+      method: 'get',
+      data: {
+        uid: getname(),
+        addressid: addressid
+      },
+      headers: 1,
+      successBack: function (ret) {
+        console.log($api.jsonToStr(ret));
+        if (ret.success) {
+          if (ret.status == 1 && ret.Data != null && ret.Data != "") {
+            var data = ret.Data[0];
+            var shtml = "";
+            shtml += '<input type="hidden" id="hideaddressid" value="' + data.id + '">';
+            shtml += '<div class="wy-media-box weui-media-box_text address-select">';
+            shtml += '<div class="weui-media-box_appmsg">';
+            shtml +=
+              '<div class="weui-media-box__hd proinfo-txt-l" style="width:20px;"><span class="promotion-label-tit"><i class="iconfont icon-location" style="font-size:22px"></i></span></div>';
+            shtml += '<div class="weui-media-box__bd">';
+            shtml += '<a href="javascript:void(0)" class="weui-cell_access">';
+            shtml += '<h4 class="address-name"><span>' + data.name + '</span><span>' + data.mobile +
+              '</span></h4>';
+            shtml += '<div class="address-txt">' + data.fullarea + '</div>';
+            shtml += '</a>';
+            shtml += '</div>';
+            shtml +=
+              '<div class="weui-media-box__hd proinfo-txt-l" style="width:16px;"><div class="weui-cell_access"><a href="" style="display:block"><span class="weui-cell__ft" style="padding-bottom:8px></span></a></div></div>';
+            shtml += '</div>';
+            shtml += '</div>';
+            // shtml+=  data.name+","+data.fullarea;
+            // shtml +='<a href="javascript:OpenAdressManage()" style="display:block">编辑</a>'
+            $api.removeCls($api.byId("addAddress"), 'show');
+            $api.html($api.byId("AddressText"), shtml);
+
+            areacode = data.areacode
+            bindFreight()
+          } else if (ret.status == 1) {
+            $api.addCls($api.byId("addAddress"), 'show');
+            $api.html($api.byId("AddressText"), '');
+            areacode = ''
+            bindFreight()
+          } else {
+            promptMsg(ret.err);
+          }
+          // bindFreight(ret.Data[0].areacode)
+        } else {
+          promptMsg(ret.err);
+        }
+      }
+    });
+  }
+
+  function BindMember() {
+    https({
+      url: siteUrl + 'Main/Member/GetMemberJson',
+      method: 'get',
+      data: {
+        uid: getname()
+      },
+      headers: 1,
+      successBack: function (ret) {
+        if (ret.success) {
+          if (ret.status == 1 && ret.Data != null) {
+            var data = ret.Data;
+            console.log($api.jsonToStr(data));
+            openimagese.shopname = data.name,
+              openimagese.txtwx = data.phone
+            //实习店铺的人买开店礼包不能用钱包
+            if (data.isintern == 1) {
+              $api.addCls($api.byId('div_cashpay'), 'hide');
+            }
+            if (data.isopenshop) {
+              $api.html($api.byId('cashbalance'), '(余额：' + parseFloat(data.blance).toFixed(2) + '元)');
+
+            } else {
+              $api.addCls($api.byId('div_cashpay'), 'hide');
+            }
+          }
+        }
+      }
+    });
+  }
+  //--------------数据绑定结束
+  function SelectPayment(obj) {
+    var selpay = $api.domAll($api.byId("paylist"), "[name=selectpay]");
+    for (var i = 0; i < selpay.length; i++) {
+      $api.attr(selpay[i], 'checked', '');
+    }
+    $api.attr(obj, 'checked', 'checked');
+  }
+
+  function OpenAdressManage() {
+    //OpenWebPage(bSiteUrl+'AddressList.aspx?shopid=170718164338876176&backurl=fromapp','收货地址');
+    openWin({
+      name: 'addressList',
+      url: './addressList.html',
+      pageParam: {
+        isPayPage: 'packageordercomfirm',
+        title: '收货地址'
+      }
+    }, 1);
+  }
+  //外部web页面调用 更新地址方法
+  function updateAddress(addressid) {
+    isreflashaddress = false;
+    BindAdress(addressid);
+    api.closeWin({
+      name: 'addressList'
+    });
+  }
+
+  function ComfirmOrder() {
+    if (onlyone) {
+      promptMsg('请勿重复提交,请重新下单');
+      return;
+    }
+    //参数验证
+    var addressid = $api.val($api.byId('hideaddressid'));
+    if (addressid == null || addressid == "") {
+      promptMsg('请选择地址');
+      return;
+    }
+    var remark = $api.val($api.byId('textremark'));
+
+    var selpay = $api.domAll($api.byId("paylist"), "[name=selectpay]");
+    var payid = '';
+    var paycode = '';
+    for (var i = 0; i < selpay.length; i++) {
+      var paycheck = $api.attr(selpay[i], "checked");
+      if (paycheck == 'checked') {
+        payid = $api.attr(selpay[i], "data-payid");
+        paycode = $api.attr(selpay[i], "data-code");
+      }
+
+    }
+    if (payid == null || payid == "" || paycode == null || paycode == "") {
+      promptMsg('请选择有效的支付方式');
+      return;
+    }
+    if (comfirmdata.length < 1) {
+      promptMsg('没有待支付商品');
+      return;
+    }
+    //判断填写了邀请码了没有
+    if (!yaoqingma) {
+      promptMsg('请填写推荐人');
+      return;
+    }
+    // 弹窗提示确认邀请人
+    $api.removeCls($api.byId('comfirmBox'), 'hide');
+  }
+
+
+  var payid = '';
+  var paycode = '';
+  var isupgrade = ''
+  function gopay() {
+    if (codeinvet == '' || codeinvet == null) {
+      return promptMsg('请重新填写邀请码')
+    }
+    if (window.api) {
+      api.showProgress({
+        text: '请耐心等待...',
+        modal: true
+      });
+    }
+    //判断升级套餐还是开店套餐  1是开店套餐
+    if (pageParam('type') == 1) {
+      isupgrade = String(false)
+    } else {
+      isupgrade = String(true)
+    }
+    onlyone = true
+
+    var addressid = $api.val($api.byId('hideaddressid'));
+    var remark = $api.val($api.byId('textremark'));
+
+    var selpay = $api.domAll($api.byId("paylist"), "[name=selectpay]");
+    for (var i = 0; i < selpay.length; i++) {
+      var paycheck = $api.attr(selpay[i], "checked");
+      if (paycheck == 'checked') {
+        payid = $api.attr(selpay[i], "data-payid");
+        paycode = $api.attr(selpay[i], "data-code");
+      }
+    }
+    console.log(codeinvet)
+    //购物车数据
+    if (paycode == 'cashpay') {
+    https({
+      url: siteUrl + 'Main/PackageShopping/PayComfirmPackage?uid=' + getname(),
+      method: 'post',
+      data: {
+        memberid: getname(),
+        isupgrade: isupgrade,
+        sourcetype: 0,
+        addressid: addressid,
+        timeid: "",
+        payid: payid,
+        paycode: paycode,
+        remark: remark,
+        data: comfirmdata,
+        invitationcode: codeinvet,
+        OrdersFreight: freight.price
+        // invoiceJson: invoiceJson,// 发票相关数据
+        // isInvoice: isInvoice,// true false 是否开发票
+      },
+      headers: 1,
+      successBack: function (ret) {
+        xinlang_pay(ret)
+      }
+    });
+  }else if(paycode == 'wxpay'){
+    https({
+      url: siteUrl + 'Main/ShoppingSinaPay/PayComfirmPackage?uid=' + getname(),
+      method: 'post',
+      data: {
+        memberid:getname(),
+            isupgrade:isupgrade,
+            sourcetype:0,
+            addressid:addressid,
+            timeid:"",
+            payid:payid,
+            paycode:paycode,
+            remark:remark,
+            data : comfirmdata,
+            invitationcode:codeinvet,
+            OrdersFreight: freight.price,
+            devicetype: 1,
+        devicemac:getname()
+      },
+      headers: 1,
+      successBack: function (ret) {
+        xinlang_pay(ret)
+      }
+    });
+  }
+  }
+  //新浪支付
+  function  xinlang_pay(ret) {
+    console.log(JSON.stringify(ret))
+        if (ret.success) {
+          var fxshopid = getname('SessionShopID');
+          if (ret.status == 1 && ret.Data != null) {
+            // 购买了开店礼包 首页底部按钮文字要改变
+            if (window.api) {
+              api.sendEvent({
+                name: 'buyOpenShop'
+              })
+            }
+            if (paycode == 'cashpay') {
+              api.openWin({
+                name: 'success',
+                url: './success.html',
+                bgColor: '#fff'
+              });
+              api.closeWin({
+                name: 'ordercomfirm'
+              });
+              pushMsg("商品: [" + ret.Data.orderids[0] + "] 订单支付成功", ret.Data.orderids[0])
+            } else if (paycode == 'alipay' && ret.Data.alipayorderinfo != null && ret.Data.alipayorderinfo != "") {
+              var orderids = ret.Data.orderids[0]
+              var aliPayPlus = api.require('aliPayPlus');
+              aliPayPlus.payOrder({
+                orderInfo: decodeURIComponent(ret.Data.alipayorderinfo)
+              }, function (ret, err) {
+                if (ret.code == "9000") {
+                  if (isupgrade == 'false') {
+                    //解冻套餐购买成功
+                    if (fxshopid != null && fxshopid != "") {
+                      ShoppingSuccess(paycode, "packagebuy", './success.html', orderids);
+                      //设置冻结套餐购买成功后刷新会员中心
+                      api.sendEvent({
+                        name: 'jiedongsuccess'
+                      });
+                    } else {
+                      openimagese.code = codeinvet
+                      kaidian()
+                      // ShoppingSuccess(paycode,"packagebuy",'../tool/pack_success.html', orderids);
+                    }
+                  } else if (isupgrade == 'true') {
+                    ShoppingSuccess(paycode, "packagebuy", './success.html', orderids);
+                  }
+                } else {
+                  pushMsg("订单号: [" + orderids + "] 订单提交成功,等待付款", orderids)
+                  api.alert({
+                    title: '支付结果',
+                    msg: alipayReturnCode(ret.code),
+                    buttons: ['确定']
+                  });
+                  setTimeout(function () {
+                    api.closeWin({
+                      name: 'packageordercomfirm'
+                    });
+                  }, 1500)
+                }
+              });
+            } else if (paycode == 'wxpay' && ret.Data.payorderinfo != null && ret.Data.payorderinfo !="") {
+              if (isupgrade == 'false') {
+                //解冻套餐购买成功
+                if (pageParam('dongjie') == 1) {
+                  wechatpay(ret.Data.payorderinfo, 'wxpay', 'packagebuy', './success.html', ret.Data.orderids[0])
+                  //设置冻结套餐购买成功后刷新会员中心
+                  api.sendEvent({
+                    name: 'jiedongsuccess'
+                  });
+                } else {
+                  //创业礼拜复购时开了店跳另一个
+                  if (fxshopid != null && fxshopid != "") {
+                    wechatpay(ret.Data.payorderinfo, 'wxpay', 'packagebuy', './success.html', ret.Data.orderids[0])
+                  } else {
+                    //直接开店
+                    openimagese.code = codeinvet
+                    wechatpay(ret.Data.payorderinfo, 'wxpay', 'packagebuy', './pack_success.html', ret.Data.orderids[0], '', '', openimagese)
+                  }
+                }
+              } else if (isupgrade == 'true') {
+                wechatpay(ret.Data.payorderinfo, 'wxpay', 'packagebuy', './success.html', ret.Data.orderids[0])
+              }
+            } else {
+              pushMsg("订单号: [" + ret.Data.orderids[0] + "] 订单提交成功,等待付款", ret.Data.orderids[0])
+              promptMsg('下单成功');
+            }
+          } else if (ret.status == 1) {} else {
+            promptMsg(ret.err);
+          }
+        } else {
+          promptMsg(ret.err);
+        }
+        api.hideProgress()  
+  }
+
+  function close() {
+    api.closeWin({
+      name: 'packageordercomfirm'
+    });
+  }
+  // 打开发票frame页
+  function openInv() {
+    api.openFrame({
+      name: 'invoice',
+      url: './invoice.html',
+      // bgColor: 'rgba(0,0,0,.3)'
+    })
+  }
+  // 获取开发票的数据
+  function get_inv(value) {
+    invoiceJson = {}
+    for (var i in value) {
+      invoiceJson[i] = value[i]
+    }
+    isInvoice = invoiceJson.invoiceType ? true : false
+    $api.byId('fp_name').innerHTML = invoiceJson.invoiceType ? invoiceJson.invoiceTitle == 1 ? '个人' : '公司' : '不开发票'
+  }
+</script>
+
+</html>

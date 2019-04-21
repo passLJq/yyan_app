@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+    <style>
+    body{background-color: #fff;font-family: "微软雅黑"}
+    .y_a{ position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #F5AC9E;
+        color: #fff;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 18px;}
+        p{
+          margin-left: 10px;
+          margin-top: 5px
+        }
+        input{    background-color: #ffffff;
+                  border: 1px solid #d1d1d1;
+                  border-radius: 3px;
+                  font-size: 0;
+                  height: 16px;
+                  outline: 0 none;
+                  vertical-align:text-bottom;
+                  width: 16px;}
+          span{    color: #999999;}
+          .y-y{
+            text-align: center
+          }
+          .back{position: fixed;top:5%;left: 3%;z-index: 9999;}
+.back img{width: 25px;height: 25px;}
+.item{display: flex;align-items: center;padding: 10px 0}
+.ondiv{width: 25%;display: flex;align-items: center;text-align: center;}
+.item img{width: 50px; height: 50px}
+.shen-head img{width: 100%;}
+.one{font-size: 12px;color: #999797;margin: 0 0;padding: 0 0;margin-top: 5px}
+.two{font-size: 14px;color: #000;margin: 0 0;padding: 0 0;margin-top: 5px;font-weight: 700}
+.ieem2{background-color: #f5f5f5}
+.huali{width: 50%;margin:0 auto;margin-top: 15px}
+.huali img{width: 100%}
+.y_share{background-color: #fff;}
+.hide{display: none;}
+
+.all_contianer{position: fixed; bottom: 0; width: 100%; text-align: center; height: 80px; background-color: #fff}
+.y_share{background-color: #fff}
+.content_img_container{margin-bottom:80px}
+    </style>
+  </head>
+    <body>
+            <div>
+              <div class="back" onclick="backUrl()"><img src="./image/icon-back.png" alt=""></div>
+              <div class="content_img_container" id="content_img_container"><img src="./image/openyishop.png" width="100%"></div>
+            </div>
+            <div class="all_contianer">
+              <div class="y_share hide" id="kaidian">
+                <div class="y-y">
+                  <p style="color: #9B9B9B;font-size: 12px"><input type="checkbox" id="xuanze" checked="checked" style="margin-right:5px;"><span>阅读并同意<a  onclick="a()">《开店协议》</a></span></p>
+                  <a href="##" class="y_a" onclick="select()">立即申请开店</a>
+                </div>
+              </div>
+          <div class="y_share hide" id="goumai">
+            <div class="y-y">
+              <a href="##" class="y_a" onclick="openpack()">立即购买</a>
+            </div>
+          </div>
+          </div>
+      <script type="text/javascript" src="./common/js/api.js"></script>
+      <script type="text/javascript" src="./common/js/config.js"></script>
+      <script type="text/javascript" src="./common/js/common.js"></script>
+      <script>
+        if(openapp){
+          window.apiready = function(){
+            if(pageParam('zhigou')==1){
+            $api.removeCls($api.byId('goumai'), 'hide');
+          }else{
+            $api.removeCls($api.byId('kaidian'), 'hide');
+          }
+            // document.getElementById("content_img_container").style.paddingBottom = 80+api.safeArea.bottom+"px"
+            // $api.fixTabBar($api.dom('.aasa'))
+            $api.fixTabBar($api.dom('.all_contianer'))
+            // $api.fixTabBar($api.dom('.y_a'))
+          }
+        }else{
+        window.onload=function(){
+          if(pageParam('zhigou')==1){
+                    $api.removeCls($api.byId('goumai'), 'hide');
+                  }else{
+                    $api.removeCls($api.byId('kaidian'), 'hide');
+                  }
+        }
+        }
+        function openpack(){
+          openWin({
+                  name:'new_packageselect',
+                  url:'./new_packageselect.html',
+                  bgColor: '#fff',
+                  pageParam:{
+                    title:'开店礼包'
+                  }
+          })
+        }
+      // 开店协议
+      function a(){
+        OpenWebPage(memberSiteUrl+"PackageIllustration.shtml?shopid=170718164338876176","开店协议");
+      }
+      function select(){
+                  if(document.getElementById('xuanze').checked== false){
+                    var title="提示"
+                    var content="请仔细阅读<开店协议>后再同意勾选按钮"
+                    promptMsg(content)
+                    return false
+                  }else{
+                    openWin({
+                      name:'open_yshopbuy',
+                      url:'./open_yshopbuy.html',
+                      pageParam:{
+                        title:'开店礼包'
+                      }
+                    },1)
+                }
+              }
+
+      </script>
+    </body>
+</html>

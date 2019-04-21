@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>累计收益</title>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+    body{background-color: #F3F2F2;}
+    ul,ol{list-style: none;}
+    a{ color: #333; text-decoration: none;}
+   .commission_preview { background-color: #fff; position: relative; margin-bottom: 60px; }
+   .commission_preview li {background-color: #fff;}
+   .commission_list { font-size: 14px; line-height: 2; padding: 10px 15px;  }
+   .commission_list_label { color: #666464; float: left; margin-right: 10px; min-width: 60px; text-align: justify; text-align-last: justify; }
+   .commission_list_value { display: block; overflow: hidden; overflow-wrap: break-word; word-break: normal;color: #666464 }
+   .height10 { height: 1px; background: #DEDEE1;margin: 0 15px; }
+   .hide{display: none;}
+
+   /*nav*/
+   .header_container{width: 100%; height: 40px;box-sizing: border-box; padding:0 15px; position:relative; color: #606061;background: #F2F2F2}
+   #btn_change_container, #year_container{height:40px; line-height: 40px; }
+    .btn_con {
+      position: absolute;
+      right: 10px;
+      top: 0;
+    }
+   .bottom_icon{display: inline-block; border-left: 5px solid  transparent;border-right: 5px solid transparent;border-top: 6px solid #333333; margin-left: 5px;}
+   .top_icon{border-bottom: 6px solid #F72133;border-top: 6px solid transparent;}
+   #nav_container{ position:absolute; top: 40px; right: 0; width: 100%; height: 0; background-color: rgba(0, 0, 0, 0.5); padding-bottom: 2.5%; z-index: 99999; overflow: hidden; transition: all 0.1s linear;-moz-transition: all 0.1s linear; -webkit-transition: all 0.1s linear; -o-transition: all 0.1s linear;  }
+   #nav_container > ul{background-color: #fff; padding-bottom:10px;}
+   #nav_container > ul > li{width: 30%; box-sizing: border-box; font-size: 12px; border-radius: 30px; border: 1px solid #CFCFCF; color: #797979; height: 25px; line-height: 25px; text-align: center; margin: 2.5% 0 0 2.5%; display: inline-block; overflow: hidden; text-overflow:ellipsis;white-space: nowrap;}
+   #nav_container > ul > li:hover, #nav_container > ul > li.isActived{background-color: #F5AC9E; color: #fff; }
+   .fr{float: right;} .fl{float: left;} .clear{content: ""; display: block; clear: both;}
+   .red_color{color: #F72133;}
+      .pp{
+        font-size: 14px;
+    margin-top: 9px;
+    background: #fff;
+    padding: 0 14px;
+    color: #666464;
+      }
+  </style>
+</head>
+<body>
+  <div class="header_container clear">
+    <div id="year_container" class="fl">
+      <span style="font-size: 13px;" id="years"></span>
+    </div>
+    <div id="btn_change_container" class="btn_con" onclick="openNav()" class="fr">
+      <span>筛选<i class="bottom_icon"></i></span>
+    </div>
+  </div>
+  <div id="nav_container" class="hide">
+
+  </div>
+  <p class="pp" id="total"></p>
+  <div class="commission_preview" id="content_container">
+
+  </div>
+  <!--没有显示记录-->
+ <div class="noRec hide" id="noRec">
+      <div class="square">
+         <img src="./image/nodata.png" alt="没有相关数据" style="width:100%;"/>
+      </div>
+     <div class="ic_text">亲，目前没有相关数据~</div>
+</div>
+
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+var page = 1;
+var pageSize =10;
+var noMore =false;
+var commisiontype = 0;
+var firstGetMsg = true;
+if(openapp){
+  window.apiready=function(){
+    data()
+  }
+}else{
+  window.onload = function () {
+    data()
+  }
+}
+
+function data(){
+  getMsg(page)
+    if(pageParam('year') && pageParam('month')) {
+      // $api.html($api.byId("year_container"), pageParam('year')+"年"+pageParam('month')+"月")
+      $api.html($api.byId("years"), pageParam('year')+"年"+pageParam('month')+"月")
+    }
+  if(window.api){
+    //下拉刷新
+    api.setCustomRefreshHeaderInfo({
+      bgColor: '#f8f8f8',
+      images: [
+          'widget://image/suaxin1.png',
+          'widget://image/suaxin2.png',
+          'widget://image/suaxin3.png',
+          'widget://image/suaxin4.png',
+          'widget://image/suaxin5.png',
+          'widget://image/suaxin6.png',
+          'widget://image/suaxin7.png'
+      ],
+      tips: {
+          pull: '下拉刷新',
+          threshold: '松开立即刷新',
+          load: '正在刷新'
+      }
+    }, function() {
+          $api.html($api.byId('content_container'), "")
+          page = 1;
+          noMore =false
+          $api.addCls($api.byId("noRec"), "hide")
+          setTimeout(function () {
+            getMsg(page);
+          }, 500)
+
+      });
+
+    api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+      if(noMore){
+        if(!$api.byId('no_more') && $api.hasCls($api.byId("noRec"), "hide")){
+        $api.append($api.byId('content_container'), '<div id="no_more" style="color:#A2A2A2;text-align:center;padding:10px 0;">-没有更多数据了-</div>')
+        }
+        return;
+      }
+        page += 1;
+        getMsg(page, "isScroll")
+    });
+  }
+}
+
+function getMsg(page_item, isScroll) {
+  var type = pageParam('type') || 0
+  if(window.api){
+    if(!isScroll) {showLoading()}
+  }
+  https({
+    url: siteUrl +'Main/Member/CommissionDetail',
+    method: 'get',
+    data:{
+        uid: getname(),
+        currentPage: page_item,
+        pageSize: pageSize,
+        type: type,
+        commisiontype: commisiontype,
+        year: pageParam('year'),
+        month: pageParam('month')     
+    },
+    headers:1,
+    successBack:function(ret){
+      if(ret.success && ret.status == 1) {
+        var data = ret.Data
+        $api.html($api.byId("myInte"), ret.totalpoint)
+        if(data.length < pageSize){
+          noMore = true;
+        }else{
+          noMore = false;
+        }
+        console.log('已到账：￥' + ret.commisionTotal.toFixed(2) + ' 未到账：￥' + ret.soonTotal.toFixed(2))
+        // $api.html($api.byId("total"), '已到账：￥' + ret.commisionTotal.toFixed(2) + ' 未到账：￥' + ret.soonTotal.toFixed(2))
+        var html = ""
+        if(data) {
+          for(var i = 0; i < data.length; i++) {
+            if (data[i].commision != "0.00") {
+                html += "<div class=\"commission_list\">";
+                html += "<p>";
+                html += "<label class=\"commission_list_label\">奖励金额</label>";
+                html += "<span class=\"commission_list_value\">￥" + data[i].commision + "</span>";
+                html += "</p>";
+                html += "<p>";
+                html += "<label class=\"commission_list_label\">奖励类型</label>";
+                html += "<span class=\"commission_list_value\">" + data[i].commisiontypename + "</span>";
+                html += "</p>";
+                html += "<p>";
+                html += "<label class=\"commission_list_label\">奖金状态</label>";
+                html += "<span class=\"commission_list_value\">" + getstate(data[i].status) + "</span>";
+                html += "</p>";
+
+                if (data[i].commisiontype == 1 || data[i].commisiontype == 2 || data[i].commisiontype == 3) {
+                    html += "<p>";
+                    html += "<label class=\"commission_list_label\">订单编号</label>";
+                    html += "<span class=\"commission_list_value\">" + data[i].orderid + "</span>";
+                    html += "</p>";
+                    html += "<p>";
+                    html += "<label class=\"commission_list_label\">订单金额</label>";
+                    html += "<span class=\"commission_list_value\">￥" + data[i].orderamount + "</span>";
+                    html += "</p>";
+                    html += "<p>";
+                    html += "<label class=\"commission_list_label\">订单时间</label>";
+                    html += "<span class=\"commission_list_value\">" + data[i].ordertime + "</span>";
+                    html += "</p>";
+                }
+                //红包奖励
+                if(data[i].commisiontype == 14){
+                  html += "<p>";
+                  html += "<label class=\"commission_list_label\">奖励来源</label>";
+                  html += "<span class=\"commission_list_value\">" + data[i].commisionactivitytype + "</span>";
+                  html += "</p>";
+                }
+                if (data[i].status == 2) {
+                    html += "<p>";
+                    html += "<label class=\"commission_list_label\">到账时间</label>";
+                    html += "<span class=\"commission_list_value\">" + data[i].successtime + "</span>";
+                    html += "</p>";
+                }
+                html += "</div>";
+                html += "<div class=\"height10\"></div>";
+            }
+          }
+          if(page_item == 1){
+            $api.html($api.byId('content_container'), html)
+          }else{
+            $api.append($api.byId('content_container'), html)
+          }
+        }
+      }else {
+        $api.removeCls($api.byId("noRec"), "hide")
+      }
+      if(ret.typeData.length > 0 && firstGetMsg) {
+        firstGetMsg = false
+        $api.removeCls($api.byId("nav_container"), 'hide');
+        var sHtml = ""
+        sHtml += '<ul>'
+        sHtml += '<li class="isActived">全部</li>'
+        for(var r = 0; r < ret.typeData.length; r++) {
+          var typeData = ret.typeData[r]
+          if(typeData.commisiontypename && typeData.commisiontype) {
+            sHtml += '<li data-id="'+typeData.commisiontype+'">'+typeData.commisiontypename+'</li>'
+          }
+        }
+        sHtml += '</ul>'
+        $api.html($api.byId("nav_container"), sHtml)
+        document.querySelector("#nav_container").addEventListener('click', function (e) {
+          if(e.target.nodeName == "LI") {
+            $api.addCls($api.byId("noRec"), "hide")
+            var nav_container = document.querySelectorAll("#nav_container>ul>li")
+            for(var i = 0; i < nav_container.length; i++) {
+                nav_container[i].className=""
+            }
+            e.target.className = "isActived"
+            if(e.target.innerHTML == "全部") {
+              commisiontype = 0
+            }else {
+              commisiontype = e.target.getAttribute("data-id")
+            }
+            page = 1
+            $api.html($api.byId('content_container'), "")
+            getMsg(page)
+            document.getElementById("nav_container").style.height = 0
+            if (window.api) {
+              api.setFrameAttr({
+                name: api.frameName,
+                bounces: true,
+              });
+            }
+            $api.removeCls($api.dom("#btn_change_container i"), 'top_icon');
+            $api.removeCls($api.dom("#btn_change_container"), 'red_color');
+          }else if(e.target.nodeName == "DIV") {
+            e.target.style.height = 0
+            if (window.api) {
+              api.setFrameAttr({
+                name: api.frameName,
+                bounces: true,
+              });
+            }
+            $api.removeCls($api.dom("#btn_change_container i"), 'top_icon');
+            $api.removeCls($api.dom("#btn_change_container"), 'red_color');
+          }
+
+
+        })
+        document.querySelector("#nav_container").addEventListener('touchmove', function (e) {
+          e.preventDefault()
+        })
+      }
+      $api.html($api.byId("total"), '已到账：￥' + ret.commisionTotal.toFixed(2) + ' 未到账：￥' + ret.soonTotal.toFixed(2))
+      hideLoading()
+      refreshDone();
+    }   
+  })
+}
+function getstate(status) {
+  switch (status){
+    case 1:
+      return "即将到账"
+    case 2:
+      return "已到账"
+    case 3:
+      return "已失效"
+  }
+}
+function openNav() {
+  var item = document.getElementById("nav_container")
+  if(item.offsetHeight < 50) {
+    item.style.height = "100%";
+    $api.addCls($api.dom("#btn_change_container i"), 'top_icon');
+    $api.addCls($api.dom("#btn_change_container"), 'red_color');
+    if (window.api) {
+      api.setFrameAttr({
+        name: api.frameName,
+        bounces: false,
+      });
+    }
+  }else {
+    item.style.height = 0
+    $api.removeCls($api.dom("#btn_change_container i"), 'top_icon');
+    $api.removeCls($api.dom("#btn_change_container"), 'red_color');
+    if (window.api) {
+      api.setFrameAttr({
+        name: api.frameName,
+        bounces: true,
+      });
+    }
+  }
+
+}
+</script>
+</body>
+</html>

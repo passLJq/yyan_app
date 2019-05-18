@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no"/>
+      <title>活动细则</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <link rel="stylesheet" href="./common/css/pageSass/lndiana_common.css">
+      <link rel="stylesheet" href="./common/css/pageSass/showRule.css">
+  </head>
+  <body style="width: 100%;height: 100%;background-color: rgba(0,0,0, .5);">
+    <!-- 活动规则详情弹窗 -->
+    <div class="ruleDetails flex flex_v flex_align_center flex_pack_justify_between" id="rule">
+      <div class="title" style="background-color: #EB6100;">活动细则</div>
+      <div class="content">
+        <span id="text" class="" style="color: #9b9b9b;"></span>
+      </div>
+      <div class="bottom flex flex_align_center flex_pack_center">
+        <div class="btn flex flex_align_center flex_pack_center" onclick="closeRule()" style="background-color: #F5AC9E;">我知道了</div>
+      </div>
+    </div>
+    <!-- 中奖号码 -->
+    <div class="showNum flex flex_v flex_align_center" id="showNum">
+      <div class="title" style="background-color: #EB6100;">
+        我的号码
+      </div>
+      <div class="content" id="content" onclick="closeRule()">
+
+      </div>
+      <div class="btn flex flex_align_center flex_pack_center">
+        <div onclick="closeRule()" style="background-color: #F5AC9E;">我知道了</div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script src="./common/js/config.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script type="text/javascript">
+    if (openapp) {
+      window.apiready = function() {
+        onready()
+      }
+    } else {
+      window.onload = function () {
+        onready()
+      }
+    }
+      var onready = function(){
+        var rule = document.getElementById('rule')
+        var showNum = document.getElementById('showNum')
+        if (pageParam('cloudid')) {
+          showNum.style.opacity = 100
+          showNum.style.position = 'absolute';
+          showNum.style.top = '50%';
+          showNum.style.left = '50%';
+          getNumber()
+        } else {
+          var text = document.getElementById('text')
+          text.innerHTML = pageParam('content')
+          rule.style.opacity = 100
+        }
+      }
+      function closeRule() {
+        console.log(111)
+        api.closeFrame();
+      }
+      function getNumber() {
+        https({
+          url: siteUrl + 'Marketing/Cloudbuy/GetCloudCode',
+          data: {
+            cloudid: pageParam('cloudid'),
+            currentPage: '1',
+            pageSize: '999',
+            uid: getname()
+          },
+          headers: 1,
+          successBack: (ret) => {
+            console.log(ret)
+            if (ret.success && ret.status == 1) {
+              var content = document.getElementById('content')
+              var str = ''
+              ret.Data.forEach(function (item) {
+                str += '<div class="item flex flex_align_center flex_pack_justify_between">'
+                str += '<span style="color:#427161;">' + item + '</span>'
+                if (!pageParam('done')) {
+                  str += '<span style="color: #9B9B9B">未开奖</span>'
+                } else {
+                  if (item == pageParam('winningcode')) {
+                    str += '<span style="color: #EB6100">已获奖</span>'
+                  } else {
+                    str += '<span style="color: #9B9B9B">未获奖</span>'
+                  }
+                }
+                str += '</div>'
+              })
+              content.innerHTML = str
+            } else {
+              promptMsg(ret.err)
+            }
+          }
+        })
+      }
+  </script>
+  </html>

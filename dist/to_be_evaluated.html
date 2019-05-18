@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="maximum-scale=1,minimum-scale=1,user-scalable=0,width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>评价中心</title><link rel="stylesheet" href="./common/css/api.css"><link rel="stylesheet" href="./common/css/iconfont.css"><style>body{background-color: #F3F2F2;}
+    .flex{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    }
+    .fr{float:right;}
+    .noMsg_container{height:45px;}
+    .clear:after{content:"";display: block;clear: both;}
+    .checked{color:#FAAFA0;border-bottom:2px solid #FAAFA0;line-height: 42px;}
+    /*选项卡样式*/
+    .nav_container{
+      width:100%;
+      height:45px;
+      line-height: 41px;
+       border-bottom:1px solid #E6E6E6;
+      box-sizing:border-box;
+      overflow: hidden;
+      background-color: #fff;
+      /* position:fixed;
+      z-index: 99; */
+    }
+    .nav_div_container{padding:0 10px;justify-content: space-around;font-size:14px;}
+    /*内容样式*/
+    .content_list{width:100%;overflow: hidden;}
+    #content_container {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+    .list_img{width:35%;height:100px;}
+    .list_img img{width:100%;height:100%;}
+    .content_list>ul>li{margin-bottom:10px;background-color: #fff;margin-top: 8px;}
+    .list_text{padding-left:10px;height:100%;	width:80%; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;overflow: hidden;}
+    
+    .list_footer{width:100%;padding:10px;text-align: right;}
+    .list_button {color:#FE6566;border:1px solid #FE6566;border-radius:7px;padding:5px 10px;position:relative;right:20px;font-size: .8rem;}
+    .li_item {
+      /* width: 335px; */
+      width: 100%;
+      box-sizing: border-box;
+      height: 255px;
+      background:rgba(255,255,255,1);
+      border-radius:4px;
+      margin: 8px auto 0;
+      padding: 0 7.5px;
+    }
+    .li_item .tit {
+      width: 100%;
+      height: 43px;
+      border-bottom: 1px solid #DEDEE1;
+      display: flex;align-items: center;justify-content: space-between;
+    }
+    .li_item .con {
+      width: 100%;
+      padding: 22px 10px;
+      display: flex;align-items: center;justify-content: space-between;
+      box-sizing: border-box;
+    }
+    .li_item .con .c {
+      margin-left: 17px;
+      max-width: 195px;
+      height: 113px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .li_item .con .c .proname {
+      width: 120px;
+      overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;
+      font-size: 12px;
+      color: #656768;
+      margin-top: 14px;
+      height: 27px;
+      line-height: 13px;
+    }
+    .btnbox {
+      width: 100%;
+      margin-top: 15px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+    .btnbox .btn {
+      color: #427161;
+      font-size: 13px;
+      width: 75px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #427161;
+      border-radius: 25px;
+    }</style></head><body><div><div class="nav_container"><ul class="nav_div_container flex" id="nav_div_container"><li class="checked" id="li_1">待评价(<span id="li_1_span">0</span>)</li><li id="li_2">待晒单(<span id="li_2_span">0</span>)</li><li id="li_3">已评价(<span id="li_3_span">0</span>)</li></ul></div><div class="content_list"><ul id="content_container"></ul></div></div><script src="./common/js/api.js"></script><script src="./common/js/common.js"></script><script src="./common/js/config.js"></script><script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script><script type="text/javascript" src="js/to_be_evaluated.bundle.js"></script></body></html>

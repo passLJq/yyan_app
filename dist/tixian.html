@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>我要提现</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <style>
+    body{background-color: #F3F2F2;}
+    ul,ol{list-style: none;}
+    a{ color: #333; text-decoration: none;}
+   .hide{display: none!important;}
+   .wrap, .pagemain { max-width: 720px; /* margin: 20px 10px 0px; */ padding-bottom: 85px; }
+    @media only screen and (max-width: 400px){
+      .wrap, .pagemain { max-width: 720px; /* margin: 20px 10px 0px; */ padding-bottom: 85px; margin: 0 auto; }
+    }
+    .formm { margin-bottom: 12px; padding: 0 10px;background-color: #fff;}
+    .item { background: #FFF; display: -moz-box; display: -webkit-box; position: relative; border-bottom: 2px #F6F6FA solid; margin-top: -1px;padding: 25px 0; }
+    label { height: 20px; width: 80px; line-height: 20px; display: block; padding-left:14px; }
+    input, select { font-size: 15px; font-family: "Microsoft YaHei"; color: #505050; outline: none; }
+    input { -moz-box-flex: 1; -webkit-box-flex: 1; border: 0; width: 100%; display: block; line-height: 20px; height: 20px; padding: 0; margin: 0;}
+   .bb { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; -o-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box;}
+   input[type=button], input[type=submit], input[type=file], input[type=text], button { cursor: pointer; -webkit-appearance:none; }
+   input, select { font-size: 15px; font-family: "Microsoft YaHei"; color: #505050; }
+   select { -moz-box-flex: 1; -webkit-box-flex: 1; border: 0; width: 100%; display: block; -webkit-appearance:none; }
+   option { font-weight: normal; display: block; white-space: pre; min-height: 1.2em; padding: 0px 2px 1px; }
+   /*.item.select:after { width: 6px; height: 6px; content: ''; border-top: 2px solid #cccccc; border-right: 2px solid #cccccc; -webkit-transform:rotate(135deg); display: block; position: absolute; right: 30px; margin-top: 25px; }*/
+   .shopCenterButton { padding-top: 50px; }
+   .button_sp_area { padding: 10px 0; width: 90%; margin: 0 auto; text-align: center; }
+   a:visited { text-decoration: none; color:#333; }
+   #btnDeposit { display: block; width: 100%; /* margin: 26px auto; */ height: 40px; line-height: 40px; text-align: center; color: #fff; font-size: 15px; background: #D8D8D8; border: none; border-radius: 40px; }
+   .UpdateRecord { font-size: 15px; color:#FF422C !important; margin-top: 5px; position: relative; display: block; margin-left: auto; margin-right: auto; padding-left: 14px; padding-right: 14px; box-sizing: border-box; text-align: center; text-decoration:underline; line-height: 2.55555556; border-radius:5px; -webkit-tap-highlight-color: rgba(0,0,0,0); overflow: hidden; }
+   .UpdateRecord img { width: 17px; height: 17px; position: relative; top: 3px; right: 5px; }
+.paddingLt{padding-right: 16px; text-align: right;}
+
+/*新样式*/
+.fl{float: left;} .fr{float: right;}
+.header_container{width: 100%; height: 150px; box-sizing: border-box; overflow: hidden; text-align: center; background-color: #fff; margin-bottom: 12px;}
+.header_price{color: #AC9374; font-size: 30px; padding-top: 44px;}
+.header_name{color: #333; font-size: 14px; padding-top: 8px;}
+.footer_container{font-size: 14px; color: #999; height: 36px; line-height: 36px; padding: 0 16px; margin-bottom: 20px;}
+.left_span{padding-right: 10px;}
+.tixian_fangs img{width: 22px; height: 22px; vertical-align: middle;}
+.tixian_fangs span{padding: 0 15px 0 10px; width: 56px; height:24px;}
+
+.red_color{background-color: #F5AC9E!important;}
+#head{position: fixed;width: 100%;top:0;z-index: 99999}
+
+
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+
+  <div class="header_container">
+    <div class="header_price" id="mok"></div>
+    <div class="header_name">可提现金额（元）</div>
+  </div>
+  <div class="wrap">
+      <div class="main">
+          <form class="formm">
+              <!-- <div class="item">
+                  <label>可提现金额</label>
+                   <p id="mok" class="paddingLt"></p>
+              </div> -->
+              <div class="item select">
+                  <label>提现方式</label>
+                  <div class="tixian_fangs  bb paddingLt" style="-webkit-box-flex: 1; height: 20px; line-height: 20px;"><img src="./image/zhifubao.png" id="img_tixian" alt=""><span id="name_tixian">支付宝</span><img src="./image/enter_icon.png" alt=""></div>
+                  <select id="txType" class="paddingLt " onchange="selectType()" style="position: absolute; top: 0; left: 0;opacity:0; width: 100%; height: 100%;">
+                  </select>
+              </div>
+
+              <div class="item" id="d_Account">
+                  <label><span id="sp_Account">账号</span></label>
+                  <input class="bb paddingLt" type="text" id="txtNum" placeholder="请填写您的提现账号" />
+              </div>
+              <div class="item" id="zsName">
+                  <label><span id="sp_Name">真实姓名</span></label>
+                  <input class="bb paddingLt Name" type="text" maxlength="10" id="txtName" placeholder="请填写您的真实姓名" />
+              </div>
+              <div class="item">
+                  <label style="font-size: 24px; color: #333;">&yen;</label>
+                  <input class="bb paddingLt" type="tel" id="txtMoney" style="text-align: left;" onkeyup="this.value=this.value.replace(/^0|[^0-9+$/]/ig,'')" placeholder="请输入100的倍数" oninput="showPrice(this)" onpropertychange="showPrice(this)" maxlength="15" />
+                  <p class="tip hide" id="litktxje"></p>
+              </div>
+
+              <!-- <div class="item hide">
+                  <label>提现手续费</label>
+                  <input class="bb paddingLt" type="text" value=" " readonly="readonly" id="txt_servicefee"/>
+              </div> -->
+
+              <div class="item hide" id="hide">
+                  <label>所在分行</label>
+                  <input class="bb paddingLt" type="text" id="TextAddress" runat="server" maxlength="20" placeholder="开户银行所在分行" />
+              </div>
+
+          </form>
+          <div class="footer_container">
+            <div class="fl"><span class="left_span">实际到账</span><span id="newPrice">&yen;0.00</span></div>
+            <div class="fr"><span class="left_span">手续费: </span>&yen;<span id="txt_servicefee"></span></div>
+          </div>
+          <div class="button_sp_area shopCenterButton">
+              <a href="javascript:;" id="btnDeposit">确认提现</a>
+              <a href="javascript:;" class="UpdateRecord"  onclick="toDepositDetail()">
+                 提现记录
+              </a>
+          </div>
+      </div>
+      <!--main结束-->
+  </div>
+  <div style="text-align: center; " class="hide" id="loadMsg">
+    <img src="./image/loading_more.gif" alt="">
+  </div>
+  <!--没有显示记录-->
+ <!-- <div class="noRec hide" id="noRec">
+      <div class="square">
+         <img src="./image/nodata.png" alt="没有相关数据" style="width:100%;"/>
+      </div>
+     <div class="ic_text">亲，目前没有相关数据~</div>
+</div> -->
+
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/jquery-3.2.1.min.js"></script>
+</body>
+<script>
+    var payStyle = 0;
+var minmoney = 1;
+var isBank = false;
+var MoneyOk = 0;
+var isWxpay = false;
+if(openapp){
+    window.apiready = function () {
+        data()
+    }
+}else{
+    window.onload=function(){
+        data()
+    }
+}
+
+function data(){
+    var statustop=$api.getStorage('statustop');
+    $api.dom('.header_container').style.marginTop=Number(statustop)+45+'px'
+
+    headTitle($api.byId('head'),'我要提现')
+    getMsg()
+}
+
+  function showPrice(self) {
+    var btnDeposit = document.getElementById("btnDeposit")
+    console.log(self.value)
+    if($api.trim(self.value)) {
+      var txt_servicefee = parseFloat(document.getElementById("txt_servicefee").innerHTML)
+      $api.html($api.byId("newPrice"), "&yen;"+((parseFloat(self.value) - txt_servicefee).toFixed(2)))
+      $api.addCls(btnDeposit, 'red_color');
+      $api.attr(btnDeposit, "onclick", "getMoney()")
+    }else {
+      $api.removeCls(btnDeposit, 'red_color');
+      $api.removeAttr(btnDeposit, "onclick")
+      $api.html($api.byId("newPrice"), "&yen;0.00")
+    }
+  }
+function getMsg() {
+    if(window.api){
+        showLoading()
+    }
+  $api.removeCls($api.byId("loadMsg"), 'hide');
+  https({
+    url: siteUrl +'Main/Member/DepositDetailInformation',
+    method: 'get',
+    data:{
+        uid: getname(),
+        shopid: sysShopID
+    },
+    headers:1,
+    successBack:function(ret){
+      if(ret.success && ret.status == 1) {
+        var data = ret.Data
+        var html = ""
+        minmoney = data.minmoney? data.minmoney: 1
+        $api.attr($api.byId("txtMoney"), "placeholder", "请输入"+minmoney+"元的倍数")
+          //$api.attr($api.byId("txt_servicefee"), "data-id", data.SerivceFee)
+          $api.html($api.byId("txt_servicefee"), data.SerivceFee)
+          $api.html($api.byId("mok"), data.MoneyOk + " 元")
+          MoneyOk = parseInt(data.MoneyOk)
+          // if(data.waylist.length > 0) {
+          //   payStyle = data.waylist[0].msg
+          //   selectType()
+          //   $api.val($api.byId("txtName"), data.waylist[0].Name)
+          //   $api.val($api.byId("TextAddress"), data.waylist[0].WayName)
+          //   $api.val($api.byId("txtNum"), data.waylist[0].kahao)
+          // }
+          for(var i = 0; i < data.waylist.length; i++) {
+            if( i == 0) {
+              var foo = ""
+              if(data.waylist.length > 0) {
+                html += ' <option value="'+data.waylist[0].WayID+'" selected="selected" data-type="'+data.waylist[0].WayType+'">'+data.waylist[0].WayName+'</option>'
+                foo = data.waylist[0].WayName
+              }else {
+                html += '<option value="'+data.waylist[i].WayID+'" selected="selected" data-type="'+data.waylist[i].WayName+'">'+data.waylist[i].WayName+'</option>'
+                foo = data.waylist[i].WayName
+              }
+              showTab(foo)
+            }else {
+              if(data.waylist.length > 0) {
+                if(data.waylist[0].WayID != data.waylist[i].WayID) {
+                  html += '<option value="'+data.waylist[i].WayID+'"  data-type="'+data.waylist[i].WayType+'">'+data.waylist[i].WayName+'</option> '
+                }
+              }else {
+                html += '<option value="'+data.waylist[i].WayID+'" >'+data.waylist[i].WayName+'</option>'
+              }
+
+            }
+
+          }
+         $api.html($api.byId('txType'), html)
+      }else {
+        // $api.removeCls($api.byId("noRec"), "hide")
+      }
+      $api.addCls($api.byId("loadMsg"), 'hide');
+    hideLoading()
+    api.refreshHeaderLoadDone();
+  }
+}
+)
+}
+function selectType() {
+    $api.val($api.byId("TextAddress"), "")
+    $api.val($api.byId("txtNum"), "")
+    var item = $("#txType option:selected").text()
+    showTab(item)
+    if (payStyle == 1) {
+      $api.html($api.byId("sp_Account"), "卡号")
+      $api.html($api.byId("sp_Name"), "开户名")
+      $api.attr($api.byId("txtNum"), "placeholder", "请输入提现的卡号")
+    } else if (payStyle == 2) {
+      $api.html($api.byId("sp_Account"), "账号")
+      $api.html($api.byId("sp_Name"), "真实姓名")
+      $api.attr($api.byId("txtNum"), "placeholder", "请输入提现的账号")
+    }
+
+
+}
+function showTab(item) {
+  if(item.indexOf("银行") != -1) {
+    isBank = true
+    var img_src = "./image/bank_icon.png"
+  }else {
+    isBank = false
+    $api.addCls($api.byId("hide"), 'hide');
+  }
+  if(item.indexOf("钱包") != -1) {
+    isWxpay = true
+    $api.addCls($api.byId("d_Account"), 'hide');
+    var img_src = "./image/weiXin-pay.png"
+  }else {
+    isWxpay = false
+    $api.removeCls($api.byId("d_Account"), 'hide');
+  }
+  if(item.indexOf("支付宝") != -1) {
+    var img_src = "./image/zhifubao.png"
+  }
+  $api.attr($api.byId("img_tixian"), "src", img_src)
+  $api.html($api.byId("name_tixian"), item)
+
+
+}
+function toDepositDetail() {
+  openWin({
+      name: 'depositdetail',
+      url: './depositdetail.html',
+      pageParam:{
+          title:'提现记录'
+      }
+  },1);
+
+}
+function getMoney() {
+    var Name = $api.val($api.byId("txtName"))
+    var kahao = $api.val($api.byId("txtNum"))
+    var wayid = $api.val($api.byId("txType"))
+    var tixJine = $api.val($api.byId("txtMoney"))
+    var BankBranch = $api.val($api.byId("TextAddress"))
+    var item = $("#txType option:selected").text()
+    var minMin = parseFloat(minmoney)
+    if ($api.trim(Name) == null || $api.trim(Name) == "") {
+        alert("请输入真实姓名");
+        return false;
+    }
+    if((tixJine % minMin) != 0) {
+      alert("提现金额必须是"+minMin+"的整数");
+      return false;
+    }
+    if (!isWxpay && ($api.trim(kahao) == null || $api.trim(kahao) == "")) {
+        alert("请输入提现账号");
+        return false;
+    }
+    if(tixJine > MoneyOk) {
+      alert("提现金额不能大于可提现金额")
+      return false;
+    }
+    if ($api.trim(wayid) == null || $api.trim(wayid) == "") {
+        alert("支付方式错误");
+        return false;
+    }
+    if ($api.trim(tixJine) == null || $api.trim(tixJine) == "") {
+        alert("请输入提现金额");
+        return false;
+    }
+    if (isBank && ($api.trim(BankBranch) == null || $api.trim(BankBranch) == "")) {
+        alert("请输入银行名字");
+        return false;
+    }
+    showLoading()
+    https({
+      url: siteUrl +'Main/Member/Withdrawal?uid='+ getname(),
+      method: 'post',
+      data:{
+          shopid: sysShopID,
+          uid: getname(),
+          Name: Name,//提现用户
+          kahao: kahao,//提现卡号
+          wayid: wayid, //提现方式
+          tixJine: tixJine,//提现金额
+          BankBranch: BankBranch//银行名字
+      },
+      headers:1,
+      successBack:function(ret){
+      if (ret.success && ret.status == 1) {
+          promptMsg("提交成功！");
+          setTimeout(function () {
+            toDepositDetail()
+          }, 1000)
+      }else if(ret.status==10){
+        comfirmDialogBox('您的店铺处于实习店铺状态，还不能申请提现，请完成3笔销售订单，成为正式店铺才能申请提现哦！',okle)
+      }
+      else {
+          promptMsg("提现失败！");
+      }
+      hideLoading()
+    }
+    }
+  );
+}
+// document.getElementById("txtMoney").addEventListener("blur", function () {
+//   var someMM = $api.attr($api.byId("txt_servicefee"), "data-id")
+//    $api.val($api.byId("txt_servicefee"), (someMM * $("#txtMoney").val()) + " 元")
+//    var tixJine = $api.val($api.byId("txtMoney"))
+//    var minMin = parseFloat(minmoney)
+//    if((tixJine % minMin) != 0) {
+//      $api.val($api.byId("txtMoney"), "提现金额必须是"+minMin+"的整数");
+//      $api.css($api.byId("txtMoney"), "color:#f00")
+//      $api.val($api.byId("txt_servicefee"), "")
+//      return false;
+//    }
+//    if(tixJine > MoneyOk) {
+//      $api.val($api.byId("txtMoney"), "提现金额不能大于可提现金额");
+//      $api.css($api.byId("txtMoney"), "color:#f00")
+//      $api.val($api.byId("txt_servicefee"), "")
+//      return false;
+//    }
+//    $api.css($api.byId("txtMoney"), "color:#505050")
+// })
+document.getElementById("txtMoney").addEventListener("focus", function () {
+    //$api.val($api.byId("txt_servicefee"), "")
+    $api.val($api.byId("txtMoney"), "")
+    $api.css($api.byId("txtMoney"), "color:#505050")
+})
+
+function okle(){
+
+}
+
+</script>
+</html>

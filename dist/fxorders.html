@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="format-detection" content="telephone=no" />
+  <title>销售订单</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<style>
+body{background-color: #F3F2F2; font-size: 14px;}
+ol, ul { list-style: none; }
+.wrap, .pagemain { max-width: 720px; /* margin: 20px 10px 0px; */  }
+@media only screen and (max-width: 400px){
+  .wrap, .pagemain {
+    max-width: 720px; /* margin: 20px 10px 0px; */  margin:0 auto;
+  }
+}
+.order_search { position: relative; width: 90%; margin: 10px auto; }
+[class^="icon-"], [class*=" icon-"] { font-family: 'weigouyi',"iconfont" !important; font-style: normal;font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+.order_search i { position: absolute; font-size: 19px; top: 0px; right: 0px; padding: 0 11px; border:1px solid #ccc; background-color: #ddd; color: #fff; border-bottom-right-radius: 10px; border-top-right-radius: 10px; line-height: 30px; height: 30px; }
+.icon-sousuo{width:41px;height:29px;background:url(./image/taobao_search_icon.png) center no-repeat;background-size:15px 15px;float:left;margin-left:7px}
+input, select { font-size: 15px; font-family: "Microsoft YaHei"; color: #505050; }
+input[type=button], input[type=submit], input[type=file], input[type=text], button { cursor: pointer; -webkit-appearance: none; outline:none; }
+.order_search input { width: 84%; border: 1px solid #ccc; border-bottom-left-radius: 10px; border-top-left-radius: 10px; padding: 0 0 0 3%; margin: 0 auto; line-height: 30px; border-right: none; border-bottom-right-radius: 0; border-top-right-radius:0; }
+.tabChange { background: #fff; width: 100%; margin: 0px auto; height: 45px; line-height: 41px; font-size: 15px; font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif; }
+.tabChange ul { display: -webkit-box; display: -webkit-flex; display:flex; }
+.tabChange ul li { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; text-align: center; }
+.lichecked { color: #AC9374;}
+.lichecked a { text-decoration: none; }
+.lichecked a { color: #2C5B33; text-decoration: none;font-weight: 700; }
+.tabChange ul li .tabChangeList { text-align: center; font-size: 15px; height: 41px; line-height: 45px; width: 100%; }
+.tabChange ul li .tabChangeList i{ font-style:normal;}
+
+.header{height:45px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-flex-flow:row;flex-flow:row;background-color:#fff;}
+#main{background-color:#EEE}
+.header{background-color: #fff;}
+
+.search-box{-webkit-box-flex:1;display:-webkit-flex;display:flex;display:-webkit-box;-webkit-flex:1;flex:1;padding:7px 8px}
+.search-inner{width:85%;display:block;height:31px;line-height: 31px;background-color:rgba(246,245,250,1);border-radius:8px}
+.search-box input{color:#000;font-size:1em;text-indent:20px;height:21px;line-height: 21px;margin-top: 5px;float:left;overflow:hidden;outline-style:none; width: 80%; vertical-align: middle;}
+.search-icon{width:29px;height:29px;background:url(./image/secard.png) 4px center no-repeat;background-size:15px 15px;float:left;margin-left:7px}
+.header-right{width:15%; text-align: center;}
+.header-right span{height:29px;line-height:29px;color:#333;}
+.hide{display: none;}
+
+
+/*没有数据样式*/
+#noRec{width:100%}
+#noRec{padding:80px 0}
+#noRec .square{width:180px;height:130px;margin:0 auto}
+#noRec .ic_text{height:24px;line-height:38px;text-align:center;color:#999;font-size:15px}
+
+   .clear:after{content: ""; display: block; clear: both;}
+   .top_container{
+      /* position: fixed; */
+      /* top: 0; */
+      /* z-index:999; */
+      width: 100%;
+      border-bottom: 1px solid #F6F5FA;
+   }
+
+.fl{float: left; } .fr{float: right;} .clear:after{content: ""; display: block; clear: both;}
+/*列表样式*/
+#list_container { margin:0 0 10px 0; }
+#orderlist_receive>li>div{width: 100%; background-color: #fff;margin-bottom: 1px; color: #333; box-sizing: border-box; overflow: hidden; padding: 0 12px;}
+.list_title_orders{ height: 35px; line-height: 35px;}
+.img_contianer{width: 48px; height: 48px;}
+.img_contianer > img{display:inline-block; width: 100%; height: 100%; border-radius: 50%;  background-color: #eee;}
+#orderlist_receive>li>div.list_content{height: 70px; padding:11px 12px;}
+.center_list_container{padding-left: 15px; max-width: 50%;}
+.center_list_container>div{display: inline-block; width: 100%; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+.right_list_container>div{text-align: right;}
+.list_prices{color: #EB6100; font-size: 17px;}
+.tixian{font-size: 12px; color: #666;}
+.list_times{color: #999; font-size: 12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top_container clear">
+    <div class="header">
+        <div class="search-box">
+            <div class="search-inner">
+                <input  type="text" id="OrderID" placeholder="请输入订单编号" onkeyup="search(event)">
+              </div>
+              <div class="header-right"  onclick="search()">
+                  <span>搜索</span>
+              </div>
+          </div>
+      </div>
+      <div style="height: 5px; background-color: #F3F2F2; width: 100%;"></div>
+      <div class="tabChange three">
+          <ul>
+            <li class="lichecked tab" onclick="changeList(0, this)"><a class="tabChangeList">全部</a></li>
+
+            <li class="tab" onclick="changeList(1, this)"><a class="tabChangeList">已结算</a></li>
+
+            <li class="tab" onclick="changeList(2, this)"><a class="tabChangeList">未结算</a></li>
+
+            <li class="tab" onclick="changeList(3, this)"><a class="tabChangeList">已退款</a></li>
+            <div class="clear">
+              </div>
+          </ul>
+      </div>
+  </div>
+
+  <div id="list_container">
+      <div>
+        <ul id="orderlist_receive">
+
+        </ul>
+      </div>
+  </div>
+
+
+    <div style="text-align: center; " class="hide" id="loadMsg">
+      <img src="./image/loading_more.gif" alt="">
+    </div>
+    <!--没有显示记录-->
+   <div class="noRec hide" id="noRec">
+        <div class="square">
+           <img src="./image/notixian.png" alt="没有相关数据" style="width:100%;"/>
+        </div>
+       <div class="ic_text">亲，目前没有相关数据~</div>
+  </div>
+</div>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/SHA1.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+var type = 0;
+var page = 1;
+var pageSize =5;
+var monthdata = 1;
+var noMore =false;
+var firstCome = true;
+var firstMsg = true;
+if(openapp){
+  window.apiready=function(){
+    data()
+  }
+}else{
+  window.onload=function(){
+    data()
+  }
+}
+
+function data(){
+  monthdata = pageParam('monthdata')
+    getMsg(page)
+
+if(window.api){
+    //下拉刷新
+    api.setCustomRefreshHeaderInfo({
+      bgColor: '#f8f8f8',
+      images: [
+          'widget://image/suaxin1.png',
+          'widget://image/suaxin2.png',
+          'widget://image/suaxin3.png',
+          'widget://image/suaxin4.png',
+          'widget://image/suaxin5.png',
+          'widget://image/suaxin6.png',
+          'widget://image/suaxin7.png'
+      ],
+      tips: {
+          pull: '下拉刷新',
+          threshold: '松开立即刷新',
+          load: '正在刷新'
+      }
+    }, function() {
+          $api.html($api.byId('orderlist_receive'), "")
+          page = 1;
+          $api.addCls($api.byId("noRec"), "hide")
+          setTimeout(function () {
+            firstMsg = true;
+            firstCome = true;
+            noMore = false
+            getMsg(page);
+          }, 500)
+
+      });
+
+    api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+      if(noMore){
+        if(!$api.byId('no_more') && firstMsg){
+          $api.append($api.byId('orderlist_receive'), '<div id="no_more" style="color:#A2A2A2;text-align:center;padding:10px 0;">-没有更多数据了-</div>')
+        }
+        return;
+      }
+        firstCome = false;
+        page += 1;
+        getMsg(page)
+    });
+  }
+}
+
+  function getMsg(page_item, content) {
+    if(firstCome) {
+      showLoading()
+    }
+    https({
+      url: siteUrl +'Main/Member/GetUserSalesDetail',
+      method: 'get',
+      data:{
+          uid: getname(),
+          currentPage: page_item,
+          pageSize: pageSize,
+          type: type,
+          orderid: content? content: "",
+          yearandmonth: monthdata
+          // yearandmonth:'2018年12月'
+      },
+      headers:1,
+      successBack:function(ret){
+        if(ret.success){
+          if(ret.Data.length > 0) {
+            var html = ""
+            for(var i = 0; i < ret.Data.length; i++) {
+              var data = ret.Data[i]
+
+              html += '<li onclick="openFxDetail(\''+data.orderid+'\')">'
+                +'<div class="list_title_orders">订单编号: <span>'+data.orderid+'</span></div>'
+                +'  <div class="list_content clear">'
+                +'    <div class="img_contianer fl">'
+                +'      <img src="'+(data.userimg? data.userimg: "./image/man.jpg")+'" alt="">'
+                +'    </div>'
+                +'    <div class="fr right_list_container">'
+                if(data.commision.indexOf("-") != -1) {
+                  var newCommision = (data.comtype === '已退款'? '': '-') + ''+data.commision.substring(1)
+                }else {
+                  var newCommision = (data.comtype === '已退款'? '': '+') + ''+(data.commision? data.commision: data.commision+"0.00")
+                }
+          // html +='      <div class="list_prices">'+newCommision+'</div>'
+          html +='      <div class="list_prices"> </div>'
+                +'      <div class="tixian" style="margin-top: 10px;">'+data.comtype+'</div>'
+                +'    </div>'
+                +'    <div class="fl center_list_container">'
+                +'      <div>'+data.username+'</div>'
+                +'      <div class="list_times">'+data.createtime+'</div>'
+                +'    </div>'
+                +'  </div>'
+                +'</li>'
+            }
+            $api.append($api.byId('orderlist_receive'), html);
+          }else{
+            noMore = true
+            if(page==1){
+              firstMsg = false
+              var shtml ='';
+                  shtml +='<div class="noRec" id="noRec">';
+                  shtml +='<div class="square">';
+                  shtml +='<img src="./image/notixian.png" alt="" width="100%">';
+                  shtml += '</div>' ;
+                  shtml +='<div class="ic_text">抱歉，目前没有显示记录~</div>';
+                  shtml += '</div>' ;
+              $api.html($api.byId('orderlist_receive'), shtml);
+            }
+        }
+      }else{
+          promptMsg(ret.err);
+        }
+      hideLoading()
+      refreshDone()
+    }
+  })
+  }
+function changeList(idx, obj) {
+  type = idx
+  page = 1
+  var  lis = document.querySelectorAll(".tab")
+  for(var i = 0; i < lis.length; i++) {
+    if(lis[i].innerHTML == $api.html(obj)) {
+      $api.addCls(obj, 'lichecked');
+    }else {
+      $api.removeCls(lis[i], 'lichecked');
+    }
+  }
+  noMore = false
+  $api.addCls($api.byId("noRec"), "hide")
+  $api.html($api.byId("orderlist_receive"), "")
+  firstCome = true;
+  firstMsg = true;
+  if($api.trim($api.val($api.byId("OrderID"))).length > 0) {
+    search()
+  }else {
+    getMsg(page);
+  }
+}
+
+function lookDetail(obj) {
+      if ($api.hasCls($api.prev(obj), 'close')) {
+          $api.removeCls($api.prev(obj), 'close');
+          $api.html($api.eq(obj, 3), "收起详情");
+      } else {
+          $api.addCls($api.prev(obj), 'close');
+          $api.html($api.eq(obj, 3), "查看详情");
+      }
+  }
+function search(e) {
+  if(e) {
+    if(e.keyCode != 13) {
+      return;
+    }
+  }
+  var content = $api.val($api.byId("OrderID"))
+  $api.html($api.byId("orderlist_receive"), "")
+  page = 1
+  getMsg(page, content)
+}
+
+function openFxDetail(orderid) {
+  openWin({
+      name: 'fxordersdetail',
+      url: './fxordersdetail.html',
+      pageParam: {
+        orderid:orderid
+      },
+      bgColor:"#F3F2F2"
+  });
+}
+</script>
+</body>
+</html>

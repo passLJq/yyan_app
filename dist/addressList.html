@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <title>收货地址</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #F3F2F2;color: #9B9B9B}
+  .flex{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;}
+  a {color: #333;background: transparent;text-decoration: none;}
+  .weui_cells_container { background-color: #F3F2F2;margin-top: 1.17647059em; line-height: 1.41176471; font-size: 17px; overflow: hidden; position: relative; }
+   .weui-content{background:#f5f5f5;width:100%;overflow:hidden;margin-bottom:50px;}
+ .weui-media-box { padding: 15px; position: relative; }
+.weui-panel:first-child{margin-top:0}
+.weui_cell_primary { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; }
+.animated { -webkit-animation-duration: 1s; animation-duration: 1s; -webkit-animation-fill-mode: both; animation-fill-mode: both; }
+.slidelefts .weui_cell_bd { height: auto; overflow: hidden; position: relative; z-index: 10; background-color: #fff; padding: 10px 15px; }
+.weui_cell .weui_cell_bd.animated { -webkit-transition: -webkit-transform .2s ease-out; transition: transform .2sease-out; }
+.weui-content .slidelefts .weui_cell_bd { padding: 10px 0; }
+.address-box .weui-panel__bd{border-bottom:10px solid #f5f5f5;min-height:90px}
+.address-edit{width:24px;height:24px;display:block;position:absolute;right:10px;top:35%;background:url(https://source.rushouvip.cn/WShopping/Image/icon-edit.png) no-repeat;background-size:20px}
+.default-add{color:#fff;padding:0 5px;font-size:13px;margin-top:5px;display:inline-block;background:#e21323}
+.detail_title{padding-right:25px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;font-size:13px;color:#333;line-height:1.2;font-weight:400;width:auto;word-wrap:break-word;word-break:break-all;margin-bottom:5px}
+.pd10{padding-left:10px}
+.addressList-btn{width:100%;position:fixed;bottom:0;background-color:#F3F2F2}
+.addressList-btn a{border-radius:0}
+.addresslist_color{background-color:#32c800}
+.weui-content .slidelefts .weui_cell_bd{padding:10px 0}
+.weui_dialog .weui_dialog_ft{font-size:14px}
+/*左滑动删除css*/
+.slidelefts { height: 100%; position: relative; background-color: #fff; transform: translateZ(0);border-bottom: 1px solid #eee; -webkit-transform: translateZ(0);padding:0; }
+.slidelefts .weui_cell_bd { height: auto; overflow: hidden; position: relative; z-index: 10; background-color: #fff; padding: 10px 15px; }
+.weui_cell .weui_cell_bd.animated { -webkit-transition: -webkit-transform .2s ease-out; transition: transform .2s ease-out; }
+.weui_cell .slideleft { height: 100%; display: -webkit-box; -webkit-box-pack: center; -webkit-box-align: center; position: absolute; top: 0; right: 0; z-index: 0; }
+.weui_cell .slideleft span { height: 100%; padding: 0 10px; display: -webkit-box; -webkit-box-pack:center; -webkit-box-align: center; }
+.bg-red { background-color: #EF4F4F; }
+.f-white { color: #FFF !important; }
+/*没有显示记录*/
+#noRec{padding:80px 0px;}
+#noRec{width:100%;background:#F3F2F2;}
+#noRec .square{width: 180px;height: auto; margin: 0 auto;}
+#noRec .square img{width:100%;}
+#noRec .ic_text{height:24px;line-height:38px; padding-top: 0;position: relative;top: -20px;text-align:center;color:#999;font-size: 13px;}
+
+/*新替换的样式*/
+.fl{float: left;} .fr{float: right; } .clear:after{content: ""; display: block; clear: both;}.font_12{font-size: 12px!important;} .font_17{font-size: 17px!important;} .hide{display: none!important;}
+.weui-btn{height: 49px; line-height: 49px; background-color: #F5AC9E; font-size: 17px;font-family:'PingFangSC-Regular';}
+.address_list_container{font-size: 12px; color: #333; padding: 0 16px;background-color: #fff; margin-top: 15px;}
+.address_list_container{ -moz-box-shadow:0px 0px 14px #f5f4f4; -webkit-box-shadow:0px 0px 14px #f5f4f4; box-shadow:0px 0px 14px #f5f4f4;}
+.list_top_contianer{height: 75px; box-sizing: border-box; overflow: hidden; border-bottom: 1px solid #F8F8FB;}
+.list_bottom_contianer{height: 35px; line-height: 35px;box-sizing: border-box; overflow: hidden;}
+.name_phone_container{padding: 10px 0;color: #215645;}
+.default_address{width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; position: relative; top: -1px;}
+.delete_address_btn{margin-left: 20px;}
+.edit_address_btn,.delete_address_btn{padding: 0 10px;}
+  </style>
+</head>
+<body>
+  <div class="weui-content">
+      <div class="weui_cells_container up_line under_line" id="div_addresslist"  style="margin-top:0;">
+      </div>
+  </div>
+
+<script src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/jquery-3.2.1.min.js"></script>
+<script>
+  if (openapp) {
+    window.apiready = function () {
+      getMsg();
+      getCitys();
+      api.addEventListener({
+        name: 'addressList_reload'
+      }, function (ret, err) {
+        reload();
+      });
+    };
+  } else {
+    window.onload = function () {
+      getMsg();
+      getCitys();
+    };
+  }
+  var cityData = '';
+  function getCitys() {
+    if (openapp) {
+      var cityFile = api.readFile({
+        sync: true,
+        path: "widget://common/json/citys.json"
+      });
+    }
+    // if (!cityFile) {
+    //   showLoading();
+    //   https({
+    //     url: siteUrl + 'Main/Main/GetDistrict',
+    //     method: 'get',
+    //     data: {
+    //       uid: getname()
+    //     },
+    //     headers: 1,
+    //     successBack: function successBack(ret, err) {
+    //       if (ret.success) {
+    //         if (window.api) {
+    //           api.writeFile({
+    //             path: "fs://citys.json",
+    //             data: $api.jsonToStr(refull(ret.Data))
+    //           }, function (ret, err) {
+    //             if (ret.status) {
+    //               //成功
+    //             } else {}
+    //           });
+    //         } else {
+    //           cityData = $api.jsonToStr(refull(ret.Data));
+    //           console.log(cityData);
+    //         }
+    //       }
+    //       hideLoading();
+    //     }
+    //   });
+    // }
+  }
+  function refull(arr) {
+    var n = [];
+    var v = [];
+    var new_list = [];
+    for (var m = 0; m < arr.length; m++) {
+      v.push(arr[m].name);
+    }
+    for (var i = 0; i < v.length; i++) {
+      if (n.indexOf(v[i]) == -1) {
+        n.push(v[i]);
+        if (arr[i].sub) {
+          arr[i].sub = refull(arr[i].sub);
+        }
+        new_list.push(arr[i]);
+      }
+    }
+    return new_list;
+  }
+  function getMsg() {
+    https({
+      url: siteUrl + 'Main/Member/GetAddressList',
+      method: 'get',
+      data: {
+        uid: getname()
+      },
+      headers: 1,
+      successBack: function successBack(ret, err) {
+        if (ret) {
+          if (ret.success) {
+            msgAjax(ret.Data);
+          }
+        } else {
+          promptMsg(err.msg);
+        }
+      }
+    });
+  }
+  function msgAjax(addresslist) {
+    console.log(addresslist);
+    $("#div_addresslist").empty();
+    var shtml = '';
+    if (addresslist.length < 1) {
+      shtml += '<div class="noRec" id="noRec">';
+      shtml += '<div class="square">';
+      shtml += '<img src="./image/noaddress.png" alt="没有收货地址" style="width:100%;">';
+      shtml += '<div class="ic_text">亲，您还没有收货地址哦！</div>';
+      shtml += '</div>';
+    } else {
+      $.each(addresslist, function (i, item) {
+        shtml += '<div class="address_list_container">';
+        if (pageParam('isPayPage')) {
+          shtml += '  <div class="list_top_contianer" onclick="changeAddress(\'' + item.addressid + '\', \'' + pageParam('isPayPage') + '\')" >';
+        } else {
+          shtml += '  <div class="list_top_contianer" >';
+        }
+        shtml += '    <div class="clear name_phone_container">';
+        shtml += '      <span class="fl font_17">' + item.name + '</span>';
+        shtml += '      <span class="fr font_12" style="line-height:22px">' + item.phone + '</span>';
+        shtml += '    </div>';
+        shtml += '    <div>';
+        shtml += '      <span style="color: #9B9B9B;">' + item.listdis + ' ' + item.address + '</span>';
+        shtml += '    </div>';
+        shtml += '  </div>';
+
+        shtml += '  <div class="list_bottom_contianer">';
+        shtml += '    <div class="clear">';
+        if (item.isdefault) {
+          shtml += '      <div style="color: #9B9B9B" class="fl default_items_1_' + i + ' all_default_item1" onclick="changeDefaultAddress(this,' + i + ',\'' + item.addressid + '\',\'' + item.name + '\',\'' + item.areacode + '\',\'' + item.address + '\',\'' + item.phone + '\')"><img src="./image/yes_check_circle.png" class="default_address" alt="" />默认地址</div>';
+          shtml += '      <div class="fl hide default_items_2_' + i + ' all_default_item2" onclick="changeDefaultAddress(this,' + i + ',\'' + item.addressid + '\',\'' + item.name + '\',\'' + item.areacode + '\',\'' + item.address + '\',\'' + item.phone + '\')"><img src="./image/no_check_circle.png" class="default_address" alt="" />默认地址</div>';
+        } else {
+          shtml += '      <div style="color: #9B9B9B" class="fl hide default_items_1_' + i + ' all_default_item1" onclick="changeDefaultAddress(this,' + i + ',\'' + item.addressid + '\',\'' + item.name + '\',\'' + item.areacode + '\',\'' + item.address + '\',\'' + item.phone + '\')"><img src="./image/yes_check_circle.png" class="default_address" alt="" />默认地址</div>';
+          shtml += '      <div class="fl default_items_2_' + i + ' all_default_item2" onclick="changeDefaultAddress(this,' + i + ',\'' + item.addressid + '\',\'' + item.name + '\',\'' + item.areacode + '\',\'' + item.address + '\',\'' + item.phone + '\')"><img src="./image/no_check_circle.png" class="default_address" alt="" />默认地址</div>';
+        }
+        shtml += '      <div class="fr"><span onclick="toEdit(\'' + item.addressid + '\')" class="edit_address_btn" style="color: #9B9B9B">编辑</span><span class="delete_address_btn" style="color: #9B9B9B" onclick="DleRess(\'' + item.addressid + '\')" >删除</span></div>';
+        shtml += '    </div>';
+        shtml += '  </div>';
+        shtml += '</div>';
+      });
+    }
+    var add_Html = '';
+    add_Html += ' <div class="addressList-btn"  style="position:fixed; bottom: 0; z-index: 3;">';
+    add_Html += '   <a class="weui-btn addresslist_color fontSize15" href="javascript:;" onclick="toEdit()"><img src="./image/add9.png" alt="" style="width:36px;color: #9B9B9B; vertical-align: middle; margin-top: -2px; margin-right:5px;">添加收货地址</a>';
+    add_Html += '  </div>';
+    $("#div_addresslist").html(shtml);
+    $("#div_addresslist").append(add_Html);
+    $api.dom('.addressList-btn').style.paddingBottom = getname('safeAreaBottom') + 'px';
+    //  $api.fixTabBar($api.dom('.addressList-btn'))
+
+    //  loadScript("/WShopping/js/slideleft.js");
+  };
+
+  function DleRess(addressid) {
+    window.api ? comfirmDialogBox("您确定要删除吗?", addressCallBack, addressid) : '';
+  }
+  function addressCallBack(addressid) {
+    https({
+      url: siteUrl + 'Main/Member/DeleteAddress?uid=' + getname(),
+      method: 'post',
+      data: {
+        addressid: addressid
+      },
+      headers: 1,
+      successBack: function successBack(ret, err) {
+        if (ret.success && ret.status == 1) {
+          promptMsg("删除成功！");
+          location.reload();
+        } else {
+          promptMsg("删除失败！");
+        }
+      }
+    });
+  }
+  // 动态加载js脚本文件
+  function loadScript(url) {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = url;
+    document.body.appendChild(script);
+  }
+  //侧滑按钮的添加
+  function touchstartF(event) {
+    x = event.changedTouches[0].pageX;
+    y = event.changedTouches[0].pageY;
+    swipeX = true;
+    swipeY = true;
+  };
+  function touchmoveF(event, e) {
+    X = event.changedTouches[0].pageX;
+    Y = event.changedTouches[0].pageY;
+    // 左右滑动
+    if (swipeX && Math.abs(X - x) - Math.abs(Y - y) > 0) {
+      // 阻止事件冒泡
+      event.stopPropagation();
+      if (X - x > 10) {
+        event.preventDefault();
+        e.style.WebkitTransform = "translateX(" + 0 + "px)";
+        e.style.transition = "-webkit-transform 100ms ease-in-out";
+      }
+      if (x - X > 10) {
+        event.preventDefault();
+        e.style.WebkitTransform = "translateX(" + -80 + "px)";
+        e.style.transition = "-webkit-transform 100ms ease-in-out";
+      }
+      swipeY = false;
+    }
+    // 上下滑动
+    if (swipeY && Math.abs(X - x) - Math.abs(Y - y) < 0) {
+      swipeX = false;
+    }
+  };
+  function toEdit(addressid) {
+    openWin({
+      name: 'addressEdit',
+      url: './addressEdit.html',
+      allowEdit: true,
+      pageParam: {
+        addressid: addressid ? addressid : ""
+      }
+    });
+  }
+  function reload() {
+    location.reload();
+  }
+  function changeAddress(addressid, addressurl) {
+    api.execScript({
+      name: addressurl,
+      script: 'updateAddress("' + addressid + '");'
+    });
+  }
+  function changeDefaultAddress(obj, idx, id, name, listdis, address, phone) {
+    setDefault(idx, id, name, listdis, address, phone);
+  }
+  function setDefault(idx, id, name, listdis, address, phone) {
+    var msg = {
+      addressID: id,
+      uid: api.getPrefs({ sync: true, key: 'SessionUserID' }),
+      isdefult: 1, //0否1是
+      name: name, //姓名
+      areacode: listdis, //区域
+      address: address, //详细地址
+      phone: phone //电话
+    };
+    https({
+      url: siteUrl + 'Main/Member/InsertorUpdateAddress?uid=' + getname(),
+      method: 'post',
+      data: JSON.stringify(msg),
+      headers: 1,
+      successBack: function successBack(ret, err) {
+        if (ret.success && ret.status == 1) {
+          var items1 = document.querySelector(".default_items_1_" + idx);
+          var items2 = document.querySelector(".default_items_2_" + idx);
+          var allitems1 = document.querySelectorAll(".all_default_item1");
+          var allitems2 = document.querySelectorAll(".all_default_item2");
+          for (var r = 0; r < allitems1.length; r++) {
+            $api.addCls(allitems1[r], "hide");
+            $api.removeCls(allitems2[r], "hide");
+          }
+          $api.removeCls(items1, 'hide');
+          $api.addCls(items2, 'hide');
+        } else {
+          promptMsg("设置失败");
+        }
+      }
+    });
+  }
+</script>
+</body>
+</html>

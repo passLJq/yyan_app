@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>我的钱包</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+    body{background-color: #F3F2F2;}
+    ul,ol{list-style: none;}
+ a{ color: #333; text-decoration: none;}
+ .billManagement { background:#fff; font-size: 15px; height: 150px; position: relative;}
+ .toatilMoneys { width: 100%; text-align: center; padding-top: 44px;}
+ .fontSize17 { font-size: 17px; } .toatilMoneys span { display: block; color: #fff; }
+ .fontSize15{ font-size: 15px !important; }
+ .weui_cells { margin-top: 1.17647059em; background-color: #fff; line-height: 1.41176471; font-size: 17px; overflow: hidden; position: relative; }
+ .weui_cells:after, .weui_cells:before {display: none;}
+ .weui_cell { position: relative; }
+ .weui_cell { 
+   padding: 10px 15px;
+   position: relative;
+   display: -webkit-box;
+   display: -webkit-flex;
+   display: flex;
+  -webkit-box-align: center;
+   -webkit-align-items: center;
+   align-items: center;
+ }
+ .pd15 { padding: 15px; }
+ .weui_cells_access a.weui_cell { color: inherit; }
+ .weui_cells_access .weui_cell:not(.no_access) { -webkit-tap-highlight-color: rgba(0,0,0,0); } a img { border: 0; }
+ .weui_cell_primary { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; }
+ .earning_icon { font-size: 14px; color: #666; padding-left: 15px; }
+ .weui_cell_ft { text-align: right; color: #888; }
+ /* .weui_cells_access .weui_cell_ft:after { content:" "; display: inline-block; -webkit-transform: rotate(45deg); transform: rotate(45deg); height: 6px; width: 6px; border-width: 2px 2px 0 0; border-color: #c8c8cd; border-style: solid; position: relative; top: -2px; top: -1px; margin-left: .3em; } */
+ /* .weui_cell:before{ content: " "; position: absolute; left: 0; top: 0; width: 100%; height: 1px; border-top: 1px solid #d9d9d9; color: #d9d9d9; -webkit-transform-origin: 0 0; transform-origin: 0 0; -webkit-transform: scaleY(.5); transform: scaleY(.5); left: 15px; } */
+ /* .weui_cells:after{ bottom: 0; border-bottom: 1px solid #d9d9d9; -webkit-transform-origin: 0 100%; transform-origin: 0 100%; } */
+  .btn {
+    width: 260px;
+    color: #fff;
+    background-color: #F5AC9E;
+    text-align: center;
+    margin-bottom: 18px;
+    border-radius: 30px;
+  }
+  .btn .earning_icon {
+    color: #fff;
+    padding: 0;
+  }
+  .hide{
+    display: none
+  }
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+
+  <div class="billManagement">
+    <p class=" toatilMoneys">
+      <span class="fontSize17" id="todayIncome" style="font-size: 30px; color: #F5AC9E;"></span>
+      <span style="color: #666464; font-size: 16px;">钱包余额（元）</span>
+      <div style="position: absolute; top: -48px; right: 0; color: #666464; font-size: 16px; padding: 10px;" onclick='mingxi("cash", "钱包明细")'>明细</div>
+    </p>
+</div>
+<div class="height5"></div>
+<div class="weui_cells weui_cells_access iocn-container" style="background: transparent!important;border:none;display: flex;justify-content: center;flex-direction: column;align-items: center;">
+    <!-- <a class="weui_cell pd15" href="javascript:;"   onclick='toFrame("cash", "钱包余额")' id="toFrame">
+        <div class="weui_cell_hd">
+            <img src="../../image/cash.png" alt="" style="width: 20px; margin-right: 5px; display: block">
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <p class="earning_icon">钱包余额</p>
+        </div>
+        <div class="weui_cell_ft" id="cashPool"></div>
+    </a> -->
+    <!-- <a class="weui_cell pd15" href="javascript:;"  onclick='toFrame("profitSharing", "我的钻石")'>
+        <div class="weui_cell_hd">
+            <img src="../../image/profitSharing.png" alt="" style="width: 20px; margin-right: 5px; display: block">
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <p class="earning_icon">我的钻石</p>
+        </div>
+        <div class="weui_cell_ft arrow" id="bonusPool"></div>
+    </a> -->
+    <!-- <a class="weui_cell pd15" href="javascript:;"  onclick='toFrame("tixian", "我要提现")' id="tixian">
+        <div class="weui_cell_hd">
+            <img src="../../image/tixian.png" alt="" style="width: 20px; margin-right: 5px; display: block">
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <p class="earning_icon">我要提现</p>
+        </div>
+        <div class="weui_cell_ft"></div>
+    </a> -->
+    <!-- onclick='toFrame("cashPassword", "钱包密码")'  -->
+    <a class="btn pd15" href="javascript:;"  onclick='toFrame("cashPassword", "钱包密码")'>
+      <p class="earning_icon">支付密码</p>
+    </a>
+    <a class="btn pd15" href="javascript:;"  onclick="tocashPassword()">
+      <p class="earning_icon">提现密码</p>
+    </a>
+    <a class="btn pd15" href="javascript:;"  onclick="tomybankcard()">
+      <p class="earning_icon">我的银行卡</p>
+    </a>
+    <a class="btn pd15" href="javascript:;" onclick='zhuanzhang()' id="transfer">
+      <p class="earning_icon">转入提现账户</p>
+    </a>
+</div>
+<script src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+  var paypwdisnull = ""
+  if (openapp) {
+    apiready = function(){
+      if(getname('SessionShopID')==''||getname('SessionShopID')=='null'){
+        $api.addCls($api.byId('transfer'), 'hide');
+      }
+      headTitle($api.byId('head'),'我的钱包')
+      getMsg()
+      api.addEventListener({
+        name:'viewappear'
+    }, function(ret, err){        
+      getMsg()
+    });
+    }
+  } else {
+    window.onload = function () {
+      if(getname('SessionShopID')==''||getname('SessionShopID')=='null'){
+        $api.addCls($api.byId('transfer'), 'hide');
+      }
+      headTitle($api.byId('head'),'我的钱包')
+      getMsg()
+    }
+  }
+
+function zhuanzhang(){
+  checkuser(function(){
+      https({
+        url:siteUrl +'Main/MemberPay/CheckPayPwd',
+        method:'get',
+        data:{
+          uid:getname(),
+          devicetype:1
+        },
+        headers:1,
+        successBack:function(ret){
+            if(ret.success&&ret.status==1){
+              if(ret.Data.issetpwd=='N'){
+                OpenWebPage(ret.Data.url,'密码设置')
+              }else if(ret.Data.issetpwd=='Y'){
+                checktransferoder()
+              }
+            }else{
+              promptMsg(ret.err)
+            }
+        }
+      })
+    })
+}
+
+//查询是否转账记录
+function checktransferoder(){
+  https({
+    url: siteUrl +'Main/MemberPay/GetTranInSinaList',
+    method: 'get',
+    data:{
+      uid: getname(),
+      handlingstatus:-1
+    },
+    headers:1,
+    successBack: function(ret, err) {
+      if(ret.success&&ret.status==1){
+        if(ret.Data.length>0){
+          promptMsg('转账审核中,请等待审核结束')          
+        }else{
+          toFrame("transfer", "转入账户")
+        }
+      }else{
+        promptMsg(ret.err)     
+      }
+  }
+ })
+}
+
+function mingxi(){
+  openWin({
+    name:'cash',
+    url:'./cash.html',
+    pageParam:{
+      title:'钱包明细'
+    }
+  },1)
+}
+
+  function toFrame(pageUrl, pageName) {
+    var name = ""
+    if(pageName == "钱包密码") {
+      if(paypwdisnull == "") {
+        return false
+      }
+      name = paypwdisnull
+    }else {
+      name = pageName
+    }
+    if(pageUrl != "profitSharing") {
+      openWin({
+          name: pageUrl,
+          url: './' + pageUrl + '.html',
+          pageParam: {pageName: name}
+      });
+    }
+
+  }
+
+  function tomybankcard(){
+    checkuser(function(){
+      openWin({
+        name:'add_bank',
+        url:'./addbank_card.html',
+        pageParam:{
+          title:'绑定银行卡',
+          status:1
+        }
+      },1)
+    })
+  }
+  //获取钱包余额
+  function getMsg() {
+    showLoading()
+    https({
+      url: siteUrl +'Main/Member/GetMyIncome',
+      method: 'get',
+      data:{
+        uid: getname()
+      },
+      headers:1,
+      successBack: function(ret) {
+      if(ret) {
+        if(ret.success && ret.status == 1) {
+          $api.html($api.byId("todayIncome"), ret.Data.availableBlance)
+          paypwdisnull = ret.Data.paypwdisnull
+        }else {
+          promptMsg(ret.msg)
+        }
+      }else {
+        promptMsg(err.msg)
+      }
+        hideLoading()
+      }
+    })
+  }
+  function refreshWin() {
+    paypwdisnull = ""
+    getMsg()
+  }
+  function tocashPassword(){
+    checkuser(function(){
+      https({
+        url:siteUrl +'Main/MemberPay/CheckPayPwd',
+        method:'get',
+        data:{
+          uid:getname(),
+          devicetype:1
+        },
+        headers:1,
+        successBack:function(ret){
+            if(ret.success&&ret.status==1){
+              if(ret.Data.issetpwd=='N'){
+                OpenWebPage(ret.Data.url,'密码设置')
+              }else if(ret.Data.issetpwd=='Y'){
+                  // OpenWebPage(ret.Data.url,'修改密码')
+                // api.closeWin({
+                //     name: api.winName
+                // });
+                openWin({
+                  name:'xinlangPassword',
+                  url:'./xinlangPassword.html',
+                  pageParam:{
+                    title:'密码设置'
+                  }
+                },1)
+              }
+            }else{
+              promptMsg(ret.err)
+            }
+        }
+      })
+    })
+  }
+</script>
+</body>
+</html>

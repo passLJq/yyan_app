@@ -91,7 +91,8 @@ export default {
         gotopshow:false,
         listIndex: -1,   // 热门标签
         statusCode: '1',
-        clickone:false
+        clickone:false,
+        scrollAjax: false
     }
   },
   watch:{},
@@ -219,9 +220,11 @@ export default {
             console.log(this.biaoqianlist)
             console.log(this.biaoqiandata)
             this.$forceUpdate()
+            this.scrollAjax = false
           },
             errorBack: err => {
               hideLoading()
+              this.scrollAjax = false
             }
         })    
                     api.refreshHeaderLoadDone();     
@@ -269,8 +272,10 @@ export default {
                 if (innerHeight <= (outerHeight + scrollTop)) {
                     //加载更多操作
                     if(!that.stops){
-                        console.log(that.currentPage++)
-                        that.currentPage=that.currentPage++
+                        if (this.scrollAjax) return
+                        this.scrollAjax = true
+                        that.currentPage += 1
+                        console.log(that.currentPage)
                         that.getlist()
                     }
             }
@@ -472,12 +477,24 @@ export default {
       }
   },
   mounted(){
+      var that = this
       if(window.api){
           this.statustop=$api.getStorage('statustop')
       }
     //   this.getSwiperMsg()
       this.DataBind()
       window.addEventListener('scroll', this.onScroll);
+    // if (window.api) {
+    //     api.addEventListener({
+    //         name: 'scrolltobottom'
+    //     }, function(ret, err){
+    //         if(!that.stops){
+    //             console.log(that.currentPage++)
+    //             that.currentPage += 1
+    //             that.getlist()
+    //         }
+    //     });
+    // }
   }
 }
 </script>

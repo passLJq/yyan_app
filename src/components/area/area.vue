@@ -1,22 +1,34 @@
 <template>
   <div id="areaApp" :style="show ? 'top:0' : 'top: 100%'">
-    <div class="area">
-      <div class="tittle">
+  <!-- <div id="areaApp" :style="show ? 'top:0' : 'top: 0'"> -->
+    <div class="area" id="area">
+      <div class="tittle" id="title">
         <span class="" @click="bindArea('')"><img src="../../image/icon-back.png" alt=""></span>
         <p>选择地区</p>
         <div style="width:10px;height:10px;"></div>
       </div>
-      <div class="areBox">
-        <div v-for="(item, index) in areaArr" :id="'area'+index" @touchstart="ontouchs(0, 'area'+index)" @touchend="ontouchs(1, 'area'+index, item.areaCode)" :key="index">
-          <p>{{item.area}}</p>
-          <p>+ {{item.areaCode}}</p>
+      <div class="areBox" id="areBox">
+        <!-- <div v-for="(item, index) in areaArr" :id="'area'+index" @touchstart="ontouchs(0, 'area'+index)" @touchmove="onMove" @touchend="ontouchs(1, 'area'+index, item.areaCode)" :key="index"> -->
+        <div class="group" v-for="area in areaArr" :key="area.Key" :id="area.Key">
+          <p :id="area.Key+'p'">{{area.Key}}</p>
+          <div class="item" v-for="(item, index) in area.Data" :id="'area'+index" @click="ontouchs(1, 'area'+index, item.Areacode)" :key="index">
+            <p>{{item.Name}}</p>
+            <p>+{{item.Areacode}}</p>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="px" v-show="showPx">
+      <ul>
+        <li v-for="item in areaArr" @click="goGroup(item.Key)" >{{item.Key}}</li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
+import arr from '../../assets/js/area';
+import { setTimeout } from 'timers';
 export default {
   props: {
     showBox: {
@@ -28,32 +40,42 @@ export default {
     return {
       area: "",
       show: false,
-      areaArr: [
-        {"area": "中国", "areaCode": "86" },
-        {"area": "香港", "areaCode": "852" },
-        {"area": "澳门", "areaCode": "853" },
-        {"area": "台湾", "areaCode": "886" },
-        // {"area": "印度(测试)", "areaCode": "91"},
-      ]
+      areaArr: arr,
+      showPx: false,    // 显示排序
     };
   },
   created() {},
   mounted() {
+    console.log(this.areaArr)
     var sp = getname('statustop') || 0
     $api.byId('areaApp').style.paddingTop = sp + 'px'
-    
+    // $api.byId('area').style.height = client().height + 'px'
+    $api.byId('area').style.height = '100%'
+    console.log($api.byId('title').offsetHeight)
+    $api.byId('areBox').style.maxHeight = $api.byId('area').offsetHeight - $api.byId('title').offsetHeight + 'px'
   },
   computed: {},
   watch: {
     showBox(val) {
       if (val == 1) {
         this.show = true
+        setTimeout(() => {
+          this.showPx = true
+        }, 500)
       } else {
         this.show = false
+        this.showPx = false
       }
     }
   },
   methods: {
+    // 跳转对应区域
+    goGroup(id) {
+      var top = $api.byId(id).offsetTop
+      var sp = getname('statustop') || 0
+      $api.byId('areBox').scrollTop = top - 40 - sp
+      promptMsg(id)
+    },
     bindArea(val) {
       this.$emit("bindArea", {
         area: ''
@@ -69,6 +91,12 @@ export default {
       } else {
         ele.style.backgroundColor = '#f6f6fa'
       }
+    },
+    onclicks() {
+
+    },
+    onMove(e) {
+      console.log(e)
     }
   }
 };
@@ -124,21 +152,60 @@ export default {
 }
 .area .areBox {
   width: 100%;
-  padding: 0 rems(30);
+  // padding: 0 rems(30);
+  overflow-y: scroll; 
 }
-.areBox > div {
+.group {
   width: 100%;
-  padding: rems(30) rems(40);
+  & > p {
+    font-size: rems(36);
+    padding: 0 rems(30);
+    background-color: #f6f6fa;
+    line-height: 40px;
+    height: 40px;
+  }
+}
+.areBox .item {
+  width: 90%;
+  padding: rems(30) rems(70);
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #DEDEE1;
+  &:active {
+    background-color: #d8d8d8;
+  }
 }
-.areBox > div > p {
+.areBox .item > p {
   font-size: rems(34);
   color: #9B9B9B;
 }
-.areBox > div > p:nth-child(2) {
+.areBox .item > p:nth-child(2) {
   color: #2C5B33
+}
+
+.px {
+  width: rems(50);
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  ul,li {
+    list-style: none;
+  }
+  ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    li {
+      font-size: rems(24);
+      padding: rems(10) 0;
+      background-color: #fff;
+      text-align: center;
+    }
+    li + li {
+      border-top: 1px solid #f6f6fa;
+    }
+  }
 }
 </style>

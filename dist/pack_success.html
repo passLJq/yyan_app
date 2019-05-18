@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" href="./common/css/api.css"/>
+
+    <style>
+    body{background-color: #fff;font-family: '微软雅黑'}
+     section{text-align: center;font-size: 18px;color: #000;padding-top: 160px;}
+     .btn {
+     display: inline-block;
+     padding: 6px 12px;
+     margin-bottom: 0;
+     font-size: 18px;
+     font-weight: 400;
+     line-height: 1.42857143;
+     text-align: center;
+     white-space: nowrap;
+     vertical-align: middle;
+     -ms-touch-action: manipulation;
+     touch-action: manipulation;
+     cursor: pointer;
+     -webkit-user-select: none;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     user-select: none;
+     background-image: none;
+     border: 1px solid transparent;
+     border-radius: 4px;
+     color: #fff;
+     background-color: #D3B473;
+     margin-top:100px;
+     width: 50%
+ }
+
+    </style>
+</head>
+<body>
+  <section>
+    <p>恭喜您</p>
+    <p>获得黄金店铺资格</p>
+    <div name="button" class="btn" onclick="goset()">立即开通</div>
+  </section>
+    <script type="text/javascript" src="./js/api.js"></script>
+    <script type="text/javascript" src="./js/config.js"></script>
+    <script type="text/javascript" src="./js/common.js"></script>
+    <script>
+
+        apiready = function () {
+
+          // 阻止首页弹动
+          api.setWinAttr({
+              bounces: false
+          });
+          // 阻止首页弹动 end
+          setTimeout(function(){
+                   api.execScript({
+                      name: 'ordercomfirm',
+                      script: 'close();'
+                  });
+              },1000);
+              setTimeout(function(){
+                       api.execScript({
+                          name: 'packageordercomfirm',
+                          script: 'close();'
+                      });
+                  },1000)
+        }
+        function goset(){
+            ReturnToIndex(0)
+        //   api.openWin({
+        //       name: 'yshopapplyset',
+        //       url: './yshopapplyset.html',
+        //       bgColor:'#fff'
+        //   });
+
+        }
+    </script>
+</body>
+</html>

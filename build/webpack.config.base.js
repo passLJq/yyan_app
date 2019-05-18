@@ -93,6 +93,13 @@ module.exports = {
     path: resolve('dist'),
     filename: 'js/[name].bundle.js'
   },
+  resolve: {
+    alias: {
+      '@src': path.resolve(__dirname, '..', 'src'),
+      '@img': path.resolve(__dirname, '..', 'src/img'),
+      '@image': path.resolve(__dirname, '..', 'src/image'),
+    }
+  },
   module: {
     rules: [
       {

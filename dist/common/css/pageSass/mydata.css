@@ -1,0 +1,85 @@
+@charset "UTF-8";
+html {
+  font-size: 20vw; }
+  @media screen and (max-width: 320px) {
+    html {
+      font-size: 64px; } }
+  @media screen and (min-width: 540px) {
+    html {
+      font-size: 108px; } }
+
+[v-cloak] {
+  display: none; }
+
+#noRec {
+  padding: 0.26667rem 0; }
+
+#noRec .square {
+  width: 2.4rem;
+  height: 1.73333rem;
+  margin: 0 auto; }
+
+#noRec .ic_text {
+  height: 0.32rem;
+  line-height: 38px;
+  text-align: center;
+  color: #999;
+  font-size: 0.2rem;
+  padding-top: 30px; }
+
+body {
+  background-color: #f6f6fa; }
+
+/*正文*/
+section {
+  /* border-bottom: 1px solid #F6F6FA; */
+  padding: 0.2rem;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  background-color: #fff; 
+  margin-bottom: 4px;
+  color: #215645;
+}
+
+  section:nth-child(1) {
+    margin-top: 15px;
+  }
+
+section img {
+  width: 0.33333rem;
+  height: 0.33333rem;
+  padding-right: 0.2rem; }
+
+.size_title {
+  font-size: 0.2rem; }
+
+#cache {
+  font-size: 0.2rem;
+  color: #999;
+}
+
+.set_page_message_ft {
+  text-align: right;
+  color: #999999; }
+
+.set_page_message_ft:after {
+  content: " ";
+  display: inline-block;
+  height: 0.13333rem;
+  width: 0.13333rem;
+  border-width: 0.01667rem 0.01667rem 0 0;
+  border-color: #C8C8CD;
+  border-style: solid;
+  -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  margin-top: -0.08rem;
+  right: 3%; }
+
+#cache {
+  position: absolute;
+  top: 50%;
+  margin-top: -0.13333rem;
+  right: 10%; }

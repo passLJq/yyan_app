@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>转账中心</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+    body{background-color: #F3F2F2;}
+    ul,ol{list-style: none;}
+    a{ color: #333; text-decoration: none;}
+   .hide{display: none;}
+   .weui_cells {
+    margin-top: 1.17647059em;
+    background-color: #fff;
+    line-height: 1.41176471;
+    font-size: 17px;
+    overflow: hidden;
+    position: relative;
+}
+.shopCenterCentent, .up_pic, .comboContentList, .transferCenter {
+    margin-top: 0;
+    padding: 50px 40px 0;
+    font-size: 15px;
+    color: #666464
+}
+.weui_cells:before {
+    display: none;
+}
+.weui_cell:before {
+  left: 0;
+  color: #E69888;
+  border-color: #E69888;
+}
+.weui_cells:after, .weui_cells:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    color: #d9d9d9;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+}
+.weui_cell {
+    position: relative;
+}
+.weui_cell {
+    padding: 10px 15px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.pd15 {
+    padding: 15px 0 15px;
+}
+.weui_label {
+    display: block;
+    width: 85px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.weui_cell_primary {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+.button_sp_area {
+    padding: 10px 0;
+    width: 80%;
+    margin: 0 auto;
+    text-align: justify;
+    text-justify: distribute-all-lines;
+    font-size: 0;
+}
+.shopCenterButton {
+    padding-top: 50px;
+}
+.weui_btn {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-sizing: border-box;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    line-height: 2.33333333;
+    border-radius: 20px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    overflow: hidden;
+}
+.mcolor {
+    background-color: #F5AC9E;
+    font-size: 16px;
+}
+button.weui_btn, input.weui_btn {
+    width: 100%;
+    border-width: 0;
+    outline: 0;
+    -webkit-appearance: none;
+}
+.UpdateRecord {
+    font-size: 15px;
+    color: #666;
+    margin-top: 5px;
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    line-height: 2.55555556;
+    border-radius: 5px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    overflow: hidden;
+}
+a img {
+    border: 0;
+}
+.UpdateRecord img {
+    width: 17px;
+    height: 17px;
+    position: relative;
+    top: 2px;
+    right: 10px;
+}
+.button_sp_area:after {
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    font-size: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    content: ".";
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+
+  <div class="weui_cells transferCenter">
+      <div class="weui_cell pd15">
+          <div class="weui_cell_hd">
+              <label class="weui_label">钱包余额：</label>
+          </div>
+          <div class="weui_cell_bd weui_cell_primary">
+              &yen; <span id="money">0.00</span>
+          </div>
+      </div>
+      <div class="weui_cell pd15">
+          <div class="weui_cell_hd">
+              <label class="weui_label">转账金额：</label>
+          </div>
+          <div class="weui_cell_bd weui_cell_primary">
+              <input class="weui_input" name="transfer_amount" id="transfer_amount" onkeyup="this.value=this.value.replace(/\+|\-/ig,'')" type="number" placeholder="&yen; 0.00">
+          </div>
+      </div>
+      <!-- <div class="weui_cell pd15">
+          <div class="weui_cell_hd">
+              <label for="" class="weui_label">选择会员：</label>
+          </div>
+          <div class="weui_cell_bd weui_cell_primary">
+              <input class="weui_input" type="tel" id="sel_user" placeholder="输入会员手机号码" oninput="if(value.length>11)value=value.slice(0,11)"/>
+          </div>
+      </div> -->
+  </div>
+  <div class="button_sp_area shopCenterButton">
+      <input type="button" id="btn_submit" class="weui_btn mcolor" onclick="alertMsg()" value="确认转账" style="width:100%;"/>
+      <!-- <a href="javascript:;" class="UpdateRecord " onclick="TransferRecord()">
+          <img src="./image/tips.png" />转账记录
+      </a> -->
+  </div>
+
+
+<script src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script>
+  var onece=false
+var paypwdisnull = "0"//是否设置支付密码
+  if (openapp) {
+    apiready = function () {
+      headTitle($api.byId('head'),'转入账户')
+      getMsg()
+    }
+  } else {
+    window.onload = function () {
+      headTitle($api.byId('head'),'转入账户')
+      getMsg()
+    }
+  }
+//获取钱包余额
+function getMsg() {
+  showLoading()
+  https({
+    url: siteUrl +'Main/Member/TransferCenterInformation',
+    method: 'get',
+    data:{
+      uid: getname()
+    },
+    headers:1,
+    successBack: function(ret, err) {
+    if(ret) {
+      if(ret.success && ret.status == 1) {
+        $api.html($api.byId("money"), ret.Data.balance)
+        paypwdisnull = ret.Data.paypwdisnull
+      }
+    }else {
+      promptMsg(err.msg)
+    }
+    hideLoading()
+  }
+ })
+}
+function alertMsg() {
+  var toMoney = $api.trim($api.val($api.byId("transfer_amount")))
+  var toId = $api.trim($api.val($api.byId("sel_user")))
+  var maxMoney = parseFloat($api.trim($api.html($api.byId("money"))))
+  if(toMoney.length <= 0) {
+    alert("请输入转账金额")
+    $api.val($api.byId("transfer_amount"), "")
+    document.getElementById("transfer_amount").focus()
+    return false;
+  }
+
+  if(parseFloat(toMoney) <= 0) {
+    alert("转账金额必须大于0")
+    $api.val($api.byId("transfer_amount"), "")
+    document.getElementById("transfer_amount").focus()
+    return false;
+  }
+  // if(toId.length <= 0) {
+  //   alert("请输入会员手机号码");
+  //   return false;
+  // }
+  if(maxMoney < parseFloat(toMoney)) {
+    alert("转账金额不能大于钱包余额")
+    $api.val($api.byId("transfer_amount"), "")
+    document.getElementById("transfer_amount").focus()
+    return false;
+  }
+  // if(!(/^1[3456789]\d{9}$/.test(toId))){
+  //   alert("手机号码有误，请重填");
+  //   $api.val($api.byId("sel_user"), "")
+  //   document.getElementById("transfer_amount").focus()
+  //   return false;
+  // }
+  if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(toMoney))){
+    alert("转账金额必须是正数或者两位小数，请重填");
+    $api.val($api.byId("transfer_amount"), "")
+    document.getElementById("transfer_amount").focus()
+    return false;
+  }
+  transferPostMsg()
+}
+function transferPostMsg() {
+  var toMoney = $api.trim($api.val($api.byId("transfer_amount")))
+  showLoading()
+  https({
+    url: siteUrl +'Main/MemberPay/TranInSina?uid='+getname(),
+    method: 'post',
+    data:{
+      uid: getname(),
+      amount : toMoney
+    },
+    headers:1,
+  successBack: function(ret, err) {
+    hideLoading()
+    if(ret.success&&ret.status==1){
+      promptMsg('转入成功，请等待审核通过')
+      setTimeout(function(){
+        api.closeWin()
+      },1500)
+    }else{
+      promptMsg(ret.err)
+    }
+    // if(ret) {
+    //   var timer = setTimeout(function () {
+    //     if(ret.success && ret.Data) {
+    //       comfirmDialogBox('确认转账给会员:'+ret.Data.username, passWord)
+    //     }else {
+    //       comfirmDialogBox(ret.err, noSubmit)
+    //     }
+    //     clearTimeout(timer)
+    //     timer = null
+    //   }, 500)
+    // }
+    }
+  })
+}
+
+function noSubmit() {
+
+}
+function passWord() {
+  var toMoney = parseFloat($api.trim($api.val($api.byId("transfer_amount"))))
+  api.openFrame({
+      name: 'paypasswordframe',
+      url: './paypasswordframe.html',
+      rect: {
+          x: 0,
+          y: 0,
+          w: 'auto',
+          h: 'auto'
+      },
+      pageParam: {
+          payAllPrice:toMoney,
+          isSeted: paypwdisnull,
+          payOrderWinName: api.winName,
+          paySuccessBack: "submit"
+      },
+      bounces: false,
+      bgColor: 'rgba(0,0,0,0.3)'
+  });
+}
+//转账
+function submit() {
+  //防止重复
+  if(onece){
+    return
+  }
+  onece=true
+  var toMoney = $api.trim($api.val($api.byId("transfer_amount")))
+  var toId = $api.trim($api.val($api.byId("sel_user")))
+  showLoading()
+  $api.removeCls($api.byId("loadMsg"), 'hide');
+  https({
+    url: siteUrl +'Main/Member/TransferCenter?uid=' + getname(),
+    method: 'post',
+    data:{
+      uid: getname(),
+        transferAmount: toMoney, //转账金额
+        phone: toId //转账ID
+    },
+    headers:1,
+    successBack: function(ret, err) {
+    if(ret) {
+      if(ret.success && ret.status == 1) {
+        hideLoading()
+        alert("转账成功")
+        location.reload()
+      }else {
+        alert(ret.err)
+        onece=false
+      }
+    }else {
+      alert(err.msg)
+      onece=false
+    }
+    hideLoading()
+  }
+})
+}
+function TransferRecord() {
+  openWin({
+      name: 'transferrecord',
+      url: './transferrecord.html'
+  });
+
+}
+</script>
+</body>
+</html>

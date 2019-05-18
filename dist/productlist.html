@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <style>
+      	html,body{-webkit-touch-callout:none;	-webkit-text-size-adjust:none;	-webkit-tap-highlight-color:rgba(0, 0, 0, 0);	-webkit-user-select:none;}
+        *{margin: 0;padding: 0;}
+        ul li{list-style:none;}
+        header{position: relative;}
+        .hide{display:none!important;opacity:1;}
+        .innerBox {-webkit-box-flex: 1;-webkit-flex: 1;flex: 1;height: auto;overflow: hidden;position: relative;  z-index: 10;background-color: #fff;padding: 0 10px;}
+        .innerBox li {width: 100%;  height: auto;background: #FFFFFF;  display: -webkit-box;  -webkit-box-align: center;font-size: 15px;padding:15px 0;  border-bottom: 1px solid #EFEFEF;}
+        .flex1{-webkit-box-flex:1;  }
+ .goods_list_content_title { font-weight: 400; font-size: 15px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 5px }
+ .smallFont{ font-size: 13px;color: #999;font-size: 13px; line-height: 1.2;overflow:hidden;text-overflow: ellipsis; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp:1; }
+ .goods_list_hd {margin-right: .8em;width: 115px;height: 115px; line-height: 115px;text-align: center; }
+ .goods_list_img {min-height: 100%; width:100%; max-height: 100%;  }
+ .message-info{-webkit-box-flex: 1;-webkit-flex: 1;flex: 1;min-width: 0;}
+ .up_and_down span { display: inline-block;}
+ .fl {float: left;}
+ .img_style{ margin: auto; position: absolute; top: 0; left: 0; bottom:0; right: 0; }
+ /*全球购*/
+ .global { background: #b162a3; color: #fff; padding: 0 5px; }
+ .globalShopping { border: 1px solid #b162a3; font-size: 12px; border-radius: 3px; }
+ .fang{background-color: #f8f8f8; height:auto;}
+ .innerBox.fang li{ width:49%; height:225px;float:left; border:none; margin-bottom:1%; position:relative; }
+ .innerBox.fang li:nth-child(odd){ margin-right:1%; } .fang li .goods_list_hd{ position:absolute; top:0; left:0; width:100%; height:150px; }
+ .fang li .goods_list_hd img{ width:100%; height:100%;}
+.fang li .message-info{ width:100%; height:auto; position:absolute; left:0; top:150px; }
+.fang .clear{ content:""; display: block; clear: both; }
+.up_and_down{ padding-top:10px; } #noRec{width:100%;padding:80px 0;background: #ffffff;}
+#noRec .square{width:180px;height:130px;margin:0 auto}
+#noRec .ic_text{height:24px;line-height:38px;text-align:center;color:#999;font-size:15px; padding-top: 20px;}
+#noPullDown{ color:#989898; text-align: center; font-weight: normal; padding:5px 0; }
+/*切换样式2*/
+ .earn_hd { font-size: 14px; display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; padding: 7px; border-bottom: 3px solid #EFEFEF; }
+ .earn_hd:after{ content:" "; display: block; height:10px; }
+ .earn_hd em{font-style: normal;}
+ .earn_hd span { color: #989898; line-height: 30px; }
+.fang .up_and_down{ display: flex; justify-content: space-between; flex-wrap: nowrap; position:relative; width:100%; padding:5px; }
+.fang .heng-jia{ position: absolute; right:20px; top:5px; z-index: 9999; }
+.fang .heng-jia img{ float:right; width: 23px;height: 23px; }
+.earn_hd img { width: 23px; height: 23px; position:absolute; right:30px; margin-top: 5px; }
+.earn_hd .ltri{ text-align:right; }
+.fang .goods_list_hd{position: relative;}
+.title_bkg { height: 30px; line-height: 30px; color: #fff; font-size:14px; box-sizing: border-box; display: -webkit-box; overflow: hidden; text-overflow: ellipsis; white-space: normal; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-all; background: rgba(168,168,168,.8); width: 100%; position:absolute; bottom:0; }
+.title_bkg em{ font-style: normal; }
+.title_bkg_fl { position: absolute; left: 10px; }
+.title_bkg_fr { position: absolute; right: 10px; }
+.bianheigh{height: 200px !important;}
+.newheng{height:30px;border-top: 1px solid #f2f2f2;color: #999;width:100%;display:flex;align-items:center;font-size:13px;justify-content:space-between}
+/*.nosall { position: absolute; display: block; width: 100px; font-size: 30px; color: #fff; background-color:
+#000; opacity: 0.5; border-radius: 50%; text-align: center; top: 50%; left: 50%; margin-top: -58px; margin-left: -48px; }*/
+/*店铺列表样式*/
+.fl{float: left;}
+.fr{float: right;}
+.clear:after{content: ""; display: block; clear: both;}
+.all_container{margin-bottom: 10px; padding: 10px; background-color: #fff;}
+.company_top{color: #666; padding: 10px; padding-left: 0;}
+.img_container{width:74px; height: 40px; padding: 3px;}
+.all_container img{width:100%; height: 100%;}
+.padding10{padding: 10px; padding-left: 0;}
+.top_list_item{padding-left: 10px;}
+.gray_color{color: #999;}
+.font12{font-size: 12px;}
+.font15{font-size: 15px;}
+.product_counts{padding-top: 10px;}
+.btn_go{padding: 4px 10px; color: #797979; border: 1px solid #797979; border-radius: 3px; text-decoration: none; font-size: 14px;}
+.btn_container{height: 50px; line-height: 50px; box-sizing: border-box;}
+.product_imgs_container{width:100%; overflow: hidden; box-sizing: border-box;}
+.product_imgs_container> div{display: inline-block; margin-top: 10px; width: 30%; overflow: hidden; position:relative;}
+.product_imgs_container> div:first-child{margin-left:3%;}
+.imgs_price{position: absolute; bottom: 10px; left:50%; transform: translateX(-50%); color: #fff; background-color: #f00; font-size: 12px; padding:0 2px; border-radius: 2px;}
+
+@media screen and (max-width: 355px) {
+  .new_p{font-size: 11px}
+}
+    </style>
+</head>
+<body>
+<ul id="goods_list" class="innerBox">
+
+</ul>
+<div class="footerMsg"></div>
+
+<img src="./image/loading_more.gif" width="30px" height="30px" id="goods_loading" class="hide img_style">
+</body>
+<script src="./common/js/api.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/echo.js"></script>
+<script>
+  var pageIndex = 1 ;
+  var pageSize = 6;
+  var stopload = false ;
+  var bob = true;
+  var firstComming = true;
+  var pageParam={
+    act : "",
+    skey : "",
+    clsid : "",
+    sale :  "",
+    ispackage : "",
+    companyid : "",
+    sort:""
+  }
+  var pangesort=''
+  window.apiready = function () {
+    console.log('执行了商品列表')
+      initParam();
+      // DataBind(pageIndex);
+      var can = true;
+      changeList(can);
+
+      api.setCustomRefreshHeaderInfo({
+      bgColor: '#fff',
+      images: [
+      'widget://image/suaxin1.png',
+      'widget://image/suaxin2.png',
+      'widget://image/suaxin3.png',
+      'widget://image/suaxin4.png',
+      'widget://image/suaxin5.png',
+      'widget://image/suaxin6.png',
+      'widget://image/suaxin7.png'
+      ],
+      tips: {
+      pull: '下拉刷新',
+      threshold: '松开立即刷新',
+      load: '正在刷新'
+      }
+      }, function() {
+      window.onscroll=function(){
+      var top=document.body.scrollTop;
+      if(top>0){
+      api.refreshHeaderLoadDone();
+      }
+      }
+      setTimeout(function(){
+        pageIndex = 1;
+        stopload = false ;
+        sele()
+      },1000)
+      });
+      api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+        if(!stopload){
+          pageIndex = pageIndex +1;
+          if(api.pageParam.iscompany) {
+            if(!firstComming)
+            ChangeCompany(api.pageParam.skey)
+          }else {
+            DataBind(pageIndex,'','search',pangesort, 1);
+          }
+
+        }
+      });
+      //第一页触发预加载
+      setTimeout(function(){
+        document.body.scrollTop = 1;
+      },1500)
+  };
+  function sele(){
+      api.execScript({
+          name:'productlist_top',
+          script: 'SearchProduct();'
+      });
+      api.refreshHeaderLoadDone();
+  }
+  function initParam(){
+    pageParam.act = api.pageParam.act;
+    pageParam.skey = api.pageParam.skey;
+    pageParam.clsid = api.pageParam.clsid;
+    pageParam.sale =  api.pageParam.sale;
+    pageParam.ispackage=api.pageParam.pack;
+    pageParam.companyid = api.pageParam.companyid;
+    pageParam.sort="";
+    pageParam.bid = api.pageParam.bid;
+
+  }
+  function DataBind(page,sort,act,skey, refreshState){
+    if(!refreshState) {
+      showLoading()
+    }
+    var fxshopid=api.getPrefs({sync: true,key: 'SessionShopID'});
+    //$api.removeCls($api.byId('goods_loading'),'hide');
+    pageParam.act = act?act:pageParam.act;
+    // pageParam.skey = skey?skey:pageParam.skey ;
+      pageParam.skey=skey;
+      pangesort=pageParam.skey;
+    pageParam.sort = sort?sort:pageParam.sort;
+    api.ajax({
+      url: siteUrl +'Main/Main/GetProductListJson',
+      method: 'get',
+      data:{
+        values:{
+          currpage:page,
+          pageSize:pageSize,
+          act : pageParam.act,
+          skey : pageParam.skey,
+          clsid : pageParam.clsid,
+          sale :  pageParam.sale,
+          ispackage :  pageParam.pack,
+          companyid : pageParam.companyid,
+          sort:pageParam.sort,
+          userid:api.getPrefs({sync: true,key: 'SessionUserID'}),
+          fxshopid:fxshopid,
+          bid:pageParam.bid
+        }
+      }
+    }, function(ret, err) {
+      console.log(JSON.stringify(ret))
+      if(ret){
+        if(ret.success){
+            var shtml = "";
+            if(page == 1)
+              $api.html($api.byId("goods_list"), '');
+              // if(ret.shopresobj.length > 0) {
+              //   if(page == 1) {
+              //     shtml += `
+              //     <div class="all_container">
+              //       <div class="clear">
+              //         <div class="fl img_container">
+              //           <img src="${ret.shopresobj[0].shoplogo}" alt="">
+              //         </div>
+              //         <div class="fl top_list_item">
+              //           <div class="font15">${ret.shopresobj[0].shopname}</div>
+              //           <div class="gray_color font12 product_counts">全部商品${ret.shopresobj[0].shopprocount}件</div>
+              //         </div >
+              //         `
+              //         shtml += '<div class="fr btn_container" onclick="toCompany(\'' + ret.shopresobj[0].yshopid + '\')">'
+              //         shtml += `
+              //           <a href="javascript:;" class="btn_go">去逛逛</a>
+              //         </div>
+              //       </div>
+              //       </div>
+              //       <div style="width: 100%; height: 3px; background-color:#F0F0F0;"></div>`
+              //   }
+              // }
+            if(ret.status==1 && ret.Data.length > 0){
+              data = ret.Data;
+              var isFang = $api.hasCls($api.byId('goods_list'), 'fang');
+              if(data.length>0){
+                  data.forEach(function(item,index){
+                    shtml += '<li>';
+                    shtml += '    <div class="goods_list_hd" onclick="toDetail(\''+item.pid+'\')">';
+                    // shtml += '      <img src="./image/bkg_cover.jpg" data-echo="'+item.pic+'" class="goods_list_img">';
+                    shtml += '      <img src="'+item.pic+'" class="goods_list_img">';
+                    if(fxshopid!=null&&fxshopid!=""){
+                    if(isFang){}
+                    // shtml += '      <div class="title_bkg" ><span class="title_bkg_fl">赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span> <span class="title_bkg_fr"><em>'+item.jifen+'积分</em></span></div>';
+                    else{}
+                    // shtml += '      <div class="title_bkg" style="display:none;" style="display:none;"><span class="title_bkg_fl">赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span> <span class="title_bkg_fr"><em>'+item.jifen+'积分</em></span></div>';
+                  }
+                    shtml += '    </div>';
+                    shtml += '    <div class="message-info clear">';
+                    shtml += '        <div class="flex1 goods_list_content_title" onclick="toDetail(\''+item.pid+'\')">'
+                    if(item.iscross){
+                      shtml += '   <span class="globalShopping"><span class="global">全球购</span><span class="pinkage">包邮包税</span></span>';
+                    }
+                    shtml+=item.name+'</div>'
+                    shtml += '        <div class="up_and_down">';
+                    shtml += '            <span class="fl" style="color:red;display:flex;align-items:center"><span>¥' + smallpirce.call(this, item.salePrice) + '</span>';
+                    if(fxshopid!=null&&fxshopid!=""){
+                      if(isFang)
+                    shtml += '  <span class="fang_heng" style="color: #999;font-size:13px;">&nbsp;&nbsp;赚¥'+item.commPrice.toFixed(2)+'</span>'
+                    else
+                    shtml += '  <span class="fang_heng hide" style="color: #999;font-size:13px;">&nbsp;&nbsp;赚¥'+item.commPrice.toFixed(2)+'</span>'
+                  }
+                    shtml += '  </span>'
+                    // if(item.isup == 0){
+                    //   if(fxshopid!=null&&fxshopid!=""){
+                    //   if(isFang)
+                    //     //  shtml += '<div style="height:40px;width:100%;background-color:#000">66666</div>';
+                    //   else{}
+                    //   //   shtml += '            <div onclick="change(\''+item.pid+'\',this,0)" style="display:none;" class="heng-jia" id="pro_'+item.pid+'"><img src="./image/goods_adds.png" class="price_fr_img"></div>';
+                    // }
+                  // }
+                    shtml += '        </div>';
+                    if(fxshopid!=null&&fxshopid!=""){
+                      if(isFang){
+                      shtml +='<div class="fang_heng newheng">'
+                      shtml +='<p style="padding-left:5px" class="new_p">'+item.chenjiaoNum+'人卖过</p>'
+                    if(item.isup == 0){
+                      shtml +='<img onclick="change(\''+item.pid+'\',this,0)" id="pro_'+item.pid+'" src="./image/goods_adds.png" style="padding-right:5px;width:23px;height:23px">'
+                    }
+                      shtml +='</div>'
+                    }else{
+                      shtml +='<div class="fang_heng hide newheng">'
+                      shtml +='<p style="padding-left:5px" class="new_p">'+item.chenjiaoNum+'人卖过</p>'
+                    if(item.isup == 0){
+                      shtml +='<img onclick="change(\''+item.pid+'\',this,0)" id="pro_'+item.pid+'" src="./image/goods_adds.png" style="padding-right:5px;width:23px;height:23px">'
+                    }
+                      shtml +='</div>'
+                    }
+                    }
+                    shtml += '    </div>';
+                    shtml += '</li>';
+                    if(fxshopid!=null&&fxshopid!=""){
+                    if(!isFang){
+                      shtml += '  <div class="earn_hd"><div><span>赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span>&nbsp;&nbsp;<span></span></div>';
+                      if(item.isup == 0){
+                      shtml += '     <div onclick="change(\''+item.pid+'\',this,0)" class="ltri" id="pro_'+item.pid+'"><img src="./image/goods_adds.png" class="price_fr_img"></div>';
+                      }
+                    }else{
+                      shtml += '  <div class="earn_hd hide"><div><span>赚&nbsp;<em>¥'+item.commPrice.toFixed(2)+'</em></span>&nbsp;&nbsp;<span></span></div>';
+                      if(item.isup == 0){
+                      shtml += '     <div onclick="change(\''+item.pid+'\',this,0)" class="ltri hide"id="pro_'+item.pid+'"><img src="./image/goods_adds.png" class="price_fr_img"></div>';
+                      }
+                    }
+                  }
+
+                    shtml += '  </div>';
+                  });
+              }
+              $api.append($api.byId("goods_list"), shtml);
+            }
+            else if(page==1){
+              shtml +='<div class="noRec" id="noRec">';
+              shtml +='    <div class="square">';
+              shtml +='        <img src="./image/noactivitys.png" alt="" width="100%">';
+              shtml +='    </div>';
+              shtml +='    <div class="ic_text">';
+              shtml +='        抱歉，目前没有显示记录~';
+              shtml +='    </div>';
+              shtml +='    </div>';
+              $api.html($api.byId("goods_list"), shtml);
+              //$api.addCls($api.byId('goods_loading'),'hide');
+              $api.html($api.byId('noPullDown'),'');
+            }
+            else {
+              if(!$api.html($api.byId('noPullDown')) && $api.domAll("#goods_list li").length>=3)
+              shtml += '<p id="noPullDown" style="color:#999">别拉了,我是有底线的~</p>';
+              $api.append($api.dom(".footerMsg"), shtml);
+            }
+            //$api.addCls($api.byId('goods_loading'),'hide');
+        }
+        else {
+            //$api.addCls($api.byId('goods_loading'),'hide');
+            promptMsg(ret.err);
+        }
+      }
+      else{
+          //$api.addCls($api.byId('goods_loading'),'hide');
+          promptMsg(err.msg);
+      }
+      hideLoading()
+      //懒加载
+      echo.init({
+      offset: 100,
+      throttle: 100,
+      unload: false,
+    });
+      api.refreshHeaderLoadDone();
+    });
+  }
+  function ChangeOrder(sort,act,keyw){
+    pageIndex=1;
+    stopload = false;
+    DataBind(pageIndex,sort,act,keyw);
+  }
+  function ChangeCompany(content) {
+    showLoading()
+    pageIndex=1;
+    stopload = false;
+    //$api.removeCls($api.byId('goods_loading'),'hide');
+      api.ajax({
+        url: siteUrl +'Main/Main/GetSearchList?uid='+ api.getPrefs({sync: true,key: 'SessionUserID'}),
+        method: 'post',
+        data:{
+          body:{
+            currentPage:pageIndex,
+            pageSize:pageSize,
+            searchcontent: content,
+            type: 1
+          }
+        },
+        headers:{
+          "Authorization": api.getPrefs({sync: true,key: 'SessionKey'}),
+          "Content-Type": 'application/json; charset=utf-8'
+        }
+      }, function(ret, err) {
+        if(ret){
+          if(ret.success){
+              var shtml = "";
+              if(pageIndex == 1)
+                $api.html($api.byId("goods_list"), '');
+              if(ret.status==1 && ret.Data.length > 0){
+                // shtml += `<div class="company_top font15"><span>找到"<span>${content}</span>"相关店铺${ret.recordCount}家</span></div>`
+                data = ret.Data;
+                var isFang = $api.hasCls($api.byId('goods_list'), 'fang');
+                // if(data.length>0){
+                //     data.forEach(function(item,index){
+                //     shtml += `
+                //     <div class="all_container">
+                //       <div class="clear">
+                //         <div class="fl img_container">
+                //           <img src="${item.shopimg}" alt="">
+                //         </div>
+                //         <div class="fl top_list_item">
+                //           <div class="font15">${item.shopname}</div>
+                //           <div class="gray_color font12 product_counts">全部商品${item.shopallpro}件</div>
+                //         </div >
+                //         `
+                //         shtml += '<div class="fr btn_container" onclick="toCompany(\'' + item.shopid + '\')">'
+                //         shtml += `
+                //           <a href="javascript:;" class="btn_go">去逛逛</a>
+                //         </div>
+                //       </div>
+                //       <div class="padding10">
+                //         <span>相关商品: <span>${item.shoplikepro}</span>件</span>
+                //       </div>
+                //       <div class="product_imgs_container">
+                //       `
+                //       if(item.prolist) {
+                //         for(var i = 0; i < item.prolist.length; i++) {
+                //           shtml += '<div  onclick="toDetail(\''+ item.prolist[i].proid +'\')">'
+                //           shtml += `
+                //             <img src="${item.prolist[i].proimg}" alt="">
+                //             <span class="imgs_price">&yen;${item.prolist[i].proprice}</span>
+                //           </div>
+                //           `
+                //         }
+                //       }
+
+                //     shtml += `
+                //       </div>
+                //     </div>
+                //     <div style="width: 100%; height: 3px; background-color:#F0F0F0;"></div>`
+                //     });
+                // }
+                $api.html($api.byId("goods_list"), shtml);
+              }
+              else if(pageIndex==1){
+                shtml +='<div class="noRec" id="noRec">';
+                shtml +='    <div class="square">';
+                shtml +='        <img src="./image/noactivitys.png" alt="" width="100%">';
+                shtml +='    </div>';
+                shtml +='    <div class="ic_text">';
+                shtml +='        抱歉，目前没有显示记录~';
+                shtml +='    </div>';
+                shtml +='    </div>';
+                $api.html($api.byId("goods_list"), shtml);
+                //$api.addCls($api.byId('goods_loading'),'hide');
+                $api.html($api.byId('noPullDown'),'');
+              }
+              else {
+                if(!$api.html($api.byId('noPullDown')) && $api.domAll("#goods_list li").length>=3)
+                shtml += '<p id="noPullDown" style="color:#999">别拉了,我是有底线的~</p>';
+                $api.append($api.dom(".footerMsg"), shtml);
+              }
+              //$api.addCls($api.byId('goods_loading'),'hide');
+          }
+          else {
+              //$api.addCls($api.byId('goods_loading'),'hide');
+              promptMsg(ret.err);
+          }
+        }
+        else{
+            //$api.toggleCls($api.byId('goods_loading'),'hide');
+            promptMsg(err.msg);
+        }
+        hideLoading()
+        api.refreshHeaderLoadDone();
+        firstComming = false
+      });
+  }
+  function change(pid,obj,state) {
+    bob = true;
+    AddPro(pid,obj,state);
+    $api.remove($api.byId('pro_'+pid+''))
+  }
+  function changeList(can) {
+    var fxshopid=api.getPrefs({sync: true,key: 'SessionShopID'});
+    if(!can){
+    $api.toggleCls($api.byId('goods_list'), 'fang');
+    var fen=$api.domAll('.fang_heng')
+    for(var i=0;i<fen.length;i++){
+      $api.toggleCls(fen[i], 'hide');
+    }
+  }
+    var hengItem = $api.domAll('.earn_hd');//横的下面价格
+    var hengJia = $api.domAll('.heng-jia');//方的上架
+    var title_bkg = $api.domAll('.title_bkg');//方的价格
+    var ltris = $api.domAll('.ltri');//横的上架
+    var theList = $api.hasCls($api.byId('goods_list'), 'fang');
+    var as=$api.domAll('.innerBox.fang li')
+    var sae=$api.domAll('.innerBox li')
+    if(fxshopid==""){
+    if(theList){
+      for(var i=0;i<as.length;i++){
+          $api.addCls(as[i], 'bianheigh');
+      }
+    }else{
+      for(var i=0;i<sae.length;i++){
+        $api.removeCls(sae[i], 'bianheigh');
+        }
+    }
+  }
+    for(var i=0;i<hengItem.length;i++){
+      $api.toggleCls(hengItem[i], 'hide');
+      $api.toggleCls(ltris[i], 'hide');
+      if(theList){
+        $api.css(hengJia[i], 'display:block;');
+        $api.css(title_bkg[i], 'display:-webkit-box;');
+      }else{
+        $api.css(hengJia[i], 'display:none;');
+        $api.css(title_bkg[i], 'display:none;');
+      }
+
+    }
+    return false;
+  }
+  function toDetail(pid) {
+    if(bob)
+    OpenProdctPage(pid)
+  }
+  function toCompany(companyid) {
+    api.openWin({
+        name: 'companyshop'+companyid,
+        url: api.wgtRootDir+'/html/company/companyshop.html',
+        pageParam: {
+          companyid:companyid
+        },
+        bgColor:"#fff"
+    });
+  }
+
+</script>
+</html>

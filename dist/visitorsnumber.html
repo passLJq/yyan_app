@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <script src="./common/js/highcharts.js"></script>
+      <!-- <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+      <script src="https://img.hcharts.cn/highcharts/modules/series-label.js"></script>
+      <script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+      <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script> -->
+      <style>
+          body{background-color: #f5f5f5}
+          .main,.foot{margin-top: 15px;background-color: #fff;}
+          .main_top{display: flex;justify-content:space-between;border-bottom: 1px solid #e6e6e6;padding: 8px 10px;}
+          .main_top p{font-size: 16px;padding-left: 10px;padding-top: 4px}
+          .main_top span{font-size: 14px;padding-right: 10px;color: #c2c2c2;padding-top: 5px;}
+          .main_foot{text-align: center;display: flex;width: 100%;border-top:1px solid #e6e6e6;}
+          .main_foot div{flex-grow:1}
+          .main_foot p{font-size: 14px;padding-top: 5px}
+          .main_foot span{font-size: 14px;color: #e72c37;padding-bottom:5px}
+          .product-head{width:30%;text-align:center}
+          .product-foot{padding:7px  5px;width:70%;}
+          .product-top{height: 33px;color:#000;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;font-weight:500}
+          /*没有数据样式*/
+          #noRec{width:100%}
+          #noRec{padding:80px 0}
+          #noRec .square{width:180px;height:130px;margin:0 auto}
+          #noRec .ic_text{height:24px;line-height:38px;text-align:center;color:#999;font-size:15px}
+          #head{position: fixed;top:0;z-index: 99999;width: 100%}
+      </style>
+  </head>
+  <body>
+      <!-- <div id="head"></div> -->
+      <div class="main">
+        <div class="main_top"><p>七日访客管理</p><span>数据截止今日00.00</span></div>
+        <div id="container" style="max-width:800px;height:200px;"></div>
+        <div class="main_foot">
+          <div style="border-right:1px solid #e6e6e6"><p>今日访客量</p> <span id='todayUV'>0</span></div>
+          <div><p>今日访问量</p> <span id='todayPV'>0</span></div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="main_top"><p>七日最热商品TOP</p><span>数据截止今日00.00</span></div>
+        <div class="foot_foot" id="foot_foot">
+            <!-- <section style='height:90px;display:flex;width:100%;border-bottom: 1px solid #e6e6e6;' class="product-sec">
+                <div class="product-head"><img src='../../image/goods3.png' width="70px" height="70px" style="padding-top:10px"></div>
+                <div class="product-foot">
+                  <p class="product-top">as萨德阿萨dasdasdasdasd阿斯兰的骄傲拉看似简单拉萨建档立卡就爱丽丝肯德基拉看似简单拉丝机的拉丝机的拉丝机林科大时间了阿萨德asdasdasd德</p>
+                  <p style="color:#e72c37;font-size:14px;padding-top:3px">&yen;123</p>
+                  <p style='font-size:12px;color:#959595;'>访客量4 访问量4</p>
+                </div>
+            </section> -->
+        </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+
+  <script>
+  var ysevendayPV = [];
+var ysevendayUV = [];
+if(openapp){
+    window.apiready=function(){
+        data()
+    }
+}else{
+    window.onload=function(){
+        data()
+    }
+}
+ function data() {
+    var statustop = getname('statustop');
+    $api.dom('.main').style.marginTop = statustop + 'px';
+
+    // headTitle($api.byId('head'), '访客管理');
+    DataBind();
+    DataProduct();
+};
+
+function DataBind() {
+    https({
+        url: siteUrl + 'Main/Member/ShopPageView',
+        method: 'get',
+        data: {
+                uid: getname(),
+                yshopid: getname('SessionShopID')
+        },
+        headers: 1,
+        successBack:function(ret){
+            if (ret.success) {
+                var data = ret.Data;
+                var myDate = new Date(); //获取今天日期
+                myDate.setDate(myDate.getDate() - 6);
+                var dateArray = [];
+                var dateTemp;
+                var flag = 1;
+                for (var i = 0; i < 7; i++) {
+                    var month = myDate.getMonth() + 1;
+                    dateTemp = (month < 10 ? '0' + month : '' + month) + "-" + (myDate.getDate() < 10 ? '0' + myDate.getDate() : '' + myDate.getDate());
+                    dateArray.push(dateTemp);
+                    myDate.setDate(myDate.getDate() + flag);
+                }
+
+                var ll = [];
+                dateArray.forEach(function (item, index) {
+                    ysevendayPV.push(data.sevendayPV[item]);
+                    ysevendayUV.push(data.sevendayUV[item]);
+                });
+                //图表
+                var chart = Highcharts.chart('container', {
+                    xAxis: {
+                        lineColor: '#fcf',
+                        type: 'category',
+                        categories: dateArray,
+                        index: 0,
+                        tickLength: 0
+                    },
+                    title: {
+                        text: null
+                    },
+                    yAxis: {
+                        lineColor: '#fff',
+                        lineWidth: 1,
+                        title: {
+                            text: null
+                        },
+                        opposite: true
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: '访客数',
+                        data: ysevendayUV,
+                        color: '#427161'
+                    }, {
+                        name: '访问量',
+                        data: ysevendayPV,
+                        color: '#7CB29F'
+                    }],
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'right',
+                                    verticalAlign: 'top',
+                                    y: -18
+                                }
+                            }
+                        }]
+                    },
+                    chart: {
+                        type: 'area'
+                    }
+                });
+                $api.html($api.byId('todayPV'), data.todayPV);
+                $api.html($api.byId('todayUV'), data.todayUV);
+            } else {
+                alert(ret.err);
+            }
+        }
+    });
+}
+
+function DataProduct() {
+    https({
+        url: siteUrl + 'Main/Member/ShopProductPageView',
+        method: 'get',
+        data: {
+            uid: getname(),
+                yshopid: getname('SessionShopID')
+        },
+        headers: 1,
+        successBack:function(ret){
+            if (ret.success) {
+                var data = ret.Data;
+                var chtml = '';
+                if (data != '' && data != null) {
+                    data.forEach(function (item, index) {
+                        chtml += '      <section style=\'height:90px;display:flex;width:100%;border-bottom: 1px solid #e6e6e6;\' class="product-sec">\n                              <div class="product-head"><img src=\'' + item.pro[0].image + '\' width="70px" height="70px" style="padding-top:10px"></div>\n                              <div class="product-foot">\n                                <p class="product-top">' + item.pro[0].proname + '</p>\n                                <p style="color:#EB6100;font-size:14px;padding-top:3px">&yen;' + item.pro[0].saleprice + '</p>\n                                <p style=\'font-size:12px;color:#959595;\'>\u8BBF\u5BA2\u91CF' + item.uvnum + ' \u8BBF\u95EE\u91CF' + item.pvnum + '</p>\n                              </div>\n                          </section>';
+                    });
+                    $api.html($api.byId('foot_foot'), chtml);
+                } else {
+                    var chtml = '';
+                    var chtml = '';
+                    chtml += '<div class="noRec" id="noRec">';
+                    chtml += '<div class="square">';
+                    chtml += '<img src="./image/nodata.png" alt="" width="100%">';
+                    chtml += '</div>';
+                    chtml += '<div class="ic_text">抱歉，目前没有访问~</div>';
+                    chtml += '</div>';
+                    $api.html($api.byId('foot_foot'), chtml);
+                }
+            } else {
+                promptMsg(ret.err);
+            }
+        }
+    });
+}
+  </script>
+  </html>

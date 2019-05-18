@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>订单确认</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <meta content="telephone=no" name="format-detection" />
+  <link rel="stylesheet" href="./common/css/api.css"/>
+  <link rel="stylesheet" href="./common/css/style.css">
+  <link rel="stylesheet" href="./common/css/orderList.css">
+  <link rel="stylesheet" href="./common/css/iconfont.css">
+<style type="text/css">
+.page{background:#f8f8f8}
+body{font-family:"微软雅黑";background:#f8f8f8;color: #656768}
+.order-content{position:relative;overflow:hidden;margin-top:1.17647059em;background-color:#f8f8f8;font-size:17px;line-height:1.41176471}
+.wy-media-box.address-select{margin-top:0;border-bottom:0;background:url(../image/location-border.png) repeat-x left bottom #fff;background-size:auto 3px}
+.wy-media-box{margin:10px 0;padding:9pt 10px;border-top:1px solid #e1e1e1;border-bottom:1px solid #e1e1e1;background:#fff}
+.address-name{color:#232323;font-weight:700;font-size:15px}
+.address-name span{margin-right:10px}
+.address-txt{color:#232323;font-size:13px;line-height:18px}
+.weui-media-box_appmsg .weui-media-box__hd.proinfo-txt-l{width:30px;height:auto;vertical-align:top}
+.weui-media-box_appmsg .weui-media-box__hd{margin-right:10px;width:82px;height:82px}
+.promotion-label-tit{color:#81838e;line-height:15px}
+.promotion-label-tit img{width:100%}
+img{border:0;vertical-align:middle}
+.font-14{font-weight:400;font-size:14px}
+blockquote,figure,form,h1,h2,h3,h4,h5,h6,p{margin:0}
+.mg-r-10{margin-right:10px}
+.fr{float:right}
+.txt-color-red{color:#e21323}
+.num{font-family:Arial,Helvetica,sans-serif}
+.sitem-tip,em,i,s{font-style:normal}
+.sitem-tip{padding:2px 6px;background:#e21323;color:#fff;font-size:9pt}
+.toolbar-inner .close-picker,.toolbar-inner .title,.weui_check_label .weui_cell_bd{font-size:15px}
+.fontSize14{font-size:14px}
+.fontSize13{font-size:13px}
+.red{color:red}
+.color6{color:#666}
+.bgd_white{background:#fff}
+.pay-container{position:fixed;bottom:0;left:0;z-index:9999;display:block;box-sizing:border-box;width:100%;border-top:1px solid #f8f8f8;background-color:#fff;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.pull-right{float:right}
+.btn{position:relative;top:0;box-sizing:border-box;margin-left:9px;width:110px;height:50px;outline:0;border:1px solid #e5e5e5;border-radius:0;background-color:#f44;color:#fff;font-size:14px;cursor:pointer}
+.hg50{height:60px}
+.goods_checked_icon:before{font-size:20px!important}
+.foot-black{clear:both;height:3pc}
+.commodity_information_panel{margin-bottom:10px;background:#fff}
+.commodity_information_title{overflow:hidden;width:auto;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;word-wrap:break-word;font-weight:400;font-size:15px;word-break:break-all}
+.order-pay{position:relative;overflow:hidden;background-color:#fff}
+.default_receiving_address{padding:20px 15px;background:#fff;color:#333;font-size:15px}
+.default_receiving_address p:nth-child(1){font-weight:600}
+.default_receiving_address p:nth-child(2){line-height:18px}
+.default_address{display:inline-block;margin-left:5px;width:45px;background:red;color:#fff;text-align:center}
+.commodity_information{position:relative;display:flex;display:-webkit-box;display:-webkit-flex;padding:14px 15px 10px;color:#656768;font-weight:500;font-size:15px}
+.weui-tabbar.wy-foot-menu{position:fixed}
+.weui-tabbar__item.npd,.wy-foot-menu .npd{padding:2px 0}
+.cart-total-txt{color:#222;font-size:15px;line-height:40px}
+.cart-total-txt i{color:#e21323;font-size:13px}
+.cart-total-txt em{color:#e21323;font-weight:700;font-size:1pc}
+.w-90{width:90px}
+.red-color{background-color:#e21323}
+.t-c{text-align:center}
+.promotion-foot-menu-label{color:#fff;font-size:15px;line-height:40px}
+.hide{display:none !important;}
+.show{display:block}
+.wy-media-box.address-select {
+    margin-top: 0;
+    /* background: url(./image/location-border.png) repeat-x left bottom #fff; */
+    border-bottom: 0;
+    background-size: auto 3px;
+}
+/*跨境购 身份证添加 订单确认*/
+.idcardvcode{padding:5px 15px;position:relative;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:#fff;margin-bottom: 10px}
+.idcardlabel{display:block;width:auto;word-wrap:break-word;word-break:break-all;font-size:14px;padding:5px 15px 5px 0;}
+.idcard_hd{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:5px 0}
+.idcard_input{width:100%;border:0;outline:0;-webkit-appearance:none;font-size:14px;color:#999;height:1.47058824em;line-height:1.47058824}
+.idcard_ft{text-align:right;color:#999;border-left:1px solid #E5E5E5;}
+.vcode-img{display:inline-block;height:25px;margin-left:5px;padding:5px 0 5px .7em;line-height:25px;vertical-align:middle}
+.vcode_btn {
+    display: inline-block;
+    height: 35px;
+    padding:0 0 0 .7em;
+    line-height:35px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #999;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+}
+.vcode_btn span {
+     display: inline-block;
+     padding:0 5px;
+    }
+
+  .globalShopping{border:1px solid #b162a3;font-size:12px; border-radius:10%;}
+  .global{background:#b162a3;color:#fff;padding:0 5px;}
+  /*导航菜单*/
+ #top{ padding:10px; height:45px; box-sizing: border-box; border-bottom:1px solid #A7A7A7; }
+.left-icon{ float:left; }
+.left-icon>img{ width:20px; height:20px; }
+#title{ line-height: 30px; text-align: center; }
+#title>span{ margin-left:-17.5px; }
+.weui-cell_access:active{background: #fff}
+a:active{background-color: #fff!important;}
+.promsg {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 80px;
+}
+#AddressText .useraddress {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border-top: 1px solid #f2f2f2;
+  background-color: #fff;
+}
+.useraddress .msg {
+  margin-left: 10px;
+  width: 100%;
+}
+.useraddress .msg > p {
+  font-size: 13px;
+  margin-top: 10px;
+}
+.useraddress .msg p {
+  margin-left: 0 !important;
+}
+.useraddress .msg .up {
+  display: flex;
+  justify-content: space-between;
+}
+.useraddress .msg .up .tit {
+  font-size: 16px;
+  font-weight: 500;
+}
+.addressModel {
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border-top: 1px solid #f2f2f2;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.addressModel > div {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.addressModel > div p:nth-child(2) {
+  margin-left: 10px;
+}
+.addressModel p {
+  font-size: 14px;
+  color: #666464;
+}
+.addressModel p.icon-gengduo {
+  font-size: 10px;
+}
+.addressModel .icon {
+  font-size: 20px;
+}
+i.goods_checked_icon:before {
+  color: #e69888 !important;
+}
+.weui_panel_hd:after,.weui_cell:before,.weui-cell:before {
+  left: 4%;
+  width: 92%;
+}
+#header {
+  background-color: #fff;
+  color: #2C5B33;
+}
+</style>
+</head>
+<body>
+    <div class="page">
+      <div id="head">
+      </div>
+    	<!-- 默认收货地址 -->
+      <div class="order-content" style="margin-top:0;">
+        <div class="addressModel hide" onclick="OpenAdressManage()" id="addAddress">
+            <div style="display: flex;align-items: center;">
+              <p class="icon iconfont icon-jia"></p>
+              <p>新增收货地址</p>
+            </div>
+            <p class="icon iconfont icon-gengduo"></p>
+        </div>
+
+
+      <div id="AddressText">
+
+      </div>
+      <div class="idcardvcode" id="div_idcard" style="display:none">
+        <div class="weui-cell__hd">
+          <label class="idcardlabel">身份证号</label>
+        </div>
+        <div class="idcard_hd">
+          <input class="idcard_input" type="text" id="IdentityNO" value="" placeholder="请输入身份证号">
+        </div>
+        <div class="idcard_ft">
+          <button class="vcode_btn" id ="vcode_btn" style="display:none"><span id="vcode_save">保存</span><span class="colse"  id ="colse">取消</span></button>
+          <img src="https://source.rushouvip.cn/WShopping/Image/edit_orderdetail.png" class="vcode-img" id="vcode-img" style="display:inline-block">
+        </div>
+      </div>
+			<!-- 商品信息 -->
+      <div id="prolist"></div>
+              <!-- 支付方式2 -->
+	            <div class="order-pay up_line under_line mg_top10" id="paylist">
+                  <div class="weui_cell" id="div_cashpay" style="background: #fff">
+                      <div class="weui_cell_hd"><img src="./image/qianbao-pay.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+                      <div class="weui_cell_bd weui_cell_primary">
+                          <p class="fontSize14">钱包支付<span id='cashbalance'></span></p>
+                      </div>
+                      <div class="weui_cell_ft weui_cells_checkbox">
+                        <label class="weui_check_label" >
+                        <div class="weui_cell_hd ">
+                            <input type="radio" class="weui_check selectpay" name="selectpay" onclick="SelectPayment(this)"  data-payid="20170824112865489534" data-code="cashpay" checked="" />
+                            <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+                        </div>
+                      </label>
+                      </div>
+                  </div>
+                    <!-- <div class="weui_cell no_access">
+                        <div class="weui_cell_hd"><img src="./image/zhifubao.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p class="fontSize14">支付宝支付</p>
+                        </div>
+                        <div class="weui_cell_ft weui_cells_checkbox">
+                          <label class="weui_check_label" >
+                          <div class="weui_cell_hd ">
+                              <input type="radio" class="weui_check selectpay" name="selectpay" data-payid="20091208120710069746" data-code="alipay" checked="checked" />
+                              <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+                          </div>
+                      </label>
+                        </div>
+                  </div> -->
+		            <div class="weui_cell" style="background: #fff">
+		                <div class="weui_cell_hd"><img src="./image/weiXin-pay.png" alt="" style="width:20px;margin-right:5px;display:block"></div>
+		                <div class="weui_cell_bd weui_cell_primary">
+		                    <p class="fontSize14">微信支付</p>
+		                </div>
+		                <div class="weui_cell_ft weui_cells_checkbox">
+			                <label class="weui_check_label" >
+					            <div class="weui_cell_hd ">
+					                <input type="radio" class="weui_check selectpay"  onclick="SelectPayment(this)" name="selectpay" data-payid="20140103153910069758" data-code="wxpay" checked="checked" />
+					                <i class="weui_icon_checked goods_checked_icon" style="display: inline-block;vertical-align: bottom;"></i>
+					            </div>
+					          </label>
+		                </div>
+		            </div>
+		        </div>
+          <!--底部导航-->
+          <div class="foot-black"></div>
+          <div class="weui-tabbar wy-foot-menu">
+            <div class="weui-tabbar__item  npd">
+              <span class="cart-total-txt" style="color: #656768">应付：<span class="" style="color: #656768" id="tprice">&yen;&nbsp;0.00</span>&nbsp;&nbsp;<span class="red" id="manjian"></span></span>
+            </div>
+            <a href="javascript:" id="comfirmOrder" class="red-color npd w-90 t-c" style="background-color: #E69888">
+              <p class="promotion-foot-menu-label">提交订单</p>
+            </a>
+          </div>
+	    </div>
+    </div>
+</body>
+<script type="text/javascript" src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript" src="./common/js/SHA1.js"></script>
+<script type="text/javascript" src="./common/js/config.js"></script>
+<script type="text/javascript" src="./common/js/common.js"></script>
+<script>
+
+
+
+    var comfirmdata=[];
+    var isreflashaddress = true;
+    var idcard = "";
+    var fanhuishuju=""//返回优惠劵数据
+    var yuanjiner=''//全部商品总金额
+    var payid ='';
+    var paycode = '';
+    var addressid = "";
+    var remarks = "";
+    var paypwdisnull = "0" //是否设置支付密码
+    if (openapp) {
+      window.apiready = function () {
+        onready()
+      }
+    } else {
+      window.onload = function () {
+        onready()
+      }
+    }
+    var onready = function(){
+      headTitle($api.byId('head'),'订单确认')
+      if (window.api) {
+        api.parseTapmode()
+        funListenLoginSuccess()
+        funListenAddressPage();
+      }
+      BindAdress();
+      if(checkLoginStatus()){
+          BindData_BuyNow()
+      }
+
+      BindIDCartEvent();
+
+    }
+    //--------------监听事件
+    function funListenLoginSuccess(){
+      api.addEventListener({
+          name: 'loginSuccess'
+      }, function(ret, err){
+          if(ret){
+            var way =  api.pageParam.way
+            if(way=='buynow'||way=='groupbuynow'){
+              BindData_BuyNow()
+            }else {
+            }
+          }
+      });
+    }
+    function funListenAddressPage(){
+      api.addEventListener({
+          name:'viewappear'
+      }, function(ret, err){
+        if(isreflashaddress)
+          BindAdress();
+        else isreflashaddress = true;
+      });
+    }
+
+    //--------------监听事件结束
+    //--------------数据绑定
+    function BindIDCartEvent(){
+      var colse = $api.byId('colse');
+      var vcodeBtn = $api.byId('vcode_btn');
+      var vcodeImg = $api.byId('vcode-img');
+      $api.addEvt(vcodeImg, 'click', function(){
+          vcodeBtn.style.display='block';
+          vcodeImg.style.display='none';
+      });
+      $api.addEvt(colse, 'click', function(){
+          vcodeBtn.style.display='none';
+          vcodeImg.style.display='block';
+      });
+      $api.addEvt($api.byId("vcode_save"), 'click', function(){
+          vcodeBtn.style.display='none';
+          vcodeImg.style.display='block';
+          CheckOrSaveIDCard(true);
+      });
+    }
+    //密码刷新数据
+    function BindMember() {
+      BindData_BuyNow()
+    }
+    function BindData_BuyNow(){
+      if (window.api) {
+        api.showProgress({
+          text: '请耐心等待...',
+          modal: true
+        });
+      }
+      //立即购买商品数据
+      https({
+          url: siteUrl +'Marketing/Cloudbuy/GetSubmitOrder',
+          // method: 'get',
+          data: {
+            uid: getname(),
+            cloudid : pageParam('cid')
+          },
+          headers:1,
+          successBack: function(ret, err) {
+        if(ret){
+          if(ret.success){
+              if(ret.status==1 && ret.Data!=null){
+                var data = ret.Data[0];
+                var shtml = '';
+                var tprice =  pageParam('num')*data.price;//总价
+                paypwdisnull = data.paypwdisnull
+
+                shtml +='<div class="commodity_information_panel weui_panel_access">';
+            	  shtml +='        <div class="weui_panel_hd commodity_information">'+ data.companyname +'</div>';
+              	shtml +='        <div class="weui_panel_bd border_top">';
+              	shtml +='            <a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">';
+              	shtml +='                <div class="weui_media_hd" style="width: 80px;height: 80px;">';
+              	shtml +='                  <img class="weui_media_appmsg_thumb" src="'+data.proimg+'" alt="" style="min-height:100%;">';
+              	shtml +='                </div>';
+              	shtml +='                <div class="weui_media_bd promsg">';
+                shtml +='                    <h4 class="commodity_information_title" style="color:#656768;">'+data.proname+'</h4>';
+                shtml +='                      <p style="color: #9b9b9b;font-size:10px;">'+((data.skutext!=""&&data.skutext!=null)?data.skutext:'')+'</p>'
+                // shtml +='                    <p class="weui_media_desc"><span>数量：x'+pageParam('qty')+'</span>&nbsp;<span>'+((pageParam('skutext') !=""&&pageParam('skutext')!=null)?pageParam('skutext'):'')+'</span></p>';
+              	// shtml +='                    <p class="fontSize13"><span style="color: #E69888;font-size: 12px;">&yen;</span><span style="color: #E69888;font-size: 17px;">&nbsp;'+ smallpirce.call(this,tprice)+'</span>&nbsp;&nbsp;<!--<span class="color6">会员折扣：80%</span>--></p>';
+                shtml += '<p class="fontSize13"><span><span style="color: #E69888;font-size: 12px;">&yen;</span><span style="color: #E69888;font-size: 17px;">&nbsp;'+ Number(data.price).toFixed(2)+'</span>&nbsp;&nbsp;</span><span style="color: #656768">x'+pageParam('num')+'</span></p>'
+                shtml +='                </div>';
+              	shtml +='            </a>';
+              	shtml +='        </div>';
+            		shtml +='      <div class="weui_cell weui_cell_select weui_select_after bgd_white fontSize14 up_line under_line">';
+            	  shtml +='            <div class="weui_cell_hd">';
+            	  shtml +='                <label for="" class="weui_label">配送方式</label>';
+            	  shtml +='            </div>';
+            	  shtml +='            <div class="weui_cell_bd weui_cell_primary">';
+            	  shtml +='                <select class="weui_select" name="select2">';
+            	  shtml +='                    <option value="1">全场包邮</option>';
+            	  //shtml +='                    <option value="2">美国</option>';
+            	  shtml +='                </select>';
+            	  shtml +='            </div>';
+            	  shtml +='        </div>';
+            	  shtml +='        <div class="weui-cell weui-cell_access" href="javascript:;">';
+            		shtml +='          <div class="weui-cell__bd weui-cell_primary">';
+            		shtml +='            <p class="font-14"><span class="mg-r-10">运费:&nbsp;&nbsp;<em class="num " style="color: #E69888;">&yen;0.00</em></span><span class="fr">总计:&nbsp;&nbsp;<em class="num" style="color: #E69888;">&yen;'+tprice.toFixed(2)+'</em></span></p>';
+            		shtml +='          </div>';
+            		shtml +='      </div>';
+            	  shtml +='      <div class="weui_cell   bgd_white fontSize14">';
+                shtml +='            <div class="weui_cell_hd"><label class="weui_label width70">买家留言</label></div>';
+            	  shtml +='            <div class="weui_cell_bd weui_cell_primary">';
+                shtml +='                <input style="font-size: 12px" class="weui_input" type="text" name="buyer_remark" placeholder="选填：填写内容已和卖家协商确认">';
+            	  shtml +='            </div>';
+            	  shtml +='        </div>';
+                shtml +='    </div>';
+                shtml +='</div>';
+                comfirmdata.push({
+                  uid: getname(),
+                  cloudid : pageParam('cid'),
+                  buycount: pageParam('num'),
+                  paycode:"alipay",
+                  addressid : "",
+                  remark:"", //留言
+
+                });
+                $api.html($api.byId('prolist'), shtml);
+                //钱包余额
+                // if(getname('SessionShopID')) {
+                  $api.html($api.byId('cashbalance'),'(余额：'+parseFloat(data.walletbalance).toFixed(2)+'元)');
+              //  }
+              //  else{
+                //  $api.addCls($api.byId('div_cashpay'), 'hide');
+              //  }
+
+                yuanjiner=tprice
+                $api.html($api.byId('tprice'),tprice.toFixed(2));
+                $api.addEvt($api.byId('comfirmOrder'), 'click', BuyNow);
+              }
+              else if(ret.status==1){
+              }
+              else{
+                promptMsg(ret.err);
+              }
+          }
+          else {
+              promptMsg(ret.err);
+          }
+        }
+        else{
+            if(checkLoginStatus()){
+              promptMsg(err.msg);
+            }
+        }
+        hideLoading()
+      }
+    });
+    }
+    function SelectPayment(obj){
+      var selpay = $api.domAll($api.byId("paylist"), "[name=selectpay]");
+      for(var i=0;i<selpay.length;i++){
+           $api.attr(selpay[i],'checked','');
+      }
+      $api.attr(obj, 'checked', 'checked');
+      console.log(selpay)
+    }
+    //收货地址
+    function BindAdress(addressid){
+      https({
+        url: siteUrl +'Main/Shopping/GetAddressJson',
+        data:{
+          uid: getname(),
+          addressid : addressid
+        },
+        headers:1,
+        successBack: function(ret, err) {
+        if(ret){
+          if(ret.success){
+              if(ret.status==1 && ret.Data!=null && ret.Data!=""){
+                var data =  ret.Data[0];
+                var shtml =  "";
+                shtml += '<div class="useraddress addressModel" onclick="OpenAdressManage()">'
+                shtml += '  <div style="width: 90%">'
+                shtml += '    <p class="icon iconfont icon-location"></p>'
+                shtml += '    <div class="msg">'
+                shtml += '      <div class="up">'
+                shtml += '        <p class="tit">收货人：'+ data.name + '<span class="">'+data.mobile+'</span>' +'</p>'
+                // shtml += '        <p class="">'+data.mobile+'</p>'
+                shtml += '      </div>'
+                shtml += '      <p>收货地址：'+data.fullarea +data.address+'</p>'
+                shtml += '    </div>'
+                shtml += '  </div>'
+                shtml += '  <p class="icon iconfont icon-gengduo"></p>'
+                shtml += '</div>'
+                shtml += '<input type="hidden" value="'+data.id+'" id="hideaddressid">';
+                $api.addCls($api.byId("addAddress"), 'hide');
+                $api.html($api.byId("AddressText"),shtml);
+                
+              }
+              else if(ret.status == 1){
+                  $api.removeCls($api.byId("addAddress"), 'hide');
+              }
+              else {
+                promptMsg(ret.err);
+              }
+          }
+          else {
+              promptMsg(ret.err);
+          }
+        }
+        else{
+          promptMsg(err.msg);
+        }
+      }
+      });
+    }
+
+    //--------------数据绑定结束
+
+    function OpenAdressManage(){
+      //OpenWebPage(bSiteUrl+'AddressList.aspx?shopid=170718164338876176&backurl=fromapp','收货地址');
+      openWin({
+          name: 'addressList',
+          url: './addressList.html',
+          pageParam: {
+              isPayPage: 'lndianaPay',
+              titile:'收货地址'
+          }
+      },1);
+    }
+    //外部web页面调用 更新地址方法
+    function updateAddress(addressid){
+      isreflashaddress = false;
+      BindAdress(addressid);
+      if (window.api) {
+        api.closeWin({
+          name: 'addressList'
+        });
+      }
+    }
+    function BuyNow(){
+        //参数验证
+        addressid = $api.val($api.byId('hideaddressid'));
+        if(addressid==null||addressid==""){
+          promptMsg('请选择地址');
+          return;
+        }
+        var selpay = $api.domAll($api.byId("paylist"), "[name=selectpay]");
+        console.log(selpay.length)
+        for(var i=0;i<selpay.length;i++){
+              var paycheck =  $api.attr(selpay[i],"checked");
+              if(paycheck=='checked'){
+                payid = $api.attr(selpay[i],"data-payid");
+                paycode = $api.attr(selpay[i],"data-code");
+              }
+        }
+        if(payid==null||payid==""||paycode==null||paycode==""){
+          promptMsg('请选择有效的支付方式');
+          return;
+        }
+        if(comfirmdata.length<1){
+          promptMsg('没有待支付商品');
+          return;
+        }
+        else{
+          remarks = $api.domAll($api.byId('prolist'), "[name=buyer_remark]");
+          remarks = $api.val(remarks)
+        }
+        showLoading()
+        if(paycode == "cashpay") {
+          hideLoading()
+          api.openFrame({
+              name: 'paypasswordframe',
+              url: './paypasswordframe.html',
+              rect: {
+                  x: 0,
+                  y: 0,
+                  w: 'auto',
+                  h: 'auto'
+              },
+              pageParam: {
+                  payAllPrice:yuanjiner,
+                  isSeted: paypwdisnull,
+                  payOrderWinName: api.winName,
+                  paySuccessBack: "payorderNow"
+              },
+              bounces: false,
+              bgColor: 'rgba(0,0,0,0.3)'
+          });
+        }else {
+          payorderNow()
+        }
+      }
+    function payorderNow() {
+      https({
+        url: siteUrl +'Marketing/Cloudbuy/PayCloud?uid='+getname(),
+        method: 'post',
+        data:{
+          uid: api.getPrefs({sync: true,key: 'SessionUserID'}),
+          cloudid : pageParam('cid'),
+          buycount: pageParam('num'),
+          paycode: paycode,
+          addressid: addressid,
+          remark: remarks
+        },
+        headers:1,
+        successBack: function(ret, err) {
+          console.log(JSON.stringify(ret))
+        if(ret){
+          if(ret.success){
+                if(ret.status==1 && ret.Data!=null){
+                  if(ret.Data.orderid) {
+                    var orderid = ret.Data.orderid
+                  }
+                    if(paycode=='cashpay'){
+                      ShoppingSuccess(paycode,"buynow",'lndianaSuccess.html', ret.Data.orderid, pageParam('cid') )
+                    }
+                    else if(paycode=='alipay'&&ret.Data.alipayorderinfo!=null&&ret.Data.alipayorderinfo!=""){
+                      var aliPayPlus = api.require('aliPayPlus');
+                      aliPayPlus.payOrder({
+                          orderInfo: decodeURIComponent(ret.Data.alipayorderinfo)
+                      }, function(ret, err) {
+                          if(ret.code == "9000"){
+                              ShoppingSuccess(paycode,"buynow",'lndianaSuccess.html', orderid, pageParam('cid'));
+                          }
+                          else {
+                            pushMsg("分享夺宝, 商品: ["+ pageParam('pName') + "] 订单提交成功,等待付款", orderid)
+                            promptMsg(alipayReturnCode(ret.code))
+                            // api.alert({
+                            //     title: '支付结果',
+                            //     msg:alipayReturnCode(ret.code),
+                            //     buttons: ['确定']
+                            // });
+                            setTimeout(function(){
+                              closeWin('lndianaPay')
+                            },1000)
+                          }
+                      });
+                    }
+                    else if(paycode=='wxpay'&&ret.Data.wechatpayorderinfo!=null&&ret.Data.wechatpayorderinfo!=""){
+                      wechatpay(ret.Data.wechatpayorderinfo,'wxpay','buynow','./success.html', ret.Data.orderid)
+                    }
+                    else {
+                      pushMsg("订单号: ["+ ret.Data.orderid +"] 订单提交成功,等待付款", ret.Data.orderid)
+                      promptMsg('下单成功');
+                    }
+                }
+                else{
+                  promptMsg(ret.err);
+                }
+            }
+            else {
+                promptMsg(ret.err);
+            }
+          }
+          else{
+              if(checkLoginStatus()){
+                promptMsg(err.msg);
+              }
+          }
+          hideLoading();
+        }
+      });
+    }
+
+    function CheckOrSaveIDCard(isupdate){
+      var textidcard = $api.val($api.byId('IdentityNO'));
+      if(textidcard==null||textidcard==""){
+        promptMsg("请填写并保存身份证号码");
+        return false;
+      }else{
+        //检验身份证
+        var resmsg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        if (!resmsg.test(textidcard)) {
+             promptMsg('请填写正确的身份证号码');
+             return false;
+        }
+        else {
+          if(idcard!=textidcard){
+            if(!isupdate){
+              promptMsg('您已修改了身份证号码，需先保存');
+              return false;
+            }
+            else{
+              api.ajax({
+                url: siteUrl +'Main/Member/UserEdit?uid='+api.getPrefs({sync: true,key: 'SessionUserID'}),
+                method: 'post',
+
+                data:{
+                  body:{
+                    uid:api.getPrefs({sync: true,key: 'SessionUserID'}),
+                    idcard:textidcard,
+                  }
+                },
+                headers:{
+                  "Authorization": api.getPrefs({sync: true,key: 'SessionKey'}),
+                  "Content-Type": 'application/json; charset=utf-8'
+                }
+              }, function(ret, err) {
+                  if(ret){
+                    if(ret.success){
+                        if(ret.status==1&&isupdate){
+                            promptMsg("修改身份证号成功");
+                            idcard = textidcard;
+                        }
+                        else if(ret.status!=1){
+                          promptMsg(ret.err);
+                          return false;
+                        }
+                        return true;
+                    }
+                  }
+              });
+            }
+          }
+          else {return true;}
+        }
+      }
+    }
+    function close(){
+      api.execScript({
+          name: 'lndiana',
+          frameName: 'lndiana_section',
+          script: 'refreshCallBack();'
+      });
+      api.closeWin({
+        name: 'lndianaPay'
+      });
+    }
+
+</script>
+</html>

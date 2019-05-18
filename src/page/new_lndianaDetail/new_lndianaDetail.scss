@@ -469,8 +469,8 @@ html {
   background-color: #fff;
   padding: 0 rem(20);
   // margin-top: rem(10);
-  max-height: rems(700);
-  overflow-y: scroll;
+  // max-height: rems(700);
+  // overflow-y: scroll;
 }
 .member .member-item {
   width: 100%;
@@ -838,4 +838,11 @@ html {
 ::-webkit-input-placeholder { /* WebKit browsers */
   color: #ccc;
   font-size: rems(30);
+}
+
+.bindmore {
+  width: 100%;
+  color: #999;
+  text-align: center;
+  padding: rems(20) 0;
 }

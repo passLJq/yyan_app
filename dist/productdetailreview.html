@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<title></title>
+	<link rel="stylesheet" href="./common/css/api.css">
+	<link rel="stylesheet" href="./common/css/orderList.css">
+	<style>
+		html,body{margin:0;padding:0; background:#f8f8f8;color:#5C5255;font-size:12px;}
+		body{font-family:'Microsoft' 'YaHei','tahoma','arial','Hiragino' 'Sans GB','sans-serif'}
+			body,html,div,p,h1,h2,h3,h4,h5,h6,span,i,b,dl,dt,dd,ul,li,ol,a{padding:0;margin:0;}
+			a{text-decoration:none;color:#5C5255;}
+			.overflow{overflow: hidden;}
+			.fr{float:right;}
+			.fl{float:left;}
+			.background{background-color: #F1F2F6;height:10px;}
+			.flex{
+		    display: -webkit-box;
+		    display: -webkit-flex;
+		    display: -ms-flexbox;
+		    display: flex;
+			}
+			/*好评头部样式*/
+			.header_top{border-bottom:1px solid #E0E0E0;border-top:1px solid #E0E0E0;}
+			.header_container{padding:10px;font-size:1.1em;background-color: #fff;}
+			.goods{color:#e4393c;}
+			nav{padding:10px; background-color: #fff;}
+			/* .nav_container{padding:;} */
+			.nav_container>div{flex-grow: 1;text-align: center;}
+			.nav_container a{display:block;background-color: rgba(246,141,120,.3);;width:80%;padding:5px 0;margin:0 auto;border-radius: 15px;}
+			.nav_container a.negative{background-color: #F0EEEE;}
+			/*评价内容*/
+			section{background-color: #fff;}
+			.content_lis{width:100%; overflow: hidden; box-sizing: border-box; padding:16px 10px; border-top:1px solid #D2D2D2;}
+			.content_pic{padding:5px;}
+			.content_pic>div{width:40px;height:40px;}
+			.content_pic>div>img{width:100%;height:100%;}
+			.content_section{flex-grow: 4;}
+			.content_section>div{padding-bottom:10px;}
+			.content_section>div:last-child{padding-bottom:0;}
+			.content_head{flex-grow: 1; justify-content: space-between;}
+			.content_head_title{flex-direction:column; padding-left:5px;}
+			.content_head_name{color:#666464;font-weight: 550;padding:5px 0;font-size:12px;}
+			.content_head_stars>i{display:inline-block;width:15px;height:15px;}
+			.content_head_stars img{width:100%;height:100%;}
+			.gray_color{color:#C6C6C6;}
+			.createime_container{color: #999;}
+			.content_msg{width:100%;height:auto;padding-left: 5px;}
+			.content_msg>p{
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 5;
+				overflow: hidden;
+        /* font-size:1.2rem; */
+        color:#9FA0A0;
+        font-size: 14px;
+			}
+			.content_msg_img{padding-top:10px; width:100%;}
+			.content_msg_img span{width:30%;min-width:80px;height:100px; padding:0 5px 5px 0;}
+			.content_msg_img img{width:100%;height:100%;}
+
+			.nav_container a.clicked{background-color: #F68D78;color:#fff;}
+		</style>
+</head>
+<body>
+<div id='head'></div>
+<!-- <header class="header_top"> -->
+	<!-- <div class="header_container overflow">
+		<span class="fr goods">好评度 <i id="goods_rate"></i></span>
+	</div> -->
+<!-- </header> -->
+<nav>
+		<div class="nav_container flex" id="nav_container">
+			<div>
+				<a href="javascript:;" class="clicked">
+					<span>全部(<i id="all">0</i>)</span>
+				</a>
+			</div>
+			<div>
+				<a href="javascript:;">
+					<span>好评(<i id="good">0</i>)</span>
+				</a>
+			</div>
+			<div>
+				<a href="javascript:;">
+					<span>中评(<i id="justsoso">0</i>)</span>
+				</a>
+			</div>
+			<div>
+				<a href="javascript:;" class="negative">
+					<span>差评(<i id="bad">0</i>)</span>
+				</a>
+			</div>
+		</div>
+</nav>
+<!-- <div class="background"></div> -->
+<section>
+	<div>
+		<ul id="content_container">
+
+		</ul>
+	</div>
+</section>
+
+<script src="./common/js/api.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script>
+  var page = 1;
+  var pageSize = 10;
+  var level = 0;
+  var isRefresh = false;
+  if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+    headTitle($api.byId('head'),'全部评价')
+    getMsg(page, level)
+    if (window.api) {
+      //下拉刷新
+      api.setCustomRefreshHeaderInfo({
+        bgColor: '#f8f8f8',
+        images: [
+            'widget://image/suaxin1.png',
+            'widget://image/suaxin2.png',
+            'widget://image/suaxin3.png',
+            'widget://image/suaxin4.png',
+            'widget://image/suaxin5.png',
+            'widget://image/suaxin6.png',
+            'widget://image/suaxin7.png'
+        ],
+        tips: {
+            pull: '下拉刷新',
+            threshold: '松开立即刷新',
+            load: '正在刷新'
+        }
+      }, function() {
+          isRefresh = true;
+          loadData();
+        });
+
+      api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+        isRefresh = false;
+        page += 1;
+        getMsg(page,level)
+      })
+    }
+    
+    document.getElementById('nav_container').addEventListener('touchend', function (e) {
+      e.preventDefault()
+      isRefresh = true;
+      var tar = e.target
+      var n = 0;
+      if(tar.nodeName == "SPAN" || tar.nodeName == "A"){
+        var as = $api.domAll('#nav_container a')
+        for(var i =0;i<as.length; i++){
+          $api.removeCls(as[i], 'clicked');
+          if((tar.nodeName == "SPAN" && tar.parentNode == as[i]) || (tar.nodeName == "A" && tar == as[i]) || (tar.nodeName == "I" && tar.parentNode.parentNode == as[i]) ){
+            n = i
+          }
+        }
+        if (tar.nodeName == "SPAN") {
+            tar.parentNode.className = 'clicked'
+        } else if (tar.nodeName == "A") {
+            tar.className = 'clicked'
+        }else if (tar.nodeName == "I") {
+          tar.parentNode.parentNode.className = 'clicked'
+        }
+        level = n
+        page = 1;
+        getMsg(page, level)
+      }
+
+    })
+  };
+
+  function loadData(){
+    page = 1;
+    getMsg(page,level)
+    refreshDone()
+  }
+
+  function getMsg(currentPage, level) {
+    if(isRefresh){
+      $api.html($api.byId('content_container'), "")
+    }
+    if(pageParam('gbid')) {
+      var url = siteUrl+"Marketing/Groupbuy/GetGroupbuyComment"
+      var ids = pageParam('gbid')
+    }else {
+      var url = siteUrl+"Main/Shopping/GetOrderComment"
+      var ids = pageParam('pid')
+    }
+    https({
+      url: url,
+      // method: 'GET',
+      data: {
+        productid: ids,
+        currentPage: currentPage,
+        pageSize: pageSize,
+        level: level
+      },
+      successBack: function(ret, err){
+        if(ret){
+          if(ret.success){
+            if (ret.Data[0].all > 0) {
+                $api.css($api.dom(".header_container"),"display:block")
+            } else {
+                $api.css($api.dom(".header_container"),"display:none")
+            }
+            if(ret.Data[0].comment.length > 0){
+              var data = ret.Data[0];
+              $api.html($api.byId('goods_rate'), data.rate)
+              $api.html($api.byId('all'), data.all)
+              $api.html($api.byId('good'), data.good)
+              $api.html($api.byId('justsoso'), data.justsoso)
+              $api.html($api.byId('bad'), data.bad)
+              var html = "";
+              for(var r =0;r<data.comment.length;r++){
+              var msg = data.comment[r]
+              var img = msg.photo.Value == null? "./image/man.jpg" : msg.photo.Value
+                html += '<li class="flex content_lis">'
+                html +=   '<div class="content_pic">'
+                html +=    '<div>'
+                html +=       '<img src="' + img + '" class="userPic" alt="">'
+                html +=     '</div>'
+                html +=   '</div>'
+                html +=   '<div class="content_section">'
+                html +=     '<div class="flex content_head">'
+                html +=       '<div class="flex content_head_title">'
+                    var reg = /^[1][3,4,5,7,8][0-9]{9}$/
+                    if(reg.test(msg.name)) {
+                      var userName = msg.name.replace(/^(.{3}).+(.{4})$/g, '$1****$2')
+                    }else {
+                      var userName = msg.name.replace(/^(.).+(.)$/g, '$1*$2')
+                    }
+                  html += '<span class="content_head_name">' + userName + '</span>'
+                  html +=  '<span class="content_head_stars">'
+
+                        var n = 0;
+                        for(var v = 0;v < msg.level; v ++){
+                          var levels = msg.level[v]
+                          n +=1;
+                          html += '<i>'
+                          html += '<img src="./image/stars.png" alt="">'
+                          html += '</i>'
+                        }
+                        var gray_star = 5 - n
+                        for(var cs = 0;cs < gray_star; cs ++){
+                          html += 	'<i>'
+                          html +=   '<img src="./image/starg.png" alt="">'
+                          html +=   '</i>'
+                        };
+                        html += '</span>'
+                        html += '</div>'
+                        html += '<div class ="createime_container">'
+                        html +=   '<span>' + msg.createime + '</span>'
+                        html += '</div>'
+                        html += '</div>'
+                        html += '<div class="content_msg">'
+                        html += '<p>' + msg.content + '</p>'
+                        html += '<div class="flex content_msg_img">'
+                        html +=   '<div>'
+                          
+                          // msg.img = JSON.parse(msg.img)
+                          console.log(msg.img)
+                          if (msg.img.length > 3) {
+                            if (msg.img.indexOf(",") != -1) {
+                                var new_imgs = msg.img.substring(1, msg.img.length - 1).split(",")
+                                console.log(new_imgs)
+                                for (var n = 0; n < new_imgs.length; n++) {
+                                  var successText = iGetInnerText(new_imgs[n])
+                                  var imgUrl = successText.match(/[^\"].*[^\"]/)[0]
+                                      html += '<span>'
+                                      html += '<img src="' + imgUrl + '" class="allImgs_' + r + '"  data-id="assess" alt="">'
+                                      html += '</span>'
+                                  }
+                              } else {
+                                var one_new_imgs = msg.img.substring(1, msg.img.length - 1)
+                                var one_successText = iGetInnerText(one_new_imgs).replace(/\"/g, '')
+                                console.log(one_successText)
+                                  html += '<span>'
+                                  html +=   '<img src="' + one_successText + '" class="allImgs_' + r + '" data-id="assess" alt="">'
+                                  html += '</span>'
+                              }
+                          }
+                        html +=     '</div>'
+                        html +=   '</div>'
+                        html += '</div>'
+                      if(msg.skutext) {
+                        html += '<div class="gray_color">'
+                        html += '<span>' + msg.skutext?msg.skutext:'' + '</span>'
+                        html += '</div>'
+                      }
+                      html += '<div class="gray_color">'
+                      // html += '<span>购买日期: ' + msg.buytime + '</span>'
+                      html += '</div>'
+                      html += '</div>'
+                      html += '</li>'
+              }
+              if(currentPage == 1){
+                $api.html($api.byId('content_container'), html)
+              }else{
+                $api.append($api.byId('content_container'), html)
+              }
+              //预览大图
+              document.getElementById("content_container").addEventListener("click", function(e) {
+                var tar = e.target
+                if(tar.nodeName == "IMG" && tar.getAttribute("data-id") == "assess") {
+                  var classNames = "."+tar.className
+                  var imgList = document.querySelectorAll(classNames)
+                  var idx = 0
+                  var imgUrl = []
+                  for(var  i = 0; i < imgList.length; i++) {
+                    imgUrl.push(imgList[i].src)
+                    if(tar == imgList[i]) {
+                      idx = i
+                    }
+                  }
+                  showBigImages(imgUrl, idx)
+                }
+              })
+          }else {
+              if (currentPage == 1) {
+              $api.html($api.byId('content_container'), '<div style="width:100%;height:100%;text-align:center;margin-top:20vh; background-color: #f8f8f8!important;"><img src="./image/no_assess.png" style="width:50%;">')
+              } else {
+                if(!$api.byId('no_more')){
+                  $api.append($api.byId('content_container'), '<p id="no_more" style="width:100%;padding:10px 0;text-align:center;color:#B5B5B5;">-没有更多评论了-</p>')
+                }
+              }
+        }
+        }
+        isConnecting = false;
+      }
+
+  }
+  });
+
+  }
+
+</script>
+</body>

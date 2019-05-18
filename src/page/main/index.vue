@@ -89,7 +89,7 @@
           <div class="proboxxia">
             <p class="protitle">{{item.title}}</p>
             <div class="propice">
-              <p>&yen;{{item.salePrice|toFixed}}<span style="text-decoration:line-through">&yen;{{item.marketPrice|toFixed}}</span></p>
+              <p style="white-space: nowrap;">&yen;{{item.salePrice|toFixed}}<span class="small">{{item.salePrice|getSmall}}</span><span class="yuanj">&yen;{{item.marketPrice|toFixed}}<span class="smalls">{{item.marketPrice|getSmall}}</span></span></p>
               <img src="../../img/main/buy_icon@3x.png" alt="">
             </div>
           </div>
@@ -156,9 +156,24 @@ export default {
   watch:{},
   computed:{},
   filters: {
-       toFixed: function(value) {
-       value = Number(value)
-       return value.toFixed(0)
+    getSmall(val) {
+      if (!val) {
+        return '.00'
+      } else {
+        var v = Number(val).toFixed(2)
+        var s = v.toString().substr(-3)
+        // console.log(s)
+        return s
+      }
+    },
+    toFixed: function(value) {
+      var v = value.toString()
+      if (v.indexOf('.') != -1) {
+        return v.split('.')[0]
+      } else {
+        return value
+      }
+      
     },
     toFixeds: function(value) {
        value = Number(value)
@@ -722,12 +737,27 @@ img{display: block}
     .propice{
       p{
         color: #E69888;
-        font-size: rems(28);
-        span{
-          // font-size: rems(18);
+        font-size: rems(26);
+        display: flex;
+        align-items: baseline;
+        .yuanj {
+          text-decoration:line-through;
+          display: flex;
+          align-items: baseline;
           font-size: rems(20);
           color:#7C7C7C;
           margin-left: rems(6);
+        }
+        .small {
+          color: #E69888;
+          font-size: rems(18);
+          margin-left: 0;
+        } 
+        .smalls {
+          color:#7C7C7C;
+          font-size: rems(18);
+          margin-left: 0;
+          // text-decoration: line-through;
         }
       }
       img{

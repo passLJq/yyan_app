@@ -1,0 +1,71 @@
+<widget id="A6098584177761"  version="0.1.0">
+  <name>攸妍</name>
+    <description>
+
+    </description>
+    <content src="index.html" />
+
+    <access origin="*"/>
+      <feature name="aliPayPlus">
+          <param name="urlScheme" value="AliPayPlusA6098584177761" />
+      </feature>
+
+      <feature name="wx">
+        <param name="urlScheme" value="wxac02f6732c2b6c58"/>
+        <param name="apiKey" value="wxac02f6732c2b6c58"/>
+      </feature>
+
+<feature name="qiyuSdk">
+    <param name="appKey" value="7006c0e1cec9f9222bfe7ed0facd7618" />
+    <param name="appName" value="youyan" />
+</feature>
+
+<feature name="ajpush">
+    <param name="app_key" value="1340ef0ca05a0e8da7d5629d" />
+    <param name="channel" value="youyan" />
+</feature>
+
+      <preference name="pageBounce" value="false"/>
+
+    	<preference name="hScrollBarEnabled" value="true"/>
+
+    	<preference name="vScrollBarEnabled" value="true"/>
+
+    	<preference name="autoLaunch" value="true"/>
+
+    	<preference name="fullScreen" value="false"/>
+
+    	<preference name="autoUpdate" value="true" />
+
+    	<preference name="smartUpdate" value="true" />
+
+     <preference name="debug" value="true"/>
+
+     <preference name="checkSslTrusted" value="false" />
+
+    <preference name="statusBarAppearance" value="true" />
+
+    	<permission name="readPhoneState" />
+
+      <preference name="customRefreshHeader" value="UIPullRefreshMotive"/>
+
+    	<permission name="camera" />
+
+    	<permission name="record" />
+
+    	<permission name="location" />
+
+    	<permission name="fileSystem" />
+
+    	<permission name="internet" />
+
+    	<permission name="bootCompleted" />
+
+    	<permission name="hardware" />
+
+      <preference name="urlScheme" value="rushou" />
+
+      <preference name="softInputMode" value="auto"/>
+      
+      <preference name="checkSslTrusted" value="false" />
+</widget>

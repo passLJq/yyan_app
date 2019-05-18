@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./common/css/api.css">
+  <title>反馈详情</title>
+  <style>
+  body{background-color: #F6F6FA;}
+  *{padding:0; margin: 0;} .fl{float: left; } .fr{float:right; } .clear:after{content: ""; display: block; clear:both;}
+  .content_container{padding: 0 16px; box-sizing: border-box; overflow: hidden; width: 100%; margin-top: 8px; background-color: #fff;}
+  .items{height:48px; line-height: 48px; border-bottom: 1px solid #F6F6FA; color: #333; font-size: 14px;}
+  .msg_container{padding: 14px 18px 24px; box-sizing: border-box; line-height: 20px; font-size: 14px; color: #999;}
+  .shopback{font-family:PingFangSC-Medium; color:rgba(51,51,51,1); font-weight: bold;}
+  .back_msg{font-size: 14px; color: #333; padding:15px 16px 50px; box-sizing: border-box;}
+  #imgs_container{width: 100%; margin:10px 5%; box-sizing: border-box; overflow: hidden;}
+  #imgs_container img{width:30%;height:100px;float: left;padding-right: 10px;padding-bottom: 10px;}
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+  <div class="content_container">
+    <div class="clear items">
+      <span class="fl">咨询时间</span>
+      <span class="fr" id="searchTime"></span>
+    </div>
+    <div class="clear items">
+      <span class="fl">反馈类型</span>
+      <span class="fr" id="searchType"></span>
+    </div>
+    <div class="msg_container" id="searchMsg">
+
+    </div>
+    <div id="imgs_container">
+
+    </div>
+  </div>
+  <div class="content_container">
+    <div class="clear items">
+      <span class="shopback">商家回复</span>
+    </div>
+    <div class="back_msg" id="backMsg">
+
+    </div>
+  </div>
+
+  <script src="./common/js/api.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script src="./common/js/common.js"></script>
+  <script src="./common/js/config.js"></script>
+  <script>
+    if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+      headTitle($api.byId("head"), "反馈记录")
+      getMsg()
+    }
+    function getMsg() {
+        https({
+          url: siteUrl +'Main/Member/GetMyAdvice',
+          method: 'get',
+          data: {
+            uid: getname(),
+            aid: pageParam('aid')
+          },
+          headers:1,
+          successBack: function(ret, err) {
+          if(ret) {
+            if(ret.success && ret.status == 1) {
+              var html = ""
+              var data = ret.Data
+              data.forEach(function (item, idx) {
+                document.getElementById("searchTime").innerHTML = item.time.split(" ")[0]
+                document.getElementById("searchType").innerHTML = item.tpyename
+                document.getElementById("searchMsg").innerHTML = item.content
+                document.getElementById("backMsg").innerHTML = item.replycontent || '<div style="text-align: center; color: #999;">暂无回复</div>'
+                if(item.img != null) {
+                  item.img.forEach(function (img, index) {
+                    html += '<img src="'+img+'" class="imgsList assess_imgs">'
+                  })
+                  document.getElementById("imgs_container").innerHTML = html
+                }
+              })
+
+            }else {
+            }
+          }
+        }
+      })
+    }
+  </script>
+</body>
+</html>

@@ -17,7 +17,7 @@
       <div class="inputbox" v-else>
         <div style="display: flex;align-items:center;border-bottom: 1px solid #DEDEE1;">
           <div class="prefix" @click="showAreaBox">+{{areaCode}}<span class="sanDown"></span></div>
-          <input type="tel" placeholder="请输入手机号码" v-model="telephone" :maxlength="maxlength" class="input1">
+          <input type="tel" placeholder="请输入手机号码" v-model="telephone" maxlength="11" class="input1">
         </div>
         <div class="telbox">
           <input type="tel" placeholder="请输入短信验证码" v-model="codenum" maxlength="4">
@@ -57,6 +57,7 @@ export default {
       areaCode: 86,
       showArea: 0,
       maxlength: 11,
+      bool: true          // 登录按钮点击
     };
   },
   watch: {
@@ -132,6 +133,9 @@ export default {
       }, 1000);
     },
     login() {
+      if (!this.bool) return
+      if (!this.code) return promptMsg('请重新获取验证码')
+      this.bool = false
       var that = this;
       if (that.telephone == "15989289012") {
         that.code = "4b49fd74e877d70276951435d388a319";
@@ -232,6 +236,7 @@ export default {
               });
             }
           } else {
+            this.bool = true
             promptMsg(ret.err);
           }
         }

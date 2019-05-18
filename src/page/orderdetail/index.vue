@@ -31,7 +31,7 @@
         <div class="pingtou">  
             <img src="../../img/orderdetail/iPhone8@3x.png" alt=""> 
             <p v-if="list.gbstate==2">拼团成功</p>
-            <p v-if="list.gbstate==1">拼单中，还差{{list.gbdata.count}}人，剩余{{hours}}:{{min}}:{{miao}}结束</p>  
+            <p v-if="list.gbstate==1">拼单中，还差{{list.gbdata.num < 0 ? 0 : list.gbdata.num}}人，剩余{{hours}}:{{min}}:{{miao}}结束</p>  
             <p v-if="list.gbstate>=3">拼团失败</p>  
         </div>
         <div class="pingimgbox" >
@@ -195,6 +195,9 @@ export default {
                     // }
                     if(ret.Data[0].gbdata){
                         that.remaintime =  ret.Data[0].gbdata.ts - ret.Data[0].gbdata.tpgap;
+                        if (ret.Data[0].gbdata.num <= 0) {
+                            ret.Data[0].gbstate = 2
+                        }
                         if(that.remaintime >0&&ret.Data[0].gbstate==1){
                             that.timesover= window.setInterval(function(){
                                 that.leftTimer()

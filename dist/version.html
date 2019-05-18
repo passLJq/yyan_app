@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <style>
+        body{
+          background: #fff;
+          color: #215645;
+        }
+        .item{display: flex;align-items: center;padding: 10px 0;border-bottom: 1px solid #e8e8e8;margin: 0 auto;width: 86%;}
+      </style>
+  </head>
+  <body>
+    <div id="head"></div>
+        <div class="item">
+          <p>当前版本：<span id='appVersion'></span></p>
+        </div>
+        <div class="item">
+          <p>引擎版本：<span id='version'></span></p>
+        </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript">
+      if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+        headTitle(document.getElementById('head'),'版本信息')
+        if (window.api) {
+          $api.html($api.byId('appVersion'), api.appVersion);
+          $api.html($api.byId('version'), api.version);
+        } else {
+          $api.html($api.byId('appVersion'), '1.0.0');
+          $api.html($api.byId('version'), '1.0.0');
+        }
+      };
+  </script>
+  </html>

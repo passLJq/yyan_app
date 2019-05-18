@@ -56,7 +56,7 @@ module.exports = function(env){
           new UglifyJsPlugin({
             uglifyOptions: {
               compress: {
-                warnings: false,
+                // warnings: false,
                 drop_debugger: false,
                 drop_console: true
               }

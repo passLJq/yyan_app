@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>带二维码的分享</title>
+      <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+      <style>
+          body{
+              background-color: rgba(0,0,0,0.5)
+          }
+          .box{position: fixed;bottom:0;width: 100%;font-size: 15px;z-index: 9999}
+        .item{display: flex;background-color: #fff;}
+        .item-div{width: 25%;text-align: center;}
+        .item-div img{height: 60px;width: 60px;display: block;margin:0 auto;padding: 10px 0}
+        .item-div p{padding-bottom: 10px}
+        .zuan{background: #fff;text-align: center;padding: 10px 0}
+        .hide{display: none}
+        .zhezhao{position: fixed;z-index: 999;width: 100%;height: 100%;top:0}
+      </style>
+  </head>
+  <body>
+    <div class="zhezhao" onclick="clos()"></div>
+    <div class="box">
+    <div class="zuan hide">
+      <p>分享好友下单赚<span style="color:#fb2f3b" id="money">6.66</span>元</p>
+    </div>
+    <div class="item">
+      <!-- <div class="item-div">
+        <img src="./image/share_weixin.png" alt="" onclick="shareText(0)">
+        <p>微信好友</p>
+      </div>
+      <div class="item-div">
+        <img src="./image/share_pengyouquan.png" alt="" onclick="shareText(1)">
+        <p>朋友圈</p>
+      </div>
+      <div class="item-div">
+        <img src="./image/share_url.png" alt="" onclick="shareText(2)">
+        <p>复制链接</p>
+      </div> -->
+      <div class="item-div">
+        <img src="./image/xiaochengx.png" alt="" onclick="shareText(4)">
+        <p>小程序</p>
+      </div>
+      <div class="item-div">
+        <img src="./image/code.png" alt="" onclick="shareText(3)">
+        <p>二维码</p>
+      </div>
+    </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+
+      };
+      function clos(){
+        api.closeFrame({
+            name: 'yshop_share'
+        });
+
+      }
+
+      function shareText(index){
+        switch (index) {
+          case 0://跳转微信好友分享
+            someShare(api.pageParam.url,'session',api.pageParam.shopName,api.pageParam.sharelanguage,api.pageParam.shoplogo)
+            setTimeout(function(){
+              clos()
+            },500)
+            return;
+          case 1://跳转微信朋友圈分享
+            someShare(api.pageParam.url,'timeline',api.pageParam.shopName,api.pageParam.sharelanguage,api.pageParam.shoplogo)
+            setTimeout(function(){
+              clos()
+            },500)
+            return;
+          case 2://跳转复制链接分享
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+            value: api.pageParam.url
+              }, function(ret, err) {
+                if (ret) {
+                    alert("复制成功");
+                } else {
+                    alert('复制失败');
+                }
+              }
+            );
+            return;
+          case 3:
+              erweima()
+            return;
+            case 4:
+            var wx = api.require('wx');
+            //商家分享
+                        if(api.pageParam.companyid){
+                          var fxshopid = api.getPrefs({sync: true,key: 'SessionShopID'});
+                          var scene
+                          if((fxshopid!=''&&fxshopid!=null)){
+                            scene=api.getPrefs({sync: true,key: 'SessionUserID'})
+                          }else{
+                            scene='111111111111111111'
+                          }
+                          wx.launchMiniProgram({
+                              apiKey: '',
+                              miniProgramType: 'release',
+                              userName: 'gh_bbe69506855a',
+                              path: 'pages/class/class?ruid='+scene+'&rcompany='+api.pageParam.duanid,
+                          }, function(ret, err) {
+                              if (ret.status) {
+                                  alert('打开成功');
+                              } else {
+                                  alert('打开失败'+err.code);
+                              }
+                          });
+                        }else{
+                          //优店分享
+                        wx.launchMiniProgram({
+                            apiKey: '',
+                            miniProgramType: 'release',
+                            userName: 'gh_bbe69506855a',
+                            path: 'pages/index/index?ruid='+api.getPrefs({sync: true,key: 'SessionUserID'})
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                alert('打开成功');
+                            } else {
+                                alert('打开失败'+err.code);
+                            }
+                        });
+                      }
+            return
+        }
+      }
+
+      function erweima() {
+        api.openFrame({
+            name: 'yshop_qrcode',
+            url: './yshop_qrcode.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                yshopid: api.pageParam.yshopid
+            },
+            bounces: false,
+            bgColor: 'rgba(36,36,36,.5)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+
+      }
+  </script>
+  </html>

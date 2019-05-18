@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="format-detection" content="telephone=no" />
+  <title>客户管理</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #F3F2F2;}
+  *{padding: 0; margin: 0;}
+ ol, ul { list-style: none; }
+ /*搜索团队*/
+ .header{background-color: #fff;}
+ .search-box{-webkit-box-flex:1;display:-webkit-flex;display:flex;display:-webkit-box;-webkit-flex:1;flex:1;padding:7px 8px}
+ .search-inner{width:85%;display:block;height:31px;line-height: 31px;background-color:rgba(246,245,250,1);border-radius:8px}
+ .search-box input{color:#000;font-size:1em;text-indent:4px;height:21px;line-height: 21px;margin-top: 5px;float:left;overflow:hidden;outline-style:none}
+ .search-icon{width:29px;height:29px;background:url(./image/secard.png) 4px center no-repeat;background-size:28px 28px;float:left;margin-left:7px}
+ .header-right{width:15%; text-align: center;}
+ .header-right span{height:29px;line-height:29px;color:#333;}
+
+ .total-member { display: -webkit-box; width: 100%; margin: 0px auto; background: #fff; height: 45px; line-height: 45px;}
+ .total-member .tab { width: 80px; height: 27px; text-align: center; -webkit-box-flex: 1; color: #666; font-size:14px; line-height: 27px; height: 45px; line-height: 45px; background-color: rgba(246,245,250,0.6);}
+ .total-member .active {background-color: #427161;}
+ .total-member .active>span { color: #fff;box-sizing: border-box; height: 45px;padding: 0 15px;}
+ .wrap { margin: 0; font-size: 13px;}
+ .wrap, .pagemain { max-width: 720px; /* margin: 20px 10px 0px; */ padding-bottom: 85px; }
+ @media only screen and (max-width: 400px){
+   .wrap, .pagemain { max-width: 720px; /* margin: 20px 10px 0px; */ padding-bottom: 85px; margin: 0 auto; }
+ }
+ .item { position: relative; display: -webkit-box; width: 100%; padding: 10px; margin: 10px auto; background:
+#fff; border-bottom: 1px solid #D7D7D7; border-top: 1px solid #D7D7D7; overflow: hidden; box-sizing: border-box; }
+.left { width: 80px; height: 80px; margin-right: 8px; box-sizing: border-box; overflow: hidden; }
+.left img { display: block; width: 80px;height: 100%;}
+.item.branch .right { display: block; -webkit-box-flex: 1; }
+.item.branch .right p span { color: #505050; }
+#noRec { width: 100%; padding: 80px 0px; }
+#noRec .square { width: 180px; height: 130px; margin: 0 auto; }
+#noRec .ic_text { height:24px; line-height: 38px; text-align: center; color: #999; font-size: 15px; }
+#cloading, #list_cloading { width: 100%; height: 50px; text-align: center; padding: 10px 0; }
+.hide { display: none; }
+
+/*我的分享样式*/
+.myshare_container, .myteams_container{width: 100%; height: 48px; line-height: 48px; padding: 0 15px; border-top: 1px solid #F6F5FA;box-sizing: border-box; background-color: #fff; font-size: 14px; color: #333;}
+.myteams_container{margin-top: 8px;}
+.fl{float: left; } .fr{float: right;} .clear:after{content:""; display: block; clear: both;}
+.fxIndextitle_ft, .teams_ft{color: #999; }
+.fxIndextitle_ft:after, .teams_ft:after{content:" ";display:inline-block;-webkit-transform:rotate(45deg);transform:rotate(45deg);height:6px;width:6px;border-width:2px 2px 0 0;border-color:#c8c8cd;border-style:solid;position:relative;top:-2px;top:-1px;margin-left:.3em}
+.teams_ft:after{border-color: transparent;}
+/*团队列表新样式*/
+#ulList>li{margin-top: 4px;}
+#ulList>li:nth-child(1){margin-top: 1px;}
+#ulList>li>div{width: 100%; background-color: #fff; color: #333; box-sizing: border-box; overflow: hidden; padding: 0 12px; font-size: 12px; color: #999;}
+#ulList>li>div:nth-child(even) {margin-bottom: 1px;position: relative;}
+.list_title_orders{ height: 35px; line-height: 35px;}
+.img_contianer{width: 48px; height: 48px;}
+.img_contianer > img{width: 100%; height: 100%; border-radius: 50%;  background-color: #eee;}
+#ulList>li>div.list_content{height: 79px;padding: 14px 10px;}
+.mask_line{height: 1px; width: 80%; position: absolute; right: 0; top: 0; background-color: #F3F2F2;}
+@media only screen and (min-width: 450px) {
+  .mask_line{width: 90%;}
+}
+.center_list_container{padding-left: 15px; max-width: 37%;}
+.right_list_container{max-width: 37%;}
+.list_content>.center_list_container>div,.right_list_container>div{display: inline-block; width: 100%; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+li>.list_content:nth-child(2)>.center_list_container>div,li>.list_content:nth-child(2)>.right_list_container>div{color: #999; font-size: 12px;}
+.right_list_container>div{text-align: right;}
+.list_prices{color: #666; }
+.orders_name{font-size: 14px; color: #333;}
+/* 店铺标识 */
+.status_team_shop{position: absolute; bottom: -5px; left: 0;width:50px;height:16px;border-radius:8px; font-size: 10px; line-height: 18px; color: #fff; text-align: center;}
+.status_team_shop_blue{background:linear-gradient(-90deg,rgba(44,137,230,1),rgba(83,160,253,1),rgba(81,175,236,1));}
+.status_team_shop_golden{background:linear-gradient(138deg,rgba(255,221,164,1),rgba(192,150,90,1));}
+.status_team_shop_red{background:linear-gradient(-90deg,rgba(232,55,74,1),rgba(253,94,67,1));}
+  </style>
+</head>
+<body>
+  <div class="header">
+      <div class="search-box">
+          <div class="search-inner">
+              <input  type="number" id="OrderID" placeholder="请输入邀请码/手机号码" onkeyup="search(event)">
+          </div>
+          <div class="header-right"  onclick="search()">
+            <i class="search-icon">
+            </i>
+          </div>
+      </div>
+  </div>
+  <div class="myshare_container clear" onclick="toMyfans()">
+    <span class="fl">我的分享</span>
+    <span class="fxIndextitle_ft fr"><span id="totalpoint"></span>人</span>
+  </div>
+  <div class="myteams_container clear">
+    <span class="fl">我的团队</span>
+    <span class="teams_ft fr"><span id="totalteams"></span>人</span>
+  </div>
+  <div class="total-member">
+    <p id="fx_tab" class="tab active" onclick="changeList(1, this)"><span>一级团队 (<span id="litoneteam">0</span>)</span></p>
+
+    <p id="qd_tab" class="tab" onclick="changeList(2, this)"><span>二级团队 (<span id="littwoteam">0</span>)</span></p>
+</div>
+  <div class="wrap">
+
+      <ul id="ulList">
+
+      </ul>
+      <!--没有显示记录-->
+     <div class="noRec hide" id="noRec">
+          <div class="square">
+            <img src="./image/nodata.png" alt="没有相关数据" style="width:100%;"/>
+         </div>
+        <div class="ic_text">亲，目前没有相关团队喔~</div>
+      </div>
+      <div id="cloading" class="hide">
+          <img id="loadmore" src="./image/loading_more.gif" alt="加载更多..." />
+      </div>
+  </div>
+
+  <script type="text/javascript" src="./common/js/api.js"></script>
+  <script type="text/javascript" src="./common/js/common.js"></script>
+  <script type="text/javascript" src="./common/js/config.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script>
+  var type = 1;
+  var page = 1;
+  var pageSize =10;
+  var noMore =false;
+  var content = "";
+  var data
+  if (openapp) {
+        window.apiready = function () {
+          data()
+        }
+      } else {
+        window.onload = function () {
+          data()
+        }
+      }  
+ function data(){
+      getMsg(page)
+      if(window.api){
+      //下拉刷新
+      api.setCustomRefreshHeaderInfo({
+        bgColor: '#f8f8f8',
+        images: [
+            'widget://image/suaxin1.png',
+            'widget://image/suaxin2.png',
+            'widget://image/suaxin3.png',
+            'widget://image/suaxin4.png',
+            'widget://image/suaxin5.png',
+            'widget://image/suaxin6.png',
+            'widget://image/suaxin7.png'
+        ],
+        tips: {
+            pull: '下拉刷新',
+            threshold: '松开立即刷新',
+            load: '正在刷新'
+        }
+      }, function() {
+            $api.html($api.byId('ulList'), "")
+            page = 1;
+            $api.addCls($api.byId("noRec"), "hide")
+            setTimeout(function () {
+              getMsg(page);
+            }, 500)
+
+        });
+
+      api.addEventListener({name: 'scrolltobottom'}, function(ret, err){
+        if(noMore){
+          if(!$api.byId('no_more') && page != 1){
+          $api.append($api.byId('ulList'), '<div id="no_more" style="color:#A2A2A2;text-align:center;padding:10px 0;">-没有更多数据了-</div>')
+          }
+          return;
+        }
+          page += 1;
+          getMsg(page, 1)
+      });
+      }
+    }
+    function getMsg(page_item, isScrollBottom) {
+      if(window.api){
+        if(!isScrollBottom) showLoading()
+      }
+      https({
+        url: siteUrl +'Main/Member/GetMyTeam',
+        method: 'get',
+        data:{
+            uid: getname(),
+            currentPage: page_item,
+            pageSize: pageSize,
+            type: type,
+            search: content
+        },
+        headers:1,
+        successBack:function(ret){
+          $api.html($api.byId("litoneteam"), ret.first)
+          $api.html($api.byId("littwoteam"), ret.second)
+          $api.html($api.byId("totalteams"), ret.total)
+          $api.html($api.byId("totalpoint"), ret.totalpoint)
+          if(ret.success && ret.status == 1) {
+            if(page_item==1){
+              data = ret.Data
+            }else{
+              data = data.concat(ret.Data)
+            }
+            $api.html($api.byId("myInte"), ret.totalpoint)
+            if(data.length < pageSize){
+              noMore = true;
+            }else{
+              noMore = false;
+            }
+            var html = ""
+            if(data) {
+              var index=0
+              if(page_item>1){
+                index=10*(Number(page_item)-1)
+              }
+              for(var i = index; i < data.length; i++) {
+                var img = data[i].shoplogo? data[i].shoplogo: "./img/man.jpg"
+
+                html += '<li onclick="toMyAlliesDetail('+ i +')">'
+                  +'  <div class="list_content clear">'
+                  +'    <div class="img_contianer fl" style="position: relative;">'
+                  +'      <img src="'+img+'" alt="">'
+                  // +'      <div class="status_team_shop '+(data[i].shoptype === 1? 'status_team_shop_red': data[i].shoptype === 2? 'status_team_shop_golden': 'status_team_shop_blue')+'">'+(data[i].shoptype === 1? "正式店主": data[i].shoptype === 2? "实习店主": data[i].shoptype === 3? "冻结店主": "")+'</div>'
+                  +'    </div>'
+                  +'    <div class="fr right_list_container">'
+                  var newTime = data[i].createtime.substring(0, data[i].createtime.indexOf(" "))
+            html +='      <div class="list_prices" style="position: relative; top: 1px;">会员职称:' + data[i].shoptitlename + '</div>'
+                  +'      <div class="tixian" style="position: relative; top: 2px;">手机号码:'+data[i].phone+'</div>'
+                  +'    </div>'
+                  +'    <div class="fl center_list_container">'
+                  +'      <div class="orders_name" >'+data[i].username+'</div>'
+                  +'      <div class="list_times" >邀请码:'+data[i].code+'</div>'
+                  +'    </div>'
+                  +'  </div>'
+                  // +'  <div class="list_content clear"  style="height:85px">'
+                  // +'    <div class="mask_line"></div>'
+                  // +'    <div class="img_contianer fl">'
+                  // +'    </div>'
+                  // +'    <div class="fr right_list_container">'
+                  // var newTime = data[i].createtime.substring(0, data[i].createtime.indexOf(" "))
+                  //       if(data[i].openshoptype === 0 || data[i].openshoptype === 2) {//开店方式,记得注释下面的<br/>
+                  //         var openshoptypeName = data[i].openshoptype === 0 ? '礼包开店' : data[i].openshoptype === 2 ? '销售开店' : ''
+                  //         html +='       <div class="tixian">开店方式:' + openshoptypeName + '</div>'
+                  //       }
+                   //
+                  //  html +='       <div class="list_prices" style="padding-top: 6px;">会员职称:' + data[i].shoptitlename + '</div>'
+            // html +='<br/>'
+            //       +'    <div class="list_prices" style="padding-top: 6px;">会员职称:' + data[i].shoptitlename + '</div>'
+            //       +'      <div class="tixian">他的分享:' + data[i].fannum + '</div>'
+            //       +'    </div>'
+            //       +'    <div class="fl center_list_container">'
+            //       +'      <div class="orders_name">店铺名称:' + data[i].shopname + '</div>'
+            //       +'      <div class="list_times">店铺等级:' + data[i].shoplevel + '</div>'
+            //       +'     <div class="list_prices">销售额:&yen;' + data[i].saletotal + '</div>'
+            //       +'    </div>'
+            //       +'  </div>'
+                  +'</li>'
+              }
+              if(page_item == 1){
+                $api.html($api.byId('ulList'), html)
+              }else{
+                $api.append($api.byId('ulList'), html)
+              }
+            }
+          }else {
+            if(page_item == 1){
+              noMore = true;
+            $api.removeCls($api.byId("noRec"), "hide")
+          }else if(ret.success && ret.status == 2){
+            noMore = true;
+          }else{
+            noMore = true;
+            promptMsg(ret.err)
+          }
+        }
+        hideLoading()
+        refreshDone()
+      }
+      }
+    )
+    }
+  function changeList(idx, obj) {
+    type = idx
+    page = 1
+    var  lis = document.querySelectorAll(".tab")
+    for(var i = 0; i < lis.length; i++) {
+      if(lis[i].innerHTML == $api.html(obj)) {
+        $api.addCls(obj, 'active');
+      }else {
+        $api.removeCls(lis[i], 'active');
+      }
+    }
+    noMore = false
+    $api.addCls($api.byId("noRec"), "hide")
+    $api.html($api.byId("ulList"), "")
+    getMsg(page);
+  }
+  function toMyfans() {
+    openWin({
+        name: 'myfans',
+        url: './myfans.html',
+        pageParam: {
+          title: '我的分享'
+        }
+    }, 1)
+  }
+  function search(e) {
+    if(e) {
+      if(e.keyCode != 13) {
+        return;
+      }
+    }
+    content = $api.val($api.byId("OrderID"))
+    $api.html($api.byId("ulList"), "")
+    page = 1
+    getMsg(page)
+  }
+  function toMyAlliesDetail(idx) {
+    openWin({
+        name: 'myallies_detail',
+        url: './myallies_detail.html',
+        pageParam: {
+            title: '详情',
+            bounces:true,
+            alliesMsg: data[idx]
+        },
+        bgColor:'#fff'
+    },1)
+  }
+</script>
+</body>
+</html>

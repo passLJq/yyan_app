@@ -28,7 +28,7 @@
             <span>完成拼团</span>
           </div>
         </div>
-        <section class="gun_waibox">
+        <section class="gun_waibox" id="fenlei">
           <div class="gun_box" :class="fixed?'fixed':''">
             <div class="gun_ul" @click="qiehuan(0,'')">
               <p>全部</p>
@@ -41,7 +41,7 @@
             </div>
           </div>
         </section>
-        <section style="background:#F6F6FA;width:100%;overflow:hidden">
+        <section style="background:#F6F6FA;width:100%;overflow:hidden" id="cont">
           <div v-if="listdata.length>0&&once">
             <div class="pro_box" v-for="(item, index) in listdata"  :key="item.pid"  @click="GroupBuy(item.pid,item.gbid)">
               <img :src="item.propic" alt="" class="pro_img">
@@ -54,7 +54,7 @@
                       <img v-else src="../../img/man.jpg" alt="">
                     </div>
                   </div>
-                  <p  v-cloak>共{{item.userimglist.length||0}}人参加</p>
+                  <p  v-cloak>共{{item.photoCount||0}}人参加</p>
                 </div>
                 <div class="pro_foot">
                   <div>
@@ -66,6 +66,7 @@
               </div>
             </div>
           </div>
+
           <div v-else>
         <div class="noRec" id="noRec" style="display: block;">
             <div class="square">
@@ -96,7 +97,7 @@ export default {
            classid:'',
            headlunbo:[],
            isDone: false,
-           loadTimer: null
+           loadTimer: null,
     }
   },
   watch:{},
@@ -160,7 +161,7 @@ export default {
       },
       handleScroll () {
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        var imgheight=this.$refs.tuan_banner.offsetHeight
+        var imgheight = this.$refs.tuan_banner.offsetHeight
         if(scrollTop>imgheight){
           this.fixed=true
         }else{
@@ -296,7 +297,9 @@ export default {
       }
   },
   mounted(){
-        window.addEventListener('scroll', this.handleScroll)
+        // if (window.api && api.systemType != 'ios') {
+        //   window.addEventListener('scroll', this.handleScroll)
+        // }
         this.headeimg()
         this.classiddata()
         this.loadTimer = setTimeout(function () {

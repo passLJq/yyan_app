@@ -99,6 +99,7 @@
             </div>
             <div class="btn gradient" @click="openGroup(item.isingroup, index)" v-cloak>{{item.isingroup ? '已参团' : '与他拼团'}}</div>
           </div>
+          <div class="bindmore" @click="bindMore">{{gbHasMore ? '点击加载更多' : '没有更多了~'}}</div>
         </div>
        <!-- 商品详情 -->
        <div class="productMsg" id="productMsg">
@@ -172,7 +173,7 @@
               <div class="gradient name">团长</div>
             </div>
             <div class="box boxx" v-for="(item, index) in resobj" v-if="resobj.length > 0" :key="index">
-              <img :src="item.userimg">
+              <img :src="item.userimg || './image/man.jpg'">
             </div>
             <div class="box boxx" v-for="(item, index) in ptCount" v-if="ptCount" :key="index">
               <img src="../../img/hui.png" style="border: 1px solid #d8d8d8;">
@@ -239,7 +240,9 @@
         orderid: '',
         statusCode: '1',
         gbsearch: '',            // 拼团搜索    
-        gblist: ''
+        gblist: '',
+        currentPage: 1,
+        gbHasMore: true
       }
     },
     created() {
@@ -465,6 +468,7 @@
          this.showPt = false
          this.orderid = ''
          this.ptDetailData = {}
+         this.resobj = []
          this.lndianaNum = this.lndianaNum == '' ? 1 : this.lndianaNum == 0 ? 1 : this.lndianaNum
          return
        }
@@ -627,12 +631,12 @@
           var imgdata=[]
           if(listimg.length>0){
           for(var i=0;i<listimg.length;i++){
-              imgdata.push(listimg[i].src)
-              $api.attr(listimg[i],'data-index',i)
-              $api.addEvt(listimg[i], 'click', function(e){
-                var index=e.target.dataset.index
-                that.bigimg(imgdata,index)
-              });
+            imgdata.push(listimg[i].src)
+            $api.attr(listimg[i],'data-index',i)
+            $api.addEvt(listimg[i], 'click', function(e){
+              var index=e.target.dataset.index
+              that.bigimg(imgdata,index)
+            });
           }
           }
           }
@@ -673,6 +677,9 @@
         }
       },
       goSearch() {
+        this.currentPage = 1
+        this.gbHasMore = this.gbsearch == '' ? true : false
+
         var that = this
         https({
           url: siteUrl + 'Main/Main/GetGroupBuyProJson',
@@ -681,7 +688,8 @@
             uid: getname() || '',
             ogid: '',
             fxshopid: getname('SessionShopID'),
-            gbsearch: that.gbsearch
+            gbsearch: that.gbsearch,
+
           },
           successBack: ret => {
             if (ret.success && ret.status == 1) {
@@ -707,12 +715,25 @@
             uid: getname() || '',
             ogid: '',
             fxshopid: getname('SessionShopID'),
-            gbsearch: ''
+            gbsearch: '',
+            pageindex: this.currentPage
           },
           successBack: (ret) => {
             // return console.log(JSON.stringify(ret))
             if (ret.success && ret.status == 1) {
-              this.gblist = ret.Data.gblist
+              if (this.currentPage != 1 && ret.Data.gblist.length == 0 ) {
+                this.gbHasMore = false
+                promptMsg('已加载全部~')
+              }
+              if (this.currentPage == 1) {
+                this.gblist = ret.Data.gblist
+              } else {
+                var gbl = this.gblist
+                gbl.filter(function (s) {
+                  return s && s != null
+                })
+                this.gblist = [...gbl, ...ret.Data.gblist]
+              }
               this.gbearn = ret.Data.gbearn
               // viewappear即回到页面, 不用重新跑这里面的代码
               if (!viewappear) {
@@ -731,14 +752,15 @@
                 if (that.timer && that.timer.length > 0) {
                   for(let i=0;i<that.timer.length;i++) {
                     clearInterval(that.timer[i])
+                    that.$set(that.countDownTime, i, '')
                   }
                 }
               }
               this.groupBuyList = ret.Data
-              for (let i = 0; i < ret.Data.gblist.length; i++) {
-                let time = ret.Data.gblist[i].ts - ret.Data.gblist[i].tpgap
+              for (let i = 0; i < this.gblist.length; i++) {
+                let time = this.gblist[i].ts - this.gblist[i].tpgap
                 if (time < 0) continue
-                ret.Data.gblist[i].countDownTime = null
+                this.gblist[i].countDownTime = null
                 that.countLastTimes(time, i)
               }
             } else {
@@ -746,6 +768,13 @@
             }
           },
         })
+      },
+      // 点击加载更多
+      bindMore() {
+        if (this.gbHasMore) {
+          this.currentPage += 1
+          this.getGroupBuyList(1)
+        }
       },
       // 读取规格 设置原价
       getSpec () {
@@ -811,7 +840,6 @@
           // that.countDownTime[idx] =  str
           // that.$forceUpdate()
           that.$set(that.countDownTime, idx, str)
-          console.log('run couttime' + index)
         }, 1000)
       },
       // 打开参团详情

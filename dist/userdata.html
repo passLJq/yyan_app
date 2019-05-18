@@ -1,0 +1,332 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no" />
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="./common/css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./common/css/orderList.css"/>
+    <link rel="stylesheet" type="text/css" href="./common/css/icon-weigoyi.css"/>
+    <link rel="stylesheet" href="./common/css/pageSass/userdata.css">
+  </head>
+  <body>
+    <div id="headr"></div>
+
+
+    <div class="user_info">
+      <ul id='user_ul'>
+
+      </ul>
+    </div>
+
+    <div class="mask_container hide" onclick="closeMask(event)">
+      <div>
+        <div class="mask_list">
+          <ul>
+            <li class="mask_title"></li>
+            <li class="mask_camera" onclick="checkMsg(event, 1)"></li>
+            <li class="mask_album" onclick="checkMsg(event, 2)"></li>
+          </ul>
+        </div>
+        <div class="mask_cancel" onclick="closeMask()">
+          <div>取消</div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="./common/js/api.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script type="text/javascript" src="./common/js/config.js"></script>
+    <script type="text/javascript" src="./common/js/common.js"></script>
+    <script>
+      var phon='';
+      var areaNum = ''    // 地区号 
+      if (openapp) {
+        window.apiready = function () {
+          onready()
+        }
+      } else {
+        window.onload = function () {
+          onready()
+        }
+      }  
+      var onready = function () {
+        datali()
+        if (window.api) {
+          api.addEventListener({
+            name: 'viewappear'
+          }, function(ret, err){
+            datali()
+          })
+        }
+    }
+    function datali(){
+    headTitle(document.getElementById('headr'),'个人资料');
+    https({
+      url: siteUrl +'Main/Member/GetMemberJson',
+      method: 'get',
+      data:{
+        uid:getname()
+      },
+      headers:1,
+      successBack: function(ret, err) {
+      if(ret.success){
+        if(ret.status==1 && ret.Data!=null){
+          areaNum = ret.Data.areaNum ? ret.Data.areaNum : 86
+          var data= ret.Data;
+          var com='';
+          var newUserPic = data.pic? data.pic: './image/man.jpg'
+          com += ' <li class="clear" onclick="showMask(1)"><div class="list_container"><div class="fl list_left_title">头像</div><div class="fr user_pic_right right_content"><img src="'+newUserPic+'" id="user_img" class="user_pic_container" alt=""></div></div></li>'
+
+          com +='   <li class="clear" onclick="toChangeName()"><div class="list_container"><div class="fl list_left_title">昵称</div><div class="fr right_content"><span id="user_name">'+data.name+'</span></div></div></li>'
+
+          var sex = "其他"
+          if(data.sex==1){
+            sex = "男"
+          }else if (data.sex==2) {
+            sex = "女"
+          }
+          com +='   <li class="clear" onclick="showMask(2)"><div class="list_container"><div class="fl list_left_title">性别</div><div class="fr right_content"><span id="user_sex" style="'+(sex=="其他"? "opacity:0;": "")+'">'+sex+'</span></div></div></li>'
+          //com +='   <li class="clear"><div class="list_container"><div class="fl list_left_title">电话号码</div><div class="fr right_content"><span id="user_phone">'+data.phone+'</span></div></div></li>'
+          if(data.iswx == "1") {
+            com +='   <li class="clear" onclick="toBindWx(\''+data.name+'\', 1)"><div class="list_container"><div class="fl list_left_title">微信</div><div class="fr right_content"><span>已绑定</span></div></div></li>'
+          }else {
+            com +='   <li class="clear" onclick="toBindWx(\''+data.name+'\')"><div class="list_container"><div class="fl list_left_title">微信</div><div class="fr right_content"><span>未绑定</span></div></div></li>'
+          }
+          com +='   <li class="clear" onclick="toChangePhone(\''+data.PhoneMobile+'\')"><div class="list_container"><div class="fl list_left_title">手机号</div><div class="fr right_content"><span>' + hidePhone(data.PhoneMobile) + '</span></div></div></li>'
+          $api.html($api.byId('user_ul'), com);
+      }
+      }
+     }
+    });
+  }
+    function hidePhone(phone) {
+      var p = String(phone)
+      var p1 = p.substr(0, 3)
+      var p2 = p.substr(7, 4)
+      return p1 + '****' + p2
+    }
+    function toChangePhone(phone) {
+      openWin({
+        name: 'changePhone',
+        url: './changePhone.html',
+        pageParam: {
+          title: '修改手机号',
+          phone: phone,
+          areaNum: areaNum
+        },
+        bgColor: '#f5f5f5'
+      },1)
+    }
+    function showMask(type) {
+      if(type == 1) {
+        $api.html($api.dom(".mask_title"), "更改头像")
+        $api.html($api.dom(".mask_camera"), "拍照")
+        $api.html($api.dom(".mask_album"), "从图库选择")
+      }else {
+        $api.html($api.dom(".mask_title"), "更改性别")
+        $api.html($api.dom(".mask_camera"), "男")
+        $api.html($api.dom(".mask_album"), "女")
+      }
+      $api.removeCls($api.dom(".mask_container"), 'hide');
+    }
+    function checkMsg(e, type) {
+      if(e.target.innerHTML == "男" || e.target.innerHTML == "女") {
+        document.getElementById("user_sex").innerHTML = e.target.innerHTML
+        document.getElementById("user_sex").style.opacity = "1"
+        postMsg(2)
+      }else {
+        if(type == 1) {
+          openSystemPic('camera')
+        }else {
+          openSystemPic('album')
+        }
+      }
+      $api.addCls($api.dom(".mask_container"), 'hide');
+    }
+    function closeMask(e) {
+      if(e) {
+        if(e.target.className == "mask_container") {
+          $api.addCls($api.dom(".mask_container"), 'hide');
+        }
+      }else {
+        $api.addCls($api.dom(".mask_container"), 'hide');
+      }
+
+    }
+    function openSystemPic(type){
+            $api.addCls($api.dom(".mask_container"), 'hide');
+            api.getPicture({
+            sourceType: type,
+            mediaValue: 'pic',
+            destinationType: 'base64',
+            allowEdit: true,
+            targetWidth: 300,
+            targetHeight: 300,
+            saveToPhotoAlbum: false
+        }, function(ret, err) {
+          if (ret.data) {
+              $api.attr($api.byId('user_img'), 'src',ret.data);
+              api.ajax({
+                    url: memberSiteUrl+'/Ajax/FileUpload.ashx',
+                    method: 'post',
+                    data: {
+                        files: {
+                            file: ret.data
+                        }
+                    }
+                }, function(ret, err) {
+                    if(api.systemType=="android"){
+                      if (ret) {
+                          if(ret.success){
+                              phon=ret.fullurl
+                              postMsg(4)
+                          }
+                      } else {
+                          promptMsg(err.msg)
+                      }
+                    }
+                    else if(api.systemType=="ios"){
+                        //解决奇怪的ios端问题
+                        var iosdata = JSON.parse(err.body.replace(/'/g,'"'));
+                        if(iosdata.success){
+                            phon=iosdata.fullurl
+                            postMsg(4)
+                        }else{
+                            promptMsg(err.msg)
+                        }
+                    }
+                });
+          }
+          else {
+              promptMsg('上传取消')
+          }
+        });
+      }
+      function subb(phon){
+        var name=document.getElementById("user_name");
+        var phone=$api.val($api.byId('user_phone'));
+        var zoneNames=document.getElementsByName("inlineRadioOptions");
+        var reg = /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;  //验证固定电话，手机号码
+            var myvalue="";
+            for(var i=0;i<zoneNames.length;i++){
+              var zoneName=zoneNames[i];
+              if(zoneName.checked){
+                myvalue=zoneName.value;
+              }
+            }
+            if(name.value==''|| name.value.length < 3 || name.value.length>11 || !nameReplace(name)){
+              promptMsg('昵称为3-11位数字,字母,中文或_');
+              name.value = ""
+              name.focus()
+              return false;
+            }
+            if (!reg.test(phone)) {
+              promptMsg('电话格式有误，请参照格式：075533560166 或 13570820930');
+              var num = document.getElementById("user_phone")
+              num.value = ""
+              num.focus()
+              return false;
+            }
+            if(myvalue!=1&&myvalue!=2){
+              promptMsg('请选择性别')
+              return false;
+            }
+        https({
+            url: siteUrl+'Main/Member/UserEdit?uid=' + getname(),
+            method: 'post',
+            data: {
+              uid: getname(),
+              name:name.value,
+              sex:myvalue,
+              telephone:phone,
+              headpic:phon
+            },
+            headers:1,
+            successBack: function(ret, err) {
+            if (ret) {
+                promptMsg('修改成功');
+                var timer = setTimeout(function () {
+                  clearTimeout(timer)
+                  api.closeWin();
+                }, 1000)
+            } else {
+                api.alert({ msg: JSON.stringify(err) });
+            }
+        }
+        });
+      }
+      function nameReplace(self) {
+        if(/[^\u4E00-\u9FA5A-Za-z0-9_]/ig.test(self.value)) {
+          return false
+        }
+        return true
+      }
+      function testTel(self) {
+        self.value=self.value.replace(/[^0-9]/ig,'')
+        if(/[0-9]{13,}/.test(self.value)) {
+          self.value = self.value.substr(0, 12)
+        }
+      }
+      function toBindWx(uname, isBind) {
+        openWin({
+            name: 'change_user_msg',
+            url: './change_user_msg.html',
+            pageParam: {
+                uname:uname,
+                isBind: isBind ? isBind : 0
+            }
+        })
+
+      }
+      function postMsg(type, msg) {
+        var newSex = type==2?(document.getElementById("user_sex").innerHTML == "男"? 1: 2):""
+        var newName = ""
+        if(type == 1) {
+          if(msg) {
+            newName = msg
+          }
+        }
+        https({
+            url: siteUrl+'Main/Member/UserEdit?uid='+getname(),
+            method: 'post',
+            data: {
+              uid: getname(),
+               name:newName,
+               sex:newSex,
+               telephone:"",
+               headpic:type==4?phon:""
+            },
+            headers:1,
+            successBack: function(ret, err) {
+            if (ret) {
+                if(type == 1) {
+                  api.execScript({
+                      name: 'change_user_msg',
+                      script: 'closeThisWin();'
+                  });
+                  document.getElementById("user_name").innerHTML = msg
+
+                }
+                promptMsg('修改成功');
+            } else {
+                api.alert({ msg: JSON.stringify(err) });
+            }
+        }
+        });
+      }
+      function toChangeName() {
+        openWin({
+            name: 'change_user_msg',
+            url: './change_user_msg.html',
+            pageParam: {
+                isChangeName: true
+            }
+        })
+
+      }
+    </script>
+  </body>
+</html>

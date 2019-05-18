@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <title>编辑地址</title>
+  <link rel="stylesheet" href="./common/css/api.css">
+  <style>
+  body{background-color: #fff; }
+.wgy_address_edit_content{background:#fff;}
+.wy_address_edit{font-size:14px}
+.mg0{margin:0}
+.wy_lab{width:70px;color:#427161;font-size: 16px;margin-left:15px;}
+.wy_address_edit .weui-cell{height: 48px; line-height: 48px; padding:0 15px; font-size: 14px!important;margin-right: 15px;padding-right: 0;}
+.toolbar,.toolbar .title{font-size:15px;color:#3d4145;width:100%}
+.picker-item{font-size:14px;text-align:center}
+.addressEdit-btn{width:80%; margin: 0 auto; margin-top: 50px;}
+.addressEdit-btn a{border-radius:0}
+.addressEdit_color{background-color:#F5AC9E; border-radius:22px; width: 100%; text-align: center; height: 44px; line-height: 44px; color: #fff;}
+.weui-cell_switch{border: 1px solid #F6F6FA; border-left: 0; border-right: 0; padding: 10px 15px;position: relative; display: -webkit-box;display: -webkit-flex;display: flex;-webkit-box-align: center;-webkit-align-items: center;align-items: center;padding:8px 15px; font-size: 14px!important;margin-right: 15px;margin-left: 15px;padding-right: 0;}
+.weui-textarea{font-size: 14px; margin: 10px 0; margin-right: 15px;padding-right: 0;}
+.weui-cells:after{border: 0;}
+.weui-cell:before{color: #F6F6FA;}
+.weui-switch-cp__input:checked~.weui-switch-cp__box, .weui-switch:checked {
+    border-color: #427161;
+    background-color: #427161;
+}
+  </style>
+</head>
+<body>
+  <div id="head">
+
+  </div>
+
+  <div class="wgy_address_edit_content">
+              <div class="weui-cells mg0 weui-cells_form wy_address_edit">
+                  <div class="weui-cell">
+                      <div class="weui-cell__hd">
+                          <label class="weui-label wy_lab">联系人</label></div>
+                      <div class="weui-cell__bd">
+                          <input class="weui-input" style="color: #9B9B9B;font-size:12px;" type="text" placeholder="请填写收货人的姓名" runat="server" id="consignee"/>
+                      </div>
+                  </div>
+                  <div class="weui-cell">
+                      <div class="weui-cell__hd">
+                          <label class="weui-label wy_lab">手机号</label></div>
+                      <div class="weui-cell__bd">
+                          <input class="weui-input" maxlength="11" style="color: #9B9B9B;font-size:12px;" type="tel" pattern="[0-9]*" placeholder="请填写收货人的手机号码" runat="server" id="phonecode" oninput="if(value.length>11)value=value.slice(0,11)"/></div>
+                  </div>
+                  <div class="weui-cell" style="display:none;">
+                      <div class="weui-cell__hd">
+                          <label class="weui-label wy_lab">身份证</label></div>
+                      <div class="weui-cell__bd">
+                          <input class="weui-input" placeholder="请输入身份证（必填）" pattern="[0-9]*" id="Identity" runat="server" maxlength="18" name="Identity" value="" type="text">
+                      </div>
+                  </div>
+                  <div class="weui-cell">
+                      <div class="weui-cell__hd">
+                          <label for="name" class="weui-label wy_lab">收货地址</label></div>
+                          <div class="weui-cell__bd">
+                              <input class="weui-input" id="taddress" type="text" value="" onclick="showCity()" readonly="" data-code="" data-codes="" placeholder=""/></div>
+                          <input type="hidden" runat="server" id="areacode" value="" />
+                          <span><img src="./image/enter_icon.png" width="22px" height="22px" style="vertical-align: middle;" alt=""></span>
+                      </div>
+                      <div class="weui-cell" style="height: 80px; line-height: normal;">
+                          <div class="weui-cell__bd">
+                              <textarea style="color: #9B9B9B;font-size:12px;padding-left:15px;" class="weui-textarea" placeholder="请输入详细地址" runat="server" id="address" rows="4"></textarea>
+                          </div>
+                      </div>
+                      <div class="weui-cell_switch">
+                      <div class="weui-cell__bd" style="color:#215645;font-size:16px;">设为默认地址</div>
+                      <div class="weui-cell__ft">
+                          <input class="weui-switch" type="checkbox" id="isdefault"></div>
+                  </div>
+              </div>
+              <div class="addressEdit-btn">
+                  <div onclick="submit()" class="addressEdit_color fontSize15">保存</div>
+              </div>
+
+          </div>
+<script src="./common/js/api.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+<script src="./common/js/common.js"></script>
+<script src="./common/js/config.js"></script>
+<script src="./common/js/jquery-3.2.1.min.js"></script>
+<script>
+  if (openapp) {
+    apiready = function(){
+      headTitle($api.byId('head'),'编辑地址')
+      getMsg()
+    } 
+  } else {
+    window.onload = function () {
+      headTitle($api.byId('head'),'编辑地址')
+      getMsg()
+    }
+  }
+
+var once=false
+  function getMsg() {
+    //异步返回结果：
+    // api.readFile({
+    //     path: 'fs://citys.json'
+    // }, function(ret, err) {
+    //     if (ret.status) {
+    //         var data = eval("("+ret.data+")");
+    //     } else {
+    //     promptMsg(err.msg);
+    //     }
+    // });
+    showLoading()
+    https({
+      url: siteUrl +'Main/Member/GetOneAddress',
+      method: 'get',
+      data:{
+        uid: getname(),
+        addressid: pageParam('addressid')
+      },
+      headers:1,
+      successBack: function(ret, err) {
+          console.log(ret)
+      if(ret) {
+        if(ret.success && ret.status == 1) {
+          $("#consignee").val(ret.Data.name)
+          $("#phonecode").val(ret.Data.phone)
+          $('#taddress').val(ret.Data.listdis)
+          $("#address").val(ret.Data.address)
+          $('#taddress').attr("data-code", ret.Data.areacode)
+          ret.Data.isdefault? document.querySelector("#isdefault").checked = true: document.querySelector("#isdefault").checked = false
+        }
+      }else {
+        promptMsg(err.msg)
+      }
+        hideLoading()
+      }
+    })
+  }
+  function showCity() {
+    var UIActionSelector = api.require('UIActionSelector');
+    UIActionSelector.open({
+        datas: "widget://common/json/citys.json",
+        layout: {
+            row: 5,
+            col: 3,
+            height: 30,
+            size: 12,
+            sizeActive: 14,
+            rowSpacing: 5,
+            colSpacing: 10,
+            maskBg: 'rgba(0,0,0,0.2)',
+            bg: '#fff',
+            color: '#888',
+            colorActive: '#f00',
+            colorSelected: '#f00'
+        },
+        animation: true,
+        cancel: {
+            text: '取消',
+            size: 12,
+            w: 90,
+            h: 35,
+            bg: '#fff',
+            bgActive: '#ccc',
+            color: '#888',
+            colorActive: '#fff'
+        },
+        ok: {
+            text: '确定',
+            size: 12,
+            w: 90,
+            h: 35,
+            bg: '#fff',
+            bgActive: '#ccc',
+            color: '#888',
+            colorActive: '#fff'
+        },
+        title: {
+            text: '',
+            size: 12,
+            h: 44,
+            bg: '#fff',
+            color: '#888'
+        },
+        fixedOn: api.frameName
+    }, function(ret, err) {
+        if (ret) {
+          if(ret.eventType == "ok") {
+            if(ret.selectedInfo.length > 0) {
+              if(ret.selectedInfo.length == 1) {
+                $('#taddress').val(ret.selectedInfo[0].name);
+              }else if(ret.selectedInfo.length == 2) {
+                $('#taddress').val(ret.selectedInfo[0].name + " " + ret.selectedInfo[1].name);
+              }else if(ret.selectedInfo.length == 3) {
+                $('#taddress').val(ret.selectedInfo[0].name + " " + ret.selectedInfo[1].name +  " " + ret.selectedInfo[2].name);
+              }
+              $('#taddress').attr("data-code", ret.selectedInfo[ret.selectedInfo.length - 1].code)
+            }
+
+          }
+
+        } else {
+            promptMsg(JSON.stringify(err));
+        }
+    });
+  }
+  function submit() {
+      var consignee = $("#consignee").val();
+      var phonecode = $("#phonecode").val();
+      var areacode = $('#taddress').attr("data-code")
+      var address = $("#address").val();
+      var defaultVal = document.querySelector("#isdefault").checked == true? 1: 0;
+      if(once){
+          return false;
+      }
+      if (consignee == null || consignee == "") {
+          alert("请填写收货人的姓名");
+          return false;
+      }
+      if (consignee.length > 20) {
+          alert("收货人不超过20个字符");
+          return false;
+      }
+      if (phonecode == null || phonecode == "") {
+          alert("请输入手机号");
+          return false;
+      }
+      // if (phonecode==''||phonecode.length<11||!/^(13[0-9]|14[0-9]|15[0-9]|166|17[0-9]|18[0-9]|19[8|9])\d{8}$/.test(phonecode)) {
+      //     alert('请输入有效的手机号码！');
+      //     return false;
+      // }
+      if (areacode == null || areacode == "") {
+          alert("请选择地区");
+          return false;
+      }
+      if (address == null || address == "") {
+          alert("请输入收货地址");
+          return false;
+      }
+      showLoading()
+      once=true
+      https({
+        url: siteUrl +'Main/Member/InsertorUpdateAddress?uid='+ getname(),
+        method: 'post',
+        data:{
+            addressID: api.pageParam.addressid,
+            uid: api.getPrefs({sync: true,key: 'SessionUserID'}),
+            isdefult: defaultVal,//0否1是
+            name: consignee,//姓名
+            areacode: areacode, //区域
+            address: address,//详细地址
+            phone: phonecode//电话
+        },
+        headers:1,
+        successBack: function(ret, err) {
+        if (ret.success && ret.status == 1) {
+            promptMsg("操作成功");
+            if(window.api) {
+                api.sendEvent({
+                    name: 'addressList_reload',
+                    extra: {}
+                })
+            }
+            setTimeout(function () {
+              closeWin('addressEdit')
+            }, 500)
+        } else {
+            promptMsg("操作失败");
+            once=false
+        }
+        hideLoading()
+      }
+    });
+  }
+</script>
+</body>
+</html>
